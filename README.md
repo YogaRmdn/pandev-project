@@ -1,126 +1,39 @@
-# PanDev Website
+# PanDev
 
-Website resmi PanDev (software house) yang dibangun dengan Next.js, Prisma ORM, dan shadcn/ui.
+Website resmi PanDev (software house Indonesia) — dibangun dengan Laravel 12 + Blade + Alpine.js + Tailwind CSS v4.
 
-## Tech Stack
-
-- **Framework:** Next.js 16.3.1 (App Router, Turbopack)
-- **UI Library:** React 19, shadcn/ui (radix-nova), Tailwind CSS 4
-- **ORM:** Prisma 6.12.0 (MySQL)
-- **State Management:** TanStack React Query
-- **Form Handling:** React Hook Form + Zod
-- **Bahasa:** TypeScript 5
-
-## Prasyarat
-
-- Node.js 20+
-- MySQL (XAMPP / MySQL Server)
-- npm
-
-## Setup Development
-
-### 1. Clone Repository
+## Setup
 
 ```bash
-git clone <url-repo>
-cd software-agency
-```
-
-### 2. Install Dependencies
-
-```bash
+composer install
 npm install
+cp .env.example .env        # atur kredensial MySQL (pandev_db)
+php artisan key:generate
+php artisan migrate:fresh --seed
+php artisan storage:link
+npm run build
+php artisan serve
 ```
 
-### 3. Setup Environment Variables
+Login admin seed: `ijichinijika@yopmail.com` / `password123`.
 
-Copy file `.env.example` ke `.env`:
+## Commands
 
 ```bash
-cp .env.example .env
+php artisan test            # 41+ test (Pest-style via PHPUnit)
+npm run build               # build aset Vite + Tailwind
+composer run pint           # Laravel Pint code style
+php artisan migrate:fresh --seed   # rebuild database + demo data
 ```
 
-Edit `.env` sesuai konfigurasi MySQL kamu:
+## Struktur
 
-```
-DATABASE_URL="mysql://root:@localhost:3306/pandev_db"
-DATABASE_USER="root"
-DATABASE_PASSWORD=""
-DATABASE_NAME="pandev_db"
-DATABASE_HOST="localhost"
-DATABASE_PORT=3306
-```
+- Sitweb publik: home, layanan, portofolio (pencarian/filter/carousel), tentang, kontak.
+- Dashboard: CMS portfolio, keuangan (transaksi + invoice/PDF), user management, settings.
+- Auth session native; tidak ada registrasi publik — user dibuat oleh admin.
+- Media: Cloudinary bila credential tersedia, fallback ke disk `public`.
 
-### 4. Buat Database
+## Env opsional
 
-Buat database di MySQL:
-
-```sql
-CREATE DATABASE pandev_db;
-```
-
-### 5. Generate Prisma Client
-
-```bash
-npx prisma generate
-```
-
-### 6. Jalankan Migrasi
-
-```bash
-npx prisma migrate dev
-```
-
-### 7. Jalankan Development Server
-
-```bash
-npm run dev
-```
-
-Buka [http://localhost:3000](http://localhost:3000) di browser.
-
-## Perintah yang Tersedia
-
-| Perintah | Keterangan |
-|---|---|
-| `npm run dev` | Jalankan dev server |
-| `npm run build` | Build untuk production |
-| `npm run start` | Jalankan production server |
-| `npm run lint` | Jalankan ESLint |
-
-## Struktur Project
-
-```
-src/
-├── app/
-│   ├── (main)/              # Halaman publik (homepage, portfolio, tentang, kontak)
-│   ├── dashboard/           # Dashboard admin
-│   │   └── portfolio/       # CRUD portfolio
-│   ├── actions/             # Server actions (upload, portfolio)
-│   └── auth/                # Autentikasi
-├── components/
-│   └── ui/                  # Komponen shadcn/ui
-├── hooks/                   # Custom React hooks
-└── lib/                     # Utility functions
-```
-
-## Menambah Komponen UI (shadcn)
-
-```bash
-npx shadcn@latest add <nama-komponen>
-```
-
-Contoh:
-
-```bash
-npx shadcn@latest add dialog
-npx shadcn@latest add table
-```
-
-## Catatan Penting
-
-- Gunakan `@/*` path alias untuk import (maps ke `./src/*`)
-- Komponen page-specific diletakkan di folder `_components/` dalam route yang sama
-- Komponen global/shared di `src/components/ui/`
-- Asset statis di `public/assets/`
-- Upload file menggunakan server actions di `src/app/actions/upload.ts`
+- `WEB3FORMS_ACCESS_KEY` — form kontak (Web3Forms).
+- `CLOUDINARY_CLOUD_NAME/API_KEY/API_SECRET` — upload media jarak jauh.
