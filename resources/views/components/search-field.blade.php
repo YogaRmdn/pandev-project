@@ -1,4 +1,4 @@
-@props(['placeholder' => 'Cari...', 'value' => ''])
+@props(['placeholder' => 'Search...', 'value' => ''])
 
 <form method="GET" x-data class="relative flex-1" x-on:submit="$el.submit()">
     @foreach (request()->except(['search', 'page']) as $key => $value)

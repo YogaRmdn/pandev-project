@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Portfolio;
 use App\Support\SiteContent;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -36,7 +37,20 @@ class PageController extends Controller
 
     public function portfolio(): View
     {
-        return view('pages.portfolio');
+        return view('pages.portfolio', [
+            'featured' => Portfolio::query()
+                ->published()
+                ->latest()
+                ->take(5)
+                ->get(),
+        ]);
+    }
+
+    public function buyEbook(): View
+    {
+        return view('pages.buy-ebook', [
+            'ebooks' => SiteContent::ebooks(),
+        ]);
     }
 
     public function submitContact(Request $request): RedirectResponse
@@ -51,20 +65,20 @@ class PageController extends Controller
 
         if (blank($accessKey)) {
             return back()->withErrors([
-                'message' => 'Formulir kontak belum dikonfigurasi. Set WEB3FORMS_ACCESS_KEY di file .env.',
+                'message' => 'The contact form is not configured yet. Set WEB3FORMS_ACCESS_KEY in the .env file.',
             ]);
         }
 
         $response = Http::asForm()->post('https://api.web3forms.com/submit', [
             'access_key' => $accessKey,
-            'subject' => 'Email baru dari PanDev',
+            'subject' => 'New message from PanDev',
             'name' => $validated['name'],
             'email' => $validated['email'],
             'message' => $validated['message'],
         ]);
 
         return $response->successful()
-            ? back()->with('success', 'Email berhasil dikirim. Terima kasih!')
-            : back()->withErrors(['message' => 'Email gagal dikirim. Silakan coba lagi.']);
+            ? back()->with('success', 'Your message has been sent. Thank you!')
+            : back()->withErrors(['message' => 'The message could not be sent. Please try again.']);
     }
 }

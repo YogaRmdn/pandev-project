@@ -10,6 +10,8 @@ use App\Models\Invoice;
 use App\Models\Portfolio;
 use App\Models\Transaction;
 use App\Models\User;
+use App\Support\Format;
+use App\Support\SiteContent;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
@@ -32,8 +34,20 @@ class MigrationSmokeTest extends TestCase
 
     public function test_public_pages_render(): void
     {
-        foreach (['home', 'services', 'about', 'contact', 'portfolio'] as $route) {
+        foreach (['home', 'services', 'about', 'contact', 'portfolio', 'buy-ebook'] as $route) {
             $this->get(route($route))->assertOk();
+        }
+    }
+
+    public function test_buy_ebook_page_lists_every_book_with_a_price(): void
+    {
+        $this->get(route('buy-ebook'))
+            ->assertOk()
+            ->assertSee('Buy eBook');
+
+        foreach (SiteContent::ebooks() as $ebook) {
+            $this->assertStringContainsString($ebook['title'], $this->get(route('buy-ebook'))->getContent());
+            $this->assertStringContainsString(Format::idr($ebook['price']), $this->get(route('buy-ebook'))->getContent());
         }
     }
 
@@ -370,11 +384,18 @@ class MigrationSmokeTest extends TestCase
         $admin = User::factory()->admin()->create();
         User::factory()->create(['fullname' => 'Orang Lain']);
 
-        $this->actingAs($admin)
+        $content = $this->actingAs($admin)
             ->get(route('dashboard.users.index'))
             ->assertOk()
             ->assertSee('Orang Lain')
-            ->assertDontSee($admin->fullname);
+            ->getContent();
+
+        // The sidebar account widget legitimately shows the signed-in user's
+        // name, so the assertion has to be scoped to the table rows.
+        preg_match('/<tbody.*?<\/tbody>/s', $content, $matches);
+
+        $this->assertNotEmpty($matches, 'Tabel user tidak ditemukan di halaman user management');
+        $this->assertStringNotContainsString($admin->fullname, $matches[0]);
     }
 
     public function test_admin_cannot_delete_their_own_account_from_user_management(): void

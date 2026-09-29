@@ -1,14 +1,21 @@
 @props(['portfolio'])
 
-<x-ui.card class="h-full transition-transform hover:scale-[1.02]">
-    <a href="{{ route('portfolio.show', $portfolio->id) }}" class="flex h-full flex-col">
-        <div class="aspect-video w-full overflow-hidden rounded-t-lg bg-muted">
+@php
+    $stacks = array_slice((array) ($portfolio->tech_stacks ?? []), 0, 3);
+    $extraStacks = max(0, count((array) ($portfolio->tech_stacks ?? [])) - 3);
+@endphp
+
+{{-- p-0 di kartu + padding di konten: thumbnail jadi full-bleed tanpa garis
+     card yang mengapit, dan tidak ada padding ganda. --}}
+<x-ui.card class="h-full gap-0 overflow-hidden p-0 transition-shadow duration-300 hover:shadow-md">
+    <a href="{{ route('portfolio.show', $portfolio->id) }}" class="group flex h-full flex-col">
+        <div class="bg-muted aspect-video w-full overflow-hidden">
             @if (filled($portfolio->thumbnail))
                 <img
                     src="{{ $portfolio->thumbnail }}"
                     alt="{{ $portfolio->name }}"
                     loading="lazy"
-                    class="h-full w-full object-cover"
+                    class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />
             @else
                 <div class="flex h-full w-full items-center justify-center">
@@ -17,40 +24,37 @@
             @endif
         </div>
 
-        <div class="flex flex-1 flex-col gap-3 p-6">
-            <div class="border-b pb-2 font-semibold">
-                <div class="truncate">{{ $portfolio->name }}</div>
-            </div>
-
-            <div class="flex items-center gap-1">
-                <x-lucide name="clock" class="size-4" />
-                <span class="text-sm">{{ \App\Support\Format::relativeTime($portfolio->updated_at, '') }}</span>
-            </div>
-
-            <div class="space-y-1">
-                <div class="text-muted-foreground uppercase">Kategori</div>
-                <div class="w-fit rounded-lg border bg-cyan-200 px-2 py-1 text-sm text-cyan-800">
-                    {{ $portfolio->category }}
+        <div class="flex flex-1 flex-col gap-4 p-5">
+            <div>
+                <h3 class="font-heading truncate text-base font-bold tracking-tight" title="{{ $portfolio->name }}">
+                    {{ $portfolio->name }}
+                </h3>
+                <div class="text-muted-foreground mt-1.5 flex items-center gap-1.5 text-xs">
+                    <x-lucide name="clock" class="size-3.5 shrink-0" />
+                    Updated {{ \App\Support\Format::date($portfolio->updated_at) }}
                 </div>
             </div>
 
-            <div class="text-muted-foreground line-clamp-2 text-sm">
-                {{ $portfolio->description }}
-            </div>
+            @if (filled($portfolio->description))
+                <p class="text-muted-foreground line-clamp-2 text-sm leading-relaxed text-pretty">
+                    {{ $portfolio->description }}
+                </p>
+            @endif
 
-            <div class="mt-auto space-y-1">
-                <div class="text-muted-foreground uppercase">Tech Stacks</div>
-                <div class="flex flex-wrap gap-1">
-                    @forelse (array_slice($portfolio->tech_stacks ?? [], 0, 3) as $tech)
-                        <div class="w-fit rounded-lg border bg-slate-200 px-2 py-1 text-sm text-slate-800">{{ $tech }}</div>
-                    @empty
-                        <div class="text-muted-foreground text-sm">Tidak ada tech stack</div>
-                    @endforelse
+            <div class="mt-auto flex flex-wrap items-center gap-1.5">
+                @if (filled($portfolio->category))
+                    <span class="inline-flex items-center gap-1 rounded-full bg-sky-500/15 px-2.5 py-0.5 text-xs font-medium text-sky-700">
+                        <x-lucide name="tag" class="size-3" /> {{ $portfolio->category }}
+                    </span>
+                @endif
 
-                    @if (count($portfolio->tech_stacks ?? []) > 3)
-                        <div class="w-fit px-2 py-1 text-sm text-slate-800">+{{ count($portfolio->tech_stacks) - 3 }}</div>
-                    @endif
-                </div>
+                @foreach ($stacks as $stack)
+                    <span class="bg-muted text-muted-foreground rounded px-2 py-0.5 text-xs">{{ $stack }}</span>
+                @endforeach
+
+                @if ($extraStacks > 0)
+                    <span class="bg-muted text-muted-foreground rounded px-2 py-0.5 text-xs">+{{ $extraStacks }}</span>
+                @endif
             </div>
         </div>
     </a>

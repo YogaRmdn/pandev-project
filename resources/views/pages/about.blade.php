@@ -1,51 +1,67 @@
 @extends('layouts.main')
 
-@section('title', 'Tentang | PanDev')
+@section('title', 'About Us | PanDev')
 
-@section('description', 'Kenali lebih dekat PanDev, software house di Indonesia yang fokus pada solusi teknologi.')
+@section('description', 'Get to know PanDev, a software development agency in Indonesia focused on reliable technology solutions.')
 
 @section('content')
-    <main class="flex w-full flex-1 flex-col pt-16">
-        <div class="flex flex-col items-center justify-center gap-8 sm:flex-row">
-            <img
-                src="{{ asset('assets/common/logo.png') }}"
-                width="300"
-                height="300"
-                alt="PanDev Logo"
-            />
-            <div class="max-w-xl">
-                <h1 class="font-heading text-primary text-3xl font-bold tracking-tight uppercase sm:text-3xl">
-                    Taking your ideas to next level
+    <main class="flex w-full flex-1 flex-col">
+        <section class="mx-auto flex w-full max-w-6xl flex-col items-center gap-10 px-4 pt-16 pb-4 sm:flex-row sm:items-center sm:justify-between">
+            <span class="bg-card flex size-40 shrink-0 items-center justify-center overflow-hidden rounded-2xl border shadow-sm sm:size-44">
+                <img
+                    src="{{ asset('assets/common/logo.png') }}"
+                    width="300"
+                    height="300"
+                    alt="PanDev Logo"
+                    class="size-full object-contain p-6"
+                />
+            </span>
+
+            <div class="max-w-2xl">
+                <div class="text-primary text-sm font-semibold tracking-wider uppercase">About us</div>
+                <h1 class="font-heading text-primary mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
+                    Taking your ideas to the next level
                 </h1>
-                <p class="mt-4 text-balance">
-                    PanDev adalah digital agency di Indonesia yang menawarkan solusi
-                    aplikasi untuk bisnis dan individu. Kami membantu mewujudkan ide
-                    menjadi produk digital yang bermanfaat dan berkelanjutan. Serta
-                    beragam produk digital lainnya untuk memenuhi kebutuhan Anda
+                <p class="mt-4 text-base text-pretty sm:text-lg">
+                    PanDev is a software development agency in Indonesia offering application
+                    solutions for businesses and individuals. We help you turn ideas into
+                    useful, sustainable digital products — and a range of other digital
+                    services to cover your needs.
                 </p>
             </div>
-        </div>
+        </section>
 
-        <section class="mx-auto mt-16 max-w-4xl py-16">
-            <div class="mb-10 text-center">
-                <h2 class="text-primary text-3xl font-bold uppercase sm:text-4xl">Meet Our Team</h2>
-                <p class="text-muted-foreground mt-2">Tim profesional yang berpengalaman di bidangnya</p>
+        <section class="mx-auto w-full max-w-6xl px-4 py-16">
+            <div class="max-w-2xl">
+                <h2 class="text-primary font-heading text-2xl font-bold tracking-tight sm:text-3xl">
+                    Meet our team
+                </h2>
+                <p class="text-muted-foreground mt-3 text-pretty">
+                    A team of professionals who are passionate about their craft.
+                </p>
             </div>
 
-            <div class="grid grid-cols-2 gap-x-4 gap-y-8 px-4 sm:grid-cols-3 md:grid-cols-4">
+            <div class="mt-10 grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-6">
                 @foreach ($team as $member)
-                    <div class="flex flex-col items-center text-center">
-                        <div class="mb-3 w-28 overflow-hidden rounded-lg border border-border bg-muted sm:w-32">
-                            <img
-                                src="{{ asset($member['image']) }}"
-                                alt="{{ $member['name'] }}"
-                                loading="lazy"
-                                class="aspect-[2/3] h-auto w-full object-cover"
-                            />
-                        </div>
-                        <h3 class="font-semibold">{{ $member['name'] }}</h3>
-                        <p class="text-muted-foreground text-sm">{{ $member['role'] }}</p>
-                    </div>
+                    <x-ui.card class="h-full gap-0 transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-md">
+                        <x-ui.card-content class="flex h-full flex-col items-center gap-3 text-center">
+                            <div class="bg-muted w-full overflow-hidden rounded-lg border">
+                                <img
+                                    src="{{ asset($member['image']) }}"
+                                    alt="{{ $member['name'] }}"
+                                    loading="lazy"
+                                    class="aspect-[2/3] w-full object-cover"
+                                />
+                            </div>
+
+                            <div>
+                                <h3 class="font-heading text-sm font-bold">{{ $member['name'] }}</h3>
+                                <p class="text-primary text-muted-foreground mt-0.5 text-xs font-medium tracking-wide">
+                                    {{ $member['role'] }}
+                                </p>
+                            </div>
+                        </x-ui.card-content>
+                    </x-ui.card>
                 @endforeach
             </div>
         </section>

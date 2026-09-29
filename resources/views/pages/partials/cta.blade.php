@@ -13,7 +13,7 @@
             x-transition:enter-end="translate-y-0 opacity-100"
             class="text-3xl font-bold leading-tight md:text-5xl"
         >
-            Siap membangun sesuatu yang berdampak?
+            Ready to build something impactful?
         </h2>
 
         <p
@@ -21,9 +21,10 @@
             x-transition:enter="transition ease-out duration-500 delay-100ms"
             x-transition:enter-start="translate-y-5 opacity-0"
             x-transition:enter-end="translate-y-0 opacity-100"
-            class="mt-4 text-lg"
+            class="mx-auto mt-4 max-w-2xl text-lg text-pretty text-white/80"
         >
-            Langkah pertama Anda dimulai dari sini.
+            Share your goals and timeline — we reply within one business day with a clear
+            next step, whether you need a full product or a quick technical review.
         </p>
 
         <x-ui.button

@@ -19,7 +19,16 @@
     @stack('head')
 </head>
 <body class="flex min-h-full flex-col bg-background font-sans text-foreground">
-    @yield('content')
+    <x-dashboard.sidebar />
+
+    <div
+        class="flex min-h-full flex-1 flex-col transition-[padding] duration-200 ease-in-out"
+        x-bind:class="$store.sidebar.collapsed ? 'md:pl-12' : 'md:pl-64'"
+    >
+        <div class="flex-1 px-4 py-4 md:px-6">
+            @yield('content')
+        </div>
+    </div>
 
     @if (session('status') || session('success'))
         <div

@@ -3,17 +3,45 @@
     $rows = SiteContent::marqueeRows();
 @endphp
 
-<section class="mt-16 text-center" x-data="{ visible: false }" x-intersect="visible = true">
+<section class="mt-16 px-4 text-center" x-data="{ visible: false }" x-intersect="visible = true">
     <div
         x-show="visible"
         x-transition:enter="transition ease-out duration-700"
         x-transition:enter-start="translate-y-5 opacity-0"
         x-transition:enter-end="translate-y-0 opacity-100"
     >
-        <h1 class="text-primary text-2xl font-bold md:text-4xl lg:text-6xl">PANDEV</h1>
-        <div class="mt-1 text-lg md:text-2xl lg:text-4xl">Unlock What's Possible</div>
-        <div class="mt-4 text-base italic tracking-wider md:text-xl lg:text-2xl">
-            Digital solutions, where ideas becomes reality
+        <span class="text-primary bg-primary/10 inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold tracking-widest uppercase">
+            <x-lucide name="sparkles" class="size-4" />
+            Software Development Agency
+        </span>
+
+        <h1 class="text-primary mt-6 text-2xl font-bold md:text-4xl lg:text-6xl">PANDEV</h1>
+        <div class="mt-1 text-lg font-medium md:text-2xl lg:text-4xl">From bold ideas to reliable software</div>
+        <p class="text-muted-foreground mx-auto mt-4 max-w-2xl text-balance text-base md:text-xl">
+            We design, build, and scale web, mobile, desktop, IoT, and data products
+            that help startups and growing businesses move forward.
+        </p>
+
+        <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
+            <x-ui.button size="lg" href="{{ route('contact') }}" class="h-12 px-8">
+                Start a Project
+                <x-lucide name="arrow-right" />
+            </x-ui.button>
+            <x-ui.button size="lg" variant="outline" href="{{ route('portfolio') }}" class="h-12 px-8">
+                View Our Work
+            </x-ui.button>
+        </div>
+
+        <div class="text-muted-foreground mt-8 flex flex-wrap items-center justify-center gap-x-8 gap-y-2 text-sm">
+            <span class="inline-flex items-center gap-2">
+                <x-lucide name="badge-check" class="text-primary size-4" /> 25+ projects shipped
+            </span>
+            <span class="inline-flex items-center gap-2">
+                <x-lucide name="badge-check" class="text-primary size-4" /> End-to-end delivery
+            </span>
+            <span class="inline-flex items-center gap-2">
+                <x-lucide name="badge-check" class="text-primary size-4" /> Ongoing support
+            </span>
         </div>
     </div>
 

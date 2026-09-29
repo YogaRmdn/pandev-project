@@ -1,6 +1,9 @@
 import Alpine from 'alpinejs';
+import intersect from '@alpinejs/intersect';
 
 window.Alpine = Alpine;
+
+Alpine.plugin(intersect);
 
 Alpine.store('modals', {
     open: {},
@@ -60,6 +63,18 @@ Alpine.data('coverflow', (count, options = {}) => ({
     gap: options.gap ?? 0.05,
     loop: options.loop ?? true,
 
+    // Auto-advance: the ring keeps moving on its own until the reader hovers,
+    // focuses, tabs away, or presses pause.
+    autoplay: options.autoplay ?? true,
+    interval: options.interval ?? 3800,
+    paused: false,
+    hovering: false,
+    focused: false,
+    inView: false,
+    running: false,
+    _timer: null,
+    _visibility: null,
+
     init() {
         this.measure();
 
@@ -67,11 +82,85 @@ Alpine.data('coverflow', (count, options = {}) => ({
         this.observer.observe(this.$el);
 
         this.$watch('index', () => this.settle());
+
+        // Only advance while the carousel is actually on screen.
+        this.viewport = new IntersectionObserver(([entry]) => {
+            this.inView = entry.isIntersecting;
+            this.sync();
+        }, { threshold: 0.2 });
+        this.viewport.observe(this.$el);
+
+        this._visibility = () => this.sync();
+        document.addEventListener('visibilitychange', this._visibility);
+
+        this.sync();
+    },
+
+    destroy() {
+        this.observer?.disconnect();
+        this.viewport?.disconnect();
+        this.stop();
+
+        if (this._visibility) {
+            document.removeEventListener('visibilitychange', this._visibility);
+        }
     },
 
     measure() {
         const card = this.$el.querySelector('[data-cf-card]');
         this.width = card ? card.offsetWidth : 0;
+    },
+
+    get reducedMotion() {
+        return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    },
+
+    /** Everything that has to be true before the ring is allowed to move. */
+    get shouldRun() {
+        return this.autoplay
+            && !this.paused
+            && this.loop
+            && this.count > 1
+            && this.inView
+            && !this.hovering
+            && !this.focused
+            && !this.reducedMotion
+            && !document.hidden;
+    },
+
+    sync() {
+        const next = this.shouldRun;
+
+        if (next === this.running) {
+            return;
+        }
+
+        this.running = next;
+
+        if (next) {
+            this._timer = setInterval(() => this.nudge(1), this.interval);
+        } else {
+            this.stop();
+        }
+    },
+
+    stop() {
+        if (this._timer) {
+            clearInterval(this._timer);
+            this._timer = null;
+        }
+    },
+
+    /** Manual override for the play/pause control. */
+    toggle() {
+        this.paused = !this.paused;
+
+        if (this.paused) {
+            this.running = false;
+            this.stop();
+        } else {
+            this.sync();
+        }
     },
 
     get pitch() {

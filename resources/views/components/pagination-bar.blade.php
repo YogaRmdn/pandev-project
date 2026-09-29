@@ -25,9 +25,9 @@
 
         <nav role="navigation" aria-label="Pagination" class="flex items-center gap-1">
             @if ($paginator->onFirstPage())
-                <span class="text-muted-foreground pointer-events-none inline-flex h-9 items-center rounded-md border px-3 text-sm opacity-50">Sebelumnya</span>
+                <span class="text-muted-foreground pointer-events-none inline-flex h-9 items-center rounded-md border px-3 text-sm opacity-50">Previous</span>
             @else
-                <a href="{{ $paginator->previousPageUrl() }}" rel="prev" class="border hover:bg-accent hover:text-accent-foreground inline-flex h-9 items-center rounded-md px-3 text-sm">Sebelumnya</a>
+                <a href="{{ $paginator->previousPageUrl() }}" rel="prev" class="border hover:bg-accent hover:text-accent-foreground inline-flex h-9 items-center rounded-md px-3 text-sm">Previous</a>
             @endif
 
             @foreach ($paginator->getUrlRange(max(1, $paginator->currentPage() - 2), min($paginator->lastPage(), $paginator->currentPage() + 2)) as $page => $url)
@@ -42,9 +42,9 @@
             @endforeach
 
             @if ($paginator->hasMorePages())
-                <a href="{{ $paginator->nextPageUrl() }}" rel="next" class="border hover:bg-accent hover:text-accent-foreground inline-flex h-9 items-center rounded-md px-3 text-sm">Selanjutnya</a>
+                <a href="{{ $paginator->nextPageUrl() }}" rel="next" class="border hover:bg-accent hover:text-accent-foreground inline-flex h-9 items-center rounded-md px-3 text-sm">Next</a>
             @else
-                <span class="text-muted-foreground pointer-events-none inline-flex h-9 items-center rounded-md border px-3 text-sm opacity-50">Selanjutnya</span>
+                <span class="text-muted-foreground pointer-events-none inline-flex h-9 items-center rounded-md border px-3 text-sm opacity-50">Next</span>
             @endif
         </nav>
     </div>

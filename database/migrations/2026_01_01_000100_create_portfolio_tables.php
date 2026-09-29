@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('category')->index();
             $table->text('description');
             $table->string('demo_link')->nullable();
-            $table->string('repository_link');
+            $table->string('repository_link')->nullable();
             $table->string('status')->default(PortfolioStatus::DRAFT->value)->index();
             $table->json('tech_stacks')->nullable();
             $table->foreignId('created_by')->constrained('users')->cascadeOnDelete();

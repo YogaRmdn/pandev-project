@@ -7,7 +7,7 @@
 
     <title>@yield('title', config('app.name'))</title>
 
-    <meta name="description" content="@yield('description', 'PanDev adalah penyedia jasa IT profesional di Indonesia yang menawarkan solusi aplikasi maupun kebutuhan digital lainnya.')">
+    <meta name="description" content="@yield('description', 'PanDev is a professional software development agency in Indonesia. We design, build, and scale web, mobile, desktop, IoT, and data products for startups and growing businesses.')">
 
     <link rel="icon" href="{{ asset('assets/common/logo.png') }}">
 

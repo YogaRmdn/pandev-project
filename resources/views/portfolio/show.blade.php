@@ -7,7 +7,7 @@
 @section('content')
     <main class="mx-auto w-full max-w-6xl flex-1 px-4 py-8">
         <a href="{{ route('portfolio.index') }}" class="text-muted-foreground hover:text-foreground mb-4 inline-flex items-center gap-1 text-sm">
-            <x-lucide name="chevron-left" /> Kembali ke daftar portfolio
+            <x-lucide name="chevron-left" /> Back to all projects
         </a>
 
         @php
@@ -44,7 +44,7 @@
                                 x-on:click="index = index === 0 ? {{ $images->count() - 1 }} : index - 1"
                                 x-bind:class="hovered ? 'opacity-100' : 'opacity-0'"
                                 class="absolute top-1/2 left-2 rounded-full bg-black/50 text-white transition-opacity hover:bg-black/70"
-                                aria-label="Gambar sebelumnya"
+                                aria-label="Previous image"
                             >
                                 <x-lucide name="chevron-left" class="size-5" />
                             </x-ui.button>
@@ -56,7 +56,7 @@
                                 x-on:click="index = index === {{ $images->count() - 1 }} ? 0 : index + 1"
                                 x-bind:class="hovered ? 'opacity-100' : 'opacity-0'"
                                 class="absolute top-1/2 right-2 rounded-full bg-black/50 text-white transition-opacity hover:bg-black/70"
-                                aria-label="Gambar berikutnya"
+                                aria-label="Next image"
                             >
                                 <x-lucide name="chevron-right" class="size-5" />
                             </x-ui.button>
@@ -84,14 +84,16 @@
                 @endif
             </div>
 
-            <x-ui.card class="h-fit w-full lg:w-1/3">
+            <x-ui.card class="h-fit w-full gap-0 lg:w-1/3">
                 <x-ui.card-header>
                     <div>
-                        <h1 class="text-2xl font-bold">{{ $portfolio->name }}</h1>
-                        <div class="mt-2 flex items-center gap-2">
-                            <span class="bg-primary/10 text-primary rounded-full px-2 py-1 text-sm font-medium">{{ $portfolio->category }}</span>
+                        <h1 class="font-heading text-2xl font-bold tracking-tight">{{ $portfolio->name }}</h1>
+                        <div class="mt-3 flex flex-wrap items-center gap-2">
+                            <span class="inline-flex items-center gap-1 rounded-full bg-sky-500/15 px-2.5 py-1 text-xs font-medium text-sky-700">
+                                <x-lucide name="tag" class="size-3" /> {{ $portfolio->category }}
+                            </span>
                             @if ($portfolio->status === \App\Enums\PortfolioStatus::DRAFT)
-                                <x-ui.badge class="bg-muted text-muted-foreground">Draft</x-ui.badge>
+                                <x-ui.badge class="bg-amber-500/15 text-amber-700">Draft</x-ui.badge>
                             @endif
                         </div>
                     </div>
@@ -122,7 +124,7 @@
 
                             @if ($demoLink)
                                 <x-ui.button href="{{ $demoLink }}" target="_blank" rel="noopener noreferrer">
-                                    <x-lucide name="external-link" class="mr-2" /> Lihat Demo
+                                    <x-lucide name="external-link" class="mr-2" /> Live Demo
                                 </x-ui.button>
                             @endif
 

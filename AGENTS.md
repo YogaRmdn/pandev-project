@@ -8,10 +8,10 @@ PanDev — website software agency Indonesia. Aplikasi ini murni Laravel (12.x) 
 
 ```bash
 php artisan serve          # Dev server (default http://localhost:8000)
-php artisan test           # Test suite (Pest-style via PHPUnit; 41+ tests)
+php artisan test           # Test suite (PHPUnit; 51+ tests)
 php artisan migrate:fresh --seed   # Rebuild & seed database (pandev_db / MySQL)
 npm run build              # Build aset Vite + Tailwind
-composer run pint          # PHP Code Style Fixer (Laravel Pint)
+vendor/bin/pint            # PHP Code Style Fixer (Laravel Pint)
 ```
 
 ## Structure

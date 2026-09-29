@@ -1,6 +1,6 @@
-@extends('layouts.app')
+@extends('layouts.guest')
 
-@section('title', 'PanDev | Login')
+@section('title', 'Login | PanDev')
 
 @section('content')
     <div class="grid min-h-svh lg:grid-cols-2">
@@ -22,7 +22,7 @@
                         <div class="flex flex-col items-center gap-1 text-center">
                             <h1 class="text-2xl font-bold">Login</h1>
                             <p class="text-muted-foreground text-sm text-balance">
-                                Masukkan email Anda untuk login ke akun Anda
+                                Enter your email and password to access your account
                             </p>
                         </div>
 
@@ -63,7 +63,7 @@
                                     type="button"
                                     x-on:click="show = !show"
                                     class="absolute top-0 right-0 flex h-full items-center px-3 transition-colors hover:bg-transparent"
-                                    aria-label="Tampilkan password"
+                                    aria-label="Toggle password visibility"
                                 >
                                     <x-lucide name="eye" x-show="!show" class="text-muted-foreground size-4" />
                                     <x-lucide name="eye-off" x-show="show" x-cloak class="text-muted-foreground size-4" />
@@ -88,8 +88,8 @@
                 alt="PanDev"
                 class="object-contain dark:grayscale dark:brightness-[0.2]"
             />
-            <div class="text-primary text-2xl font-bold">Unlock What's Possible</div>
-            <div class="italic">Digital solutions, where ideas becomes reality</div>
+            <div class="text-primary text-2xl font-bold">From bold ideas to reliable software</div>
+            <div class="italic">We build it, you run it</div>
         </div>
     </div>
 @endsection

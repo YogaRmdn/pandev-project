@@ -19,11 +19,15 @@ Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/layanan', [PageController::class, 'services'])->name('services');
 Route::get('/tentang', [PageController::class, 'about'])->name('about');
 Route::get('/kontak', [PageController::class, 'contact'])->name('contact');
-Route::post('/kontak', [PageController::class, 'submitContact'])->name('contact.submit');
+Route::post('/kontak', [PageController::class, 'submitContact'])
+    ->middleware('throttle:6,1')
+    ->name('contact.submit');
 
 Route::get('/portfolio', [PageController::class, 'portfolio'])->name('portfolio');
 Route::get('/portfolio/list', [PortfolioController::class, 'index'])->name('portfolio.index');
 Route::get('/portfolio/{uuid}', [PortfolioController::class, 'show'])->name('portfolio.show');
+
+Route::get('/buy-ebook', [PageController::class, 'buyEbook'])->name('buy-ebook');
 
 /*
 |--------------------------------------------------------------------------

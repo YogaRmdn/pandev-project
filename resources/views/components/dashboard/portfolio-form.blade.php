@@ -223,7 +223,7 @@
             </label>
 
             @if ($existingGallery->isNotEmpty())
-                <div class="mt-4 grid grid-cols-3 gap-2">
+                <div class="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-6">
                     @foreach ($existingGallery as $image)
                         <div class="group relative aspect-square overflow-hidden rounded-lg" x-show="!removeGallery.includes(@js($image->image_url))">
                             <img src="{{ $image->image_url }}" alt="Galeri" loading="lazy" class="h-full w-full object-cover" />

@@ -14,8 +14,8 @@
 
     <x-ui.dialog
         name="portfolio-filter"
-        title="Filter Portfolio"
-        description="Pilih kategori untuk mengfilter portfolio."
+        title="Filter Projects"
+        description="Select categories to filter the projects."
     >
         <form method="GET" class="grid gap-4">
             @foreach (request()->except(['category', 'page']) as $key => $value)
@@ -29,7 +29,7 @@
             @endforeach
 
             <fieldset class="space-y-3">
-                <legend class="mb-2 text-sm font-medium">Kategori</legend>
+                <legend class="mb-2 text-sm font-medium">Category</legend>
                 <div class="flex flex-wrap gap-2">
                     @foreach ($categories as $category)
                         <label class="cursor-pointer">
@@ -49,8 +49,8 @@
             </fieldset>
 
             <div class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-                <x-ui.button type="button" variant="outline" x-on:click="$store.modals.close('portfolio-filter')">Batal</x-ui.button>
-                <x-ui.button type="submit">Terapkan filter</x-ui.button>
+                <x-ui.button type="button" variant="outline" x-on:click="$store.modals.close('portfolio-filter')">Cancel</x-ui.button>
+                <x-ui.button type="submit">Apply filters</x-ui.button>
             </div>
         </form>
     </x-ui.dialog>

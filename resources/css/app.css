@@ -71,8 +71,21 @@
         }
     }
 
+    /* Idle "napas" untuk panggung coverflow. Pakai properti `translate`, bukan
+       `transform`, supaya tidak bentrok dengan transform 3D tiap kartu. */
+    @keyframes coverflow-drift {
+        0%,
+        100% {
+            translate: 0 0;
+        }
+        50% {
+            translate: 0 -7px;
+        }
+    }
+
     --animate-marquee: marquee 30s linear infinite;
     --animate-float: float 3s ease-in-out infinite;
+    --animate-coverflow-drift: coverflow-drift 7s ease-in-out infinite;
 }
 
 :root {
@@ -187,4 +200,328 @@
 
 [x-cloak] {
     display: none !important;
+}
+
+.orbit-spin {
+    animation: orbit-spin var(--orbit-duration, 48s) linear infinite;
+}
+
+.orbit-item {
+    translate: -50% -50%;
+    animation: orbit-counter var(--orbit-duration, 48s) linear infinite;
+}
+
+.orbit-icon {
+    width: clamp(36px, 8vw, 72px);
+    height: clamp(36px, 8vw, 72px);
+}
+
+.orbit-ring {
+    animation: orbit-spin calc(var(--orbit-duration, 48s) * -3) linear infinite;
+}
+
+.orbit:has(.orbit-item:hover) .orbit-spin,
+.orbit:has(.orbit-item:hover) .orbit-item,
+.orbit:has(.orbit-item:hover) .orbit-ring {
+    animation-play-state: paused;
+}
+
+.orbit-tip {
+    position: absolute;
+    left: 50%;
+    top: 100%;
+    margin-top: 0.5rem;
+    translate: -50% 4px;
+    opacity: 0;
+    white-space: nowrap;
+    pointer-events: none;
+    transition:
+        opacity 200ms ease,
+        translate 200ms ease;
+}
+
+.orbit-item:hover .orbit-tip {
+    translate: -50% 0;
+    opacity: 1;
+}
+
+@keyframes orbit-spin {
+    from {
+        rotate: 0deg;
+    }
+
+    to {
+        rotate: 360deg;
+    }
+}
+
+@keyframes orbit-counter {
+    from {
+        rotate: -360deg;
+    }
+
+    to {
+        rotate: 0deg;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .orbit-spin,
+    .orbit-item,
+    .orbit-ring {
+        animation: none;
+    }
+}
+
+@media (max-width: 639px) {
+    .orbit {
+        --orbit-duration: 64s;
+    }
+}
+
+/*
+|--------------------------------------------------------------------------
+| Navigation
+|--------------------------------------------------------------------------
+| Rebuilds the "Book Shop" (Codevz) header: a white panel with a single large
+| rounded corner floating over a tinted band, bold menu items separated by
+| hairlines, an accent block that wipes down from the top on hover, and a pill
+| call-to-action that darkens instead of changing hue.
+*/
+
+.nav-shell {
+    background-image: linear-gradient(
+        to bottom,
+        color-mix(in oklab, var(--muted) 90%, var(--primary) 10%),
+        color-mix(in oklab, var(--background) 0%, transparent)
+    );
+}
+
+.nav-panel {
+    /* Multi-stop + oversized canvas: alternating background-position makes the
+       sheen travel across the panel instead of the whole panel pulsing in
+       unison, which is what read as "kaku" before. */
+    background-image: linear-gradient(
+        110deg,
+        color-mix(in oklab, var(--background) 96%, var(--primary)) 0%,
+        color-mix(in oklab, var(--background) 84%, var(--primary)) 22%,
+        color-mix(in oklab, var(--background) 97%, var(--primary)) 44%,
+        color-mix(in oklab, var(--background) 82%, var(--primary)) 66%,
+        color-mix(in oklab, var(--background) 95%, var(--primary)) 88%,
+        color-mix(in oklab, var(--background) 96%, var(--primary)) 100%
+    );
+    background-size: 220% 100%;
+    background-position: 0% 50%;
+    border-bottom-right-radius: 70px;
+    box-shadow: 0 13px 26px 0 rgb(12 12 12 / 0.06);
+    transition: box-shadow 300ms ease;
+    animation: nav-gradient-drift 24s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
+}
+
+@keyframes nav-gradient-drift {
+    from {
+        background-position: 0% 50%;
+    }
+
+    to {
+        background-position: 100% 50%;
+    }
+}
+
+.is-scrolled .nav-panel {
+    box-shadow: 0 7px 19px rgb(0 0 0 / 0.07);
+}
+
+.nav-pill {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    padding-inline: 1.25rem;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--muted-foreground);
+    /* The colour switch is delayed so the label never turns white on the
+       still-white panel while the accent block is still wiping in. */
+    transition: color 200ms ease 150ms;
+}
+
+.nav-pill::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset-inline-start: -0.5rem;
+    bottom: 0;
+    width: calc(100% + 1rem);
+    height: 100%;
+    border-radius: 10px 10px 0 0;
+    background-color: var(--primary);
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 300ms cubic-bezier(0.9, 0.05, 0.1, 1);
+}
+
+.nav-pill:hover,
+.nav-pill:focus-visible,
+.nav-pill[aria-current='page'] {
+    color: var(--primary-foreground);
+}
+
+.nav-pill:hover::before,
+.nav-pill:focus-visible::before,
+.nav-pill[aria-current='page']::before {
+    transform: scaleY(1);
+    transform-origin: bottom;
+}
+
+.nav-sep {
+    color: color-mix(in oklab, var(--foreground) 14%, transparent);
+    user-select: none;
+}
+
+/* Menu desktop_absolute- di tengah viewport. Di rentang lg (1024px) sampai
+   sebelum xl (1280px) labels + padding exceeded ruang antara logo dan ikon
+   sosial, jadi jaraknya dipadatkan. */
+@media (min-width: 64rem) and (max-width: 79.999rem) {
+    .nav-pill {
+        padding-inline: 0.75rem;
+        font-size: 0.9375rem;
+    }
+
+    .nav-sep {
+        padding-inline: 0.125rem;
+    }
+}
+
+.btn-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border: 1px solid transparent;
+    border-radius: 9999px;
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+    padding: 0.75rem 1.875rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    white-space: nowrap;
+    transition:
+        background-color 200ms ease-in-out,
+        color 200ms ease-in-out;
+}
+
+.btn-pill:hover {
+    background-color: var(--foreground);
+    color: var(--background);
+}
+
+.icon-circle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1px solid color-mix(in oklab, var(--foreground) 12%, transparent);
+    border-radius: 9999px;
+    background-color: transparent;
+    transition:
+        background-color 200ms ease,
+        border-color 200ms ease;
+}
+
+.icon-circle:hover {
+    background-color: var(--accent);
+}
+
+.nav-offcanvas {
+    position: fixed;
+    inset-block: 0;
+    right: 0;
+    width: 400px;
+    max-width: 85%;
+    /* Kolom flex supaya blok social di kaki (mt-auto) terdorong ke bawah di
+       layar tinggi, namun tetap mengalir normal saat layar pendek. */
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    z-index: 9999;
+    background-color: var(--background);
+    padding: 1.875rem;
+    box-shadow: -5px 0 20px rgb(0 0 0 / 0.12);
+    visibility: hidden;
+    transform: translateX(120%);
+    /* Visibility flips discretely *after* the slide-out finishes, so the drawer
+       can never contribute scrollable overflow or swallow clicks while closed. */
+    transition:
+        transform 700ms cubic-bezier(0.9, 0.05, 0.1, 1),
+        visibility 0s linear 700ms;
+}
+
+.nav-offcanvas::-webkit-scrollbar {
+    display: none;
+}
+
+.nav-offcanvas {
+    scrollbar-width: none;
+}
+
+.nav-offcanvas.is-open {
+    visibility: visible;
+    transform: translateX(0);
+    transition:
+        transform 700ms cubic-bezier(0.9, 0.05, 0.1, 1),
+        visibility 0s;
+}
+
+.nav-offcanvas-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    width: 100%;
+    padding: 0.875rem 0.25rem;
+    border-bottom: 1px solid color-mix(in oklab, var(--foreground) 10%, transparent);
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--foreground);
+    text-align: start;
+    transition: color 200ms ease, padding-inline-start 200ms ease;
+}
+
+.nav-offcanvas-item:hover,
+.nav-offcanvas-item[aria-current='page'] {
+    color: var(--primary);
+    padding-inline-start: 0.75rem;
+}
+
+/* Coverflow. Hover ikut作用于 gambar di dalam kartu, bukan kartunya:
+   `transform` kartu dipakai JS untuk posisi 3D, jadi hover di elemen
+   kartunya sendiri akan menimpa posisi itu. */
+[data-cf-card] img {
+    transition: transform 400ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+[data-cf-card]:hover img {
+    transform: scale(1.08);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .nav-panel {
+        animation: none;
+        background-position: 0% 50%;
+    }
+
+    .nav-offcanvas,
+    .nav-offcanvas.is-open {
+        transition: none;
+    }
+
+    .nav-pill::before {
+        transition: none;
+    }
+
+    [data-cf-card] img {
+        transition: none;
+    }
 }
