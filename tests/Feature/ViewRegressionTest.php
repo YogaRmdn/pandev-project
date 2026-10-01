@@ -17,6 +17,54 @@ class ViewRegressionTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function test_public_pages_offer_a_fixed_whatsapp_button(): void
+    {
+        // Diset eksplisit, bukan ikut .env, supaya test tidak bergantung pada
+        // isi .env mesin. Formatnya sengaja kotor (+, spasi, tanda hubung)
+        // karena wa.me hanya mau digit: 6287899298190.
+        config(['services.whatsapp.number' => '+62 878-9929-8190']);
+
+        foreach (['home', 'services', 'about', 'contact', 'portfolio', 'buy-ebook'] as $route) {
+            $content = $this->get(route($route))->getContent();
+
+            // `fixed` + z-40: tombolnya harus menempel di pojok kanan bawah
+            // dan tetap di atas konten halaman. z-40 dipilih di bawah navbar
+            // (z-50) dan nav-offcanvas (9999) supaya keduanya masih menutupi.
+            $this->assertStringContainsString('fixed end-4 bottom-4 z-40', $content, $route);
+
+            $this->assertStringContainsString('https://wa.me/6287899298190?text=', $content, $route);
+            $this->assertStringContainsString('rel="noopener noreferrer"', $content, $route);
+            $this->assertStringContainsString('aria-label="Hubungi PanDev lewat WhatsApp"', $content, $route);
+
+            // Glyph-nya inline dengan fill=currentColor supaya warnanya ikut
+            // primary site, bukan hijau WhatsApp (Lucide tidak punya brand glyph).
+            $this->assertStringContainsString('viewBox="0 0 24 24" fill="currentColor"', $content, $route);
+            $this->assertStringContainsString(SiteContent::whatsappPath(), $content, $route);
+        }
+    }
+
+    public function test_whatsapp_button_disappears_without_a_number(): void
+    {
+        config(['services.whatsapp.number' => null]);
+
+        // Nomor kosong harus menyembunyikan tombolnya, bukan link ke wa.me
+        // yang tidak ada tujuannya — pola yang sama seperti WEB3FORMS_ACCESS_KEY.
+        $this->get(route('home'))
+            ->assertOk()
+            ->assertDontSee('wa.me', escape: false);
+    }
+
+    public function test_whatsapp_button_stays_out_of_the_dashboard(): void
+    {
+        $admin = User::factory()->admin()->create();
+
+        // Tombol ini untuk pengunjung, bukan untuk user yang sudah login.
+        $this->actingAs($admin)
+            ->get(route('dashboard'))
+            ->assertOk()
+            ->assertDontSee('wa.me', escape: false);
+    }
+
     public function test_login_screen_renders_the_actual_form(): void
     {
         $response = $this->get(route('login'));
@@ -51,6 +99,46 @@ class ViewRegressionTest extends TestCase
             // e() karena Blade meng-escape output (mis. "Launch & Support").
             $this->assertStringContainsString(e($step['title']), $content);
             $this->assertStringContainsString($step['step'], $content);
+        }
+    }
+
+    public function test_buy_ebook_cards_reserve_room_for_the_cover(): void
+    {
+        $content = $this->get(route('buy-ebook'))->getContent();
+
+        // Cover full-bleed: padding dititipkan ke px/py (menang atas p-6) dan
+        // kartu dibungkus satu anak flex supaya gap-6 base tidak berlaku.
+        $this->assertStringContainsString('h-full overflow-hidden px-0 py-0', $content);
+        $this->assertStringContainsString('flex flex-1 flex-col gap-6 p-6', $content);
+        $this->assertStringContainsString('aspect-[3/4]', $content);
+
+        // Footer harga harus kolom tunggal yang tidak bisa wrap: `.btn-pill` punya
+        // white-space:nowrap (133px) dan blok harga terpanjang 191px, jadi
+        // side-by-side butuh 324px sementara inner card di grid `sm` cuma
+        // 246px — tombol sempat jatuh ke baris kedua dan posisinya bergeser
+        // antar card.
+        $this->assertStringContainsString('flex flex-1 flex-col justify-end', $content);
+        $this->assertStringContainsString('flex flex-col gap-4 border-t pt-5', $content);
+        $this->assertStringContainsString('btn-pill w-full shrink-0', $content);
+        $this->assertStringNotContainsString('flex-wrap items-end justify-between', $content);
+
+        // Garis pembatas harus menempel pada div yang melekat pada isi footer,
+        // bukan pada wrapper flex-1 yang melar — kalau tidak, garisnya ikut
+        // bergeser mengikuti tinggi daftar topik tiap judul.
+        $this->assertStringNotContainsString('flex-1 flex-col justify-end gap-4 border-t', $content);
+        $this->assertStringNotContainsString('border-t pt-5 mt-6 flex flex-1', $content);
+
+        foreach (SiteContent::ebooks() as $ebook) {
+            // Cover yang filenya belum ada harus jatuh ke badge ikon, bukan
+            // <img> kosong. Cek ini per-title supaya tiap kartu ikut tercover.
+            $cover = $ebook['cover'] ?? null;
+
+            if (filled($cover) && is_file(public_path(ltrim($cover, '/')))) {
+                $this->assertStringContainsString(e(asset($cover)), $content);
+                $this->assertStringContainsString('Sampul '.e($ebook['title']), $content);
+            } else {
+                $this->assertStringNotContainsString(e(asset((string) $cover)), $content);
+            }
         }
     }
 

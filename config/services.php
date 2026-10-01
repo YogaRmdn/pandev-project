@@ -39,6 +39,15 @@ return [
         'access_key' => env('WEB3FORMS_ACCESS_KEY'),
     ],
 
+    /*
+     * Nomor untuk tombol WhatsApp mengambang. Format internasional tanpa "+",
+     * spasi, dan tanda hubung (contoh: 628xxxxxxxxx) karena itu yang dipakai
+     * wa.me. Kalau kosong, tombolnya tidak dirender sama sekali.
+     */
+    'whatsapp' => [
+        'number' => env('WHATSAPP_NUMBER'),
+    ],
+
     'cloudinary' => [
         'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
         'api_key' => env('CLOUDINARY_API_KEY'),
