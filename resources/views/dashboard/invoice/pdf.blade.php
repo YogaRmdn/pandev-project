@@ -50,7 +50,7 @@
 </head>
 <body>
     <div class="header">
-        <img src="{{ asset('assets/common/logo.png') }}" alt="PanDev">
+        <img src="{{ asset('assets/common/logo-mark.png') }}" alt="PanDev">
         <div>
             <div class="brand">PanDev</div>
             <div class="tagline">Digital Agency</div>

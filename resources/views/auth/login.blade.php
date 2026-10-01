@@ -7,9 +7,7 @@
         <div class="flex flex-col gap-4 p-6 md:p-10">
             <div class="flex justify-center gap-2 md:justify-start">
                 <a href="{{ route('home') }}" class="flex items-center gap-2 font-medium">
-                    <span class="text-primary-foreground flex size-6 items-center justify-center overflow-hidden rounded-md">
-                        <img src="{{ asset('assets/common/logo.png') }}" width="30" height="30" alt="PanDev Logo" class="size-full object-contain" />
-                    </span>
+                    <img src="{{ asset('assets/common/logo-mark.png') }}" width="24" height="24" alt="PanDev Logo" class="size-6 object-contain" />
                     PanDev
                 </a>
             </div>
@@ -82,7 +80,7 @@
 
         <div class="bg-muted hidden items-center justify-center lg:flex lg:flex-col">
             <img
-                src="{{ asset('assets/common/logo.png') }}"
+                src="{{ asset('assets/common/logo-mark.png') }}"
                 width="200"
                 height="200"
                 alt="PanDev"

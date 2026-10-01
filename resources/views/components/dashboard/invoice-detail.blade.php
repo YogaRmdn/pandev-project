@@ -5,7 +5,7 @@
 <x-ui.dialog :name="$name" width="sm:max-w-2xl">
     <div class="space-y-4">
         <div class="flex items-center gap-3">
-            <img src="{{ asset('assets/common/logo.png') }}" alt="PanDev" width="50" height="50" class="size-12 object-contain" />
+            <img src="{{ asset('assets/common/logo-mark.png') }}" alt="PanDev" width="48" height="48" class="size-12 object-contain" />
             <div>
                 <h2 class="text-primary text-lg font-bold">Pandev</h2>
                 <p class="text-muted-foreground text-sm">Digital Agency Indonesia</p>

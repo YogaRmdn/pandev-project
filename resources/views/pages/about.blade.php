@@ -9,7 +9,7 @@
         <section class="mx-auto flex w-full max-w-6xl flex-col items-center gap-10 px-4 pt-16 pb-4 sm:flex-row sm:items-center sm:justify-between">
             <span class="bg-card flex size-40 shrink-0 items-center justify-center overflow-hidden rounded-2xl border shadow-sm sm:size-44">
                 <img
-                    src="{{ asset('assets/common/logo.png') }}"
+                    src="{{ asset('assets/common/logo-mark.png') }}"
                     width="300"
                     height="300"
                     alt="PanDev Logo"

@@ -3,9 +3,9 @@
         <div class="grid grid-cols-1 gap-10 border-b border-white/10 pb-14 sm:grid-cols-2 lg:grid-cols-4">
             <div>
                 <a href="{{ route('home') }}" class="flex items-center gap-2.5">
-                    <span class="bg-primary text-primary-foreground inline-flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-full">
-                        <img src="{{ asset('assets/common/logo.png') }}" width="50" height="50" alt="PanDev Logo" class="size-full object-contain" />
-                    </span>
+                    {{-- Footer gelap, jadi pakai varian light (logo-mark-light.png):
+                         mark aslinya gelap dan akan hilang di atas bg-black. --}}
+                    <img src="{{ asset('assets/common/logo-mark-light.png') }}" width="36" height="36" alt="PanDev Logo" class="size-9 shrink-0 object-contain" />
                     <span class="font-heading text-lg font-bold tracking-tight">PANDEV</span>
                 </a>
                 <p class="mt-4 text-sm leading-relaxed text-white/70">
