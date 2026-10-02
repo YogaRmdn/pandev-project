@@ -6,4 +6,6 @@
     @yield('content')
 
     <x-footer />
+
+    <x-whatsapp-fab />
 @endsection

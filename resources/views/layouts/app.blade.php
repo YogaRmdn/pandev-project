@@ -9,7 +9,7 @@
 
     <meta name="description" content="@yield('description', 'PanDev is a professional software development agency in Indonesia. We design, build, and scale web, mobile, desktop, IoT, and data products for startups and growing businesses.')">
 
-    <link rel="icon" href="{{ asset('assets/common/logo.png') }}">
+    <link rel="icon" href="{{ asset('assets/common/logo-mark.png') }}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

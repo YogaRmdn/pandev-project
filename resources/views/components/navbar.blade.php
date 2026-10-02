@@ -23,16 +23,19 @@
                     class="my-5 flex shrink-0 items-center gap-2.5 font-heading text-lg font-bold tracking-tight"
                     aria-label="PanDev - Beranda"
                 >
-                    <span class="bg-primary text-primary-content inline-flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full">
-                        <img
-                            src="{{ asset('assets/common/logo.png') }}"
-                            width="50"
-                            height="50"
-                            alt="PanDev Logo"
-                            class="size-full object-contain"
-                        />
-                    </span>
-                    <span class="text-base-content">PANDEV</span>
+                    {{-- Logo memakai file khusus (logo-mark.png) yang sudah
+                         transparent + tight-crop, jadi tidak perlu lingkaran
+                         bg-primary: monogramnya sendiri gelap dan kalau ditaruh
+                         di atas lingkaran dark cyan mark-nya hilang, yang terlihat
+                         cuma bulatan hijau kebiruan. --}}
+                    <img
+                        src="{{ asset('assets/common/logo-mark.png') }}"
+                        width="32"
+                        height="32"
+                        alt="PanDev Logo"
+                        class="size-8 shrink-0 object-contain"
+                    />
+                    <span class="text-foreground">PANDEV</span>
                 </a>
             </div>
         </div>
@@ -145,8 +148,7 @@
     >
         <div class="flex items-center justify-between">
             <span class="font-heading flex items-center gap-2.5 text-lg font-bold tracking-tight">
-                <span class="bg-primary text-primary-content inline-flex size-8 items-center justify-center overflow-hidden rounded-full">
-                    <img src="{{ asset('assets/common/logo.png') }}" width="50" height="50" alt="PanDev Logo" class="size-full object-contain" />
+                <img src="{{ asset('assets/common/logo-mark.png') }}" width="32" height="32" alt="PanDev Logo" class="size-8 shrink-0 object-contain" />
                 </span>
                 <span class="text-base-content">PANDEV</span>
             </span>
