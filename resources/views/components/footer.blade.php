@@ -3,7 +3,7 @@
         <div class="grid grid-cols-1 gap-10 border-b border-white/10 pb-14 sm:grid-cols-2 lg:grid-cols-4">
             <div>
                 <a href="{{ route('home') }}" class="flex items-center gap-2.5">
-                    <span class="bg-primary text-primary-foreground inline-flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-full">
+                    <span class="bg-primary text-primary-content inline-flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-full">
                         <img src="{{ asset('assets/common/logo.png') }}" width="50" height="50" alt="PanDev Logo" class="size-full object-contain" />
                     </span>
                     <span class="font-heading text-lg font-bold tracking-tight">PANDEV</span>

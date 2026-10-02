@@ -31,7 +31,7 @@
         class="flex h-16 items-center gap-2 border-b px-2"
         aria-label="PanDev"
     >
-        <div class="bg-primary text-primary-foreground flex aspect-square size-8 shrink-0 items-center justify-center rounded-lg">
+        <div class="bg-primary text-primary-content flex aspect-square size-8 shrink-0 items-center justify-center rounded-lg">
             <img src="{{ asset('assets/common/logo.png') }}" alt="PanDev Logo" width="30" height="30" class="size-7 object-contain" />
         </div>
         <span
@@ -81,7 +81,7 @@
             class="flex h-16 items-center gap-2 border-b px-2"
             aria-label="PanDev"
         >
-            <div class="bg-primary text-primary-foreground flex aspect-square size-8 shrink-0 items-center justify-center rounded-lg">
+            <div class="bg-primary text-primary-content flex aspect-square size-8 shrink-0 items-center justify-center rounded-lg">
                 <img src="{{ asset('assets/common/logo.png') }}" alt="PanDev Logo" width="30" height="30" class="size-7 object-contain" />
             </div>
             <span class="truncate font-semibold">PanDev</span>

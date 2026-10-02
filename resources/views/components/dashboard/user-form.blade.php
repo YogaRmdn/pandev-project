@@ -10,42 +10,33 @@
     @endif
 
     <div class="space-y-2">
-        <x-ui.label for="fullname">Nama Lengkap</x-ui.label>
-        <x-ui.input
-            id="fullname"
-            name="fullname"
-            value="{{ old('fullname', $user?->fullname) }}"
-            placeholder="Nama lengkap..."
-            required
-        />
-        <x-ui.input-error :messages="$errors->get('fullname')" />
+        <label class="label text-sm font-medium" for="fullname">Nama Lengkap</label>
+        <input class="input w-full" id="fullname" name="fullname" value="{{ old('fullname', $user?->fullname) }}" placeholder="Nama lengkap..." required>
+                @if ($errors->get('fullname'))
+            <ul class="text-error space-y-1 text-sm">
+                @foreach ($errors->get('fullname') as $message)
+                    <li>{{ $message }}</li>
+                @endforeach
+            </ul>
+        @endif
     </div>
 
     <div class="space-y-2">
-        <x-ui.label for="email">Email</x-ui.label>
-        <x-ui.input
-            id="email"
-            type="email"
-            name="email"
-            value="{{ old('email', $user?->email) }}"
-            placeholder="email@example.com"
-            required
-        />
-        <x-ui.input-error :messages="$errors->get('email')" />
+        <label class="label text-sm font-medium" for="email">Email</label>
+        <input class="input w-full" id="email" type="email" name="email" value="{{ old('email', $user?->email) }}" placeholder="email@example.com" required>
+                @if ($errors->get('email'))
+            <ul class="text-error space-y-1 text-sm">
+                @foreach ($errors->get('email') as $message)
+                    <li>{{ $message }}</li>
+                @endforeach
+            </ul>
+        @endif
     </div>
 
     <div class="space-y-2">
-        <x-ui.label for="password">Password</x-ui.label>
+        <label class="label text-sm font-medium" for="password">Password</label>
         <div class="relative" x-data="{ show: false }">
-            <x-ui.input
-                id="password"
-                x-bind:type="show ? 'text' : 'password'"
-                name="password"
-                value=""
-                placeholder="Minimal 8 karakter"
-                x-bind:required="!{{ $isEdit ? 'true' : 'false' }}"
-                class="pr-10"
-            />
+            <input class="input w-full pr-10" id="password" x-bind:type="show ? 'text' : 'password'" name="password" value="" placeholder="Minimal 8 karakter" x-bind:required="!{{ $isEdit ? 'true' : 'false' }}">
             <button
                 type="button"
                 x-on:click="show = !show"
@@ -57,28 +48,40 @@
             </button>
         </div>
         @if ($isEdit)
-            <p class="text-muted-foreground text-xs">Kosongkan password jika tidak ingin diubah.</p>
+            <p class="text-base-content/60 text-xs">Kosongkan password jika tidak ingin diubah.</p>
         @endif
-        <x-ui.input-error :messages="$errors->get('password')" />
+                @if ($errors->get('password'))
+            <ul class="text-error space-y-1 text-sm">
+                @foreach ($errors->get('password') as $message)
+                    <li>{{ $message }}</li>
+                @endforeach
+            </ul>
+        @endif
     </div>
 
     <div class="space-y-2">
-        <x-ui.label for="role">Role</x-ui.label>
-        <x-ui.select id="role" name="role" required>
+        <label class="label text-sm font-medium" for="role">Role</label>
+        <select class="select w-full" id="role" name="role" required>
             <option value="">Pilih role</option>
             @foreach ($roles as $role)
                 <option value="{{ $role->value }}" @selected(old('role', $user->role?->value ?? 'USER') === $role->value)>
                     {{ $role->value }}
                 </option>
             @endforeach
-        </x-ui.select>
-        <x-ui.input-error :messages="$errors->get('role')" />
+        </select>
+                @if ($errors->get('role'))
+            <ul class="text-error space-y-1 text-sm">
+                @foreach ($errors->get('role') as $message)
+                    <li>{{ $message }}</li>
+                @endforeach
+            </ul>
+        @endif
     </div>
 
     <div class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-        <x-ui.button type="button" variant="outline" x-on:click="$store.modals.close('{{ $isEdit ? 'edit-user' : 'create-user' }}')">
+        <button type="button" class="btn btn-outline" x-on:click="$store.modals.close('{{ $isEdit ? 'edit-user' : 'create-user' }}')">
             Batal
-        </x-ui.button>
-        <x-ui.button type="submit">Simpan</x-ui.button>
+        </button>
+        <button type="submit" class="btn btn-primary">Simpan</button>
     </div>
 </form>

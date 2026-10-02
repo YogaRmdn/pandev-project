@@ -20,14 +20,13 @@
             @foreach ($services as $index => $service)
                 <div
                     x-show="visible"
-                    x-transition:enter="transition ease-out duration-500"
+                    x-transition:enter="transition ease-out duration-500 {{ ['delay-100', 'delay-200', 'delay-300', 'delay-400', 'delay-500'][$index] ?? '' }}"
                     x-transition:enter-start="translate-y-8 opacity-0"
                     x-transition:enter-end="translate-y-0 opacity-100"
-                    x-transition:enter-delay="{{ $index * 100 }}ms"
                 >
-                    <x-ui.card class="h-full transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-md">
-                        <x-ui.card-content class="flex h-full flex-col gap-4">
-                            <span class="bg-primary text-primary-foreground flex size-12 shrink-0 items-center justify-center rounded-xl md:size-14">
+                    <div class="card gap-6 border p-6 shadow-sm h-full transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-md">
+                        <div class="flex h-full flex-col gap-4">
+                            <span class="bg-primary text-primary-content flex size-12 shrink-0 items-center justify-center rounded-xl md:size-14">
                                 <x-lucide :name="$service['icon']" class="size-6 md:size-7" />
                             </span>
 
@@ -35,12 +34,12 @@
                                 <h3 class="font-heading text-base font-bold tracking-tight sm:text-lg">
                                     {{ $service['label'] }}
                                 </h3>
-                                <p class="text-muted-foreground text-sm leading-relaxed text-pretty">
+                                <p class="text-base-content/60 text-sm leading-relaxed text-pretty">
                                     {{ $service['description'] }}
                                 </p>
                             </div>
-                        </x-ui.card-content>
-                    </x-ui.card>
+                        </div>
+                    </div>
                 </div>
             @endforeach
         </div>

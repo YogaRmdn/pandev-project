@@ -5,7 +5,7 @@
     'confirmLabel' => 'Hapus',
 ])
 
-<div x-data class="contents">
+<div x-data class="contents whitespace-normal" x-on:keydown.escape.window="$store.modals.close('{{ $name }}')">
     <div
         x-show="$store.modals.isOpen('{{ $name }}')"
         x-cloak
@@ -25,7 +25,7 @@
         <div
             x-show="$store.modals.isOpen('{{ $name }}')"
             x-transition
-            class="bg-card text-card-foreground relative flex w-full max-w-lg flex-col gap-4 rounded-xl border p-6 shadow-lg"
+            class="bg-base-100 text-base-content relative flex w-full max-w-lg flex-col gap-4 rounded-xl border p-6 shadow-lg"
         >
             <button
                 type="button"
@@ -38,13 +38,13 @@
 
             <div class="flex flex-col gap-2 pr-8 text-center sm:text-left">
                 <h2 class="text-lg font-semibold">{{ $title }}</h2>
-                <p class="text-muted-foreground text-sm">{{ $description }}</p>
+                <p class="text-base-content/60 text-sm">{{ $description }}</p>
             </div>
 
             <div class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-                <x-ui.button type="button" variant="outline" x-on:click="$store.modals.close('{{ $name }}')">
+                <button type="button" class="btn btn-outline" x-on:click="$store.modals.close('{{ $name }}')">
                     Batal
-                </x-ui.button>
+                </button>
                 {{ $slot }}
             </div>
         </div>

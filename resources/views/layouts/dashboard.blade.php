@@ -18,7 +18,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('head')
 </head>
-<body class="flex min-h-full flex-col bg-background font-sans text-foreground">
+<body x-data class="flex min-h-full flex-col bg-base-100 font-sans text-base-content">
     <x-dashboard.sidebar />
 
     <div
@@ -32,32 +32,36 @@
 
     @if (session('status') || session('success'))
         <div
+            class="toast toast-end z-[100]"
             x-data="{ show: true }"
             x-show="show"
             x-init="setTimeout(() => show = false, 4000)"
             x-transition
-            class="fixed bottom-4 right-4 z-[100] max-w-sm rounded-lg border border-border bg-card px-4 py-3 text-sm shadow-lg"
             role="status"
         >
-            {{ session('status') ?? session('success') }}
+            <div class="alert alert-success">
+                <span>{{ session('status') ?? session('success') }}</span>
+            </div>
         </div>
     @endif
 
     @if ($errors->any())
         <div
+            class="toast toast-start z-[100]"
             x-data="{ show: true }"
             x-show="show"
             x-init="setTimeout(() => show = false, 5000)"
             x-transition
-            class="fixed bottom-4 left-4 z-[100] max-w-sm rounded-lg border border-destructive/50 bg-destructive/10 px-4 py-3 text-sm text-destructive shadow-lg"
             role="alert"
         >
-            <div class="font-medium">Terjadi kesalahan</div>
-            <ul class="mt-1 list-disc pl-4">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
+            <div class="alert alert-error">
+                <span class="font-medium">Terjadi kesalahan</span>
+                <ul class="mt-1 list-disc pl-4">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
         </div>
     @endif
 

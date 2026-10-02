@@ -10,8 +10,8 @@
     style="background-image: url('{{ asset('assets/common/tech-stacks-background.jpg') }}')"
 >
     <div class="orbit relative aspect-square w-[min(88vw,680px)]">
-        <div class="absolute inset-[4%] rounded-full border border-border/40"></div>
-        <div class="orbit-ring absolute inset-[14%] rounded-full border border-dashed border-border/25"></div>
+        <div class="absolute inset-[4%] rounded-full border border-base-300/40"></div>
+        <div class="orbit-ring absolute inset-[14%] rounded-full border border-dashed border-base-300/25"></div>
         <div class="absolute inset-[20%] rounded-full bg-primary/10 blur-3xl"></div>
 
         <div class="orbit-spin absolute inset-0 z-10">

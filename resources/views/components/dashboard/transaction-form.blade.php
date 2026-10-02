@@ -13,57 +13,60 @@
 
     <div class="grid gap-4 sm:grid-cols-2">
         <div class="space-y-2">
-            <x-ui.label for="type">Tipe Transaksi</x-ui.label>
-            <x-ui.select id="type" name="type" required>
+            <label class="label text-sm font-medium" for="type">Tipe Transaksi</label>
+            <select class="select w-full" id="type" name="type" required>
                 <option value="">Pilih tipe transaksi</option>
                 @foreach (\App\Enums\TransactionType::cases() as $type)
                     <option value="{{ $type->value }}" @selected(old('type', $transaction?->type?->value) === $type->value)>
                         {{ $type->label() }}
                     </option>
                 @endforeach
-            </x-ui.select>
-            <x-ui.input-error :messages="$errors->get('type')" />
+            </select>
+                        @if ($errors->get('type'))
+                <ul class="text-error space-y-1 text-sm">
+                    @foreach ($errors->get('type') as $message)
+                        <li>{{ $message }}</li>
+                    @endforeach
+                </ul>
+            @endif
         </div>
 
         <div class="space-y-2">
-            <x-ui.label for="amount">Total</x-ui.label>
-            <x-ui.input
-                id="amount"
-                name="amount"
-                inputmode="numeric"
-                value="{{ old('amount', $transaction?->amount ? (int) $transaction->amount : '') }}"
-                placeholder="Rp 0"
-                required
-                x-data
-                x-on:input="$el.value = $el.value.replace(/\D/g, '')"
-            />
-            <x-ui.input-error :messages="$errors->get('amount')" />
+            <label class="label text-sm font-medium" for="amount">Total</label>
+            <input class="input w-full" id="amount" name="amount" inputmode="numeric" value="{{ old('amount', $transaction?->amount ? (int) $transaction->amount : '') }}" placeholder="Rp 0" required x-data x-on:input="$el.value = $el.value.replace(/\D/g, '')">
+                        @if ($errors->get('amount'))
+                <ul class="text-error space-y-1 text-sm">
+                    @foreach ($errors->get('amount') as $message)
+                        <li>{{ $message }}</li>
+                    @endforeach
+                </ul>
+            @endif
         </div>
 
         <div class="space-y-2 sm:col-span-2">
-            <x-ui.label for="description">Deskripsi</x-ui.label>
-            <x-ui.textarea
-                id="description"
-                name="description"
-                rows="3"
-                placeholder="Deskripsi transaksi..."
-                required
-            >{{ old('description', $transaction->description) }}</x-ui.textarea>
-            <x-ui.input-error :messages="$errors->get('description')" />
+            <label class="label text-sm font-medium" for="description">Deskripsi</label>
+            <textarea class="textarea w-full" id="description" name="description" rows="3" placeholder="Deskripsi transaksi..." required>{{ old('description', $transaction->description) }}</textarea>
+                        @if ($errors->get('description'))
+                <ul class="text-error space-y-1 text-sm">
+                    @foreach ($errors->get('description') as $message)
+                        <li>{{ $message }}</li>
+                    @endforeach
+                </ul>
+            @endif
         </div>
 
         <div class="space-y-2">
-            <x-ui.label for="date">Tanggal</x-ui.label>
-            <x-ui.input
-                id="date"
-                type="date"
-                name="date"
-                value="{{ old('date', $transaction?->date?->format('Y-m-d') ?? now()->format('Y-m-d')) }}"
-                required
-            />
-            <x-ui.input-error :messages="$errors->get('date')" />
+            <label class="label text-sm font-medium" for="date">Tanggal</label>
+            <input class="input w-full" id="date" type="date" name="date" value="{{ old('date', $transaction?->date?->format('Y-m-d') ?? now()->format('Y-m-d')) }}" required>
+                        @if ($errors->get('date'))
+                <ul class="text-error space-y-1 text-sm">
+                    @foreach ($errors->get('date') as $message)
+                        <li>{{ $message }}</li>
+                    @endforeach
+                </ul>
+            @endif
         </div>
     </div>
 
-    <x-ui.button type="submit" class="h-10 w-full">Submit</x-ui.button>
+    <button type="submit" class="btn btn-primary h-10 w-full">Submit</button>
 </form>

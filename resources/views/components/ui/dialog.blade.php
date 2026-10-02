@@ -6,7 +6,7 @@
 ])
 
 {{-- Triggered from anywhere with: $dispatch('open-modal', 'name') --}}
-<div x-data class="contents">
+<div x-data class="contents whitespace-normal" x-on:keydown.escape.window="$store.modals.close('{{ $name }}')">
     <div
         x-show="$store.modals.isOpen('{{ $name }}')"
         x-cloak
@@ -26,7 +26,7 @@
         <div
             x-show="$store.modals.isOpen('{{ $name }}')"
             x-transition
-            class="bg-card text-card-foreground relative flex max-h-full w-full flex-col gap-4 overflow-y-auto rounded-xl border p-6 shadow-lg"
+            class="bg-base-100 text-base-content relative flex max-h-full w-full flex-col gap-4 overflow-y-auto rounded-xl border p-6 shadow-lg"
         >
             <button
                 type="button"
@@ -41,7 +41,7 @@
                 <div class="flex flex-col gap-1.5 pr-8 text-center sm:text-left">
                     <h2 class="text-lg leading-none font-semibold">{{ $title }}</h2>
                     @if ($description)
-                        <p class="text-muted-foreground text-sm">{{ $description }}</p>
+                        <p class="text-base-content/60 text-sm">{{ $description }}</p>
                     @endif
                 </div>
             @endif

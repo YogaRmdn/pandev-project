@@ -4,16 +4,16 @@
     <div class="space-y-4">
         <x-dashboard.header title="User" description="Kelola semua akun user yang terdata di aplikasi" />
 
-        <x-ui.card class="w-full gap-2">
-            <x-ui.card-header class="flex flex-wrap items-center justify-between gap-2 border-b">
+        <div class="card gap-6 border p-6 shadow-sm w-full gap-2">
+            <div class="flex flex-col gap-1.5 flex flex-wrap items-center justify-between gap-2 border-b">
                 <div>
-                    <x-ui.card-title class="flex items-center gap-2">
+                    <div class="card-title flex items-center gap-2">
                         Data User
                         @if ($users->isNotEmpty())
-                            <x-ui.badge class="bg-green-100! text-primary! px-1 hover:bg-green-100!">Total {{ $users->count() }}</x-ui.badge>
+                            <span class="badge badge-success px-1">Total {{ $users->count() }}</span>
                         @endif
-                    </x-ui.card-title>
-                    <x-ui.card-description>Berikut semua data user yang ada</x-ui.card-description>
+                    </div>
+                    <div class="text-base-content/60 text-sm">Berikut semua data user yang ada</div>
                 </div>
 
                 <div class="flex items-center gap-2">
@@ -23,78 +23,61 @@
                         <x-dashboard.user-form :action="route('dashboard.users.store')" :roles="$roles" />
                     </x-ui.dialog>
 
-                    <x-ui.button type="button" x-on:click="$dispatch('open-modal', 'create-user')">
+                    <button type="button" class="btn btn-primary" x-on:click="$dispatch('open-modal', 'create-user')">
                         <x-lucide name="plus" /> Tambah User
-                    </x-ui.button>
+                    </button>
                 </div>
-            </x-ui.card-header>
+            </div>
 
-            <x-ui.card-content class="px-0">
-                <x-ui.table>
-                    <x-ui.table-header>
-                        <x-ui.table-row>
-                            <x-ui.table-head class="w-12">#</x-ui.table-head>
-                            <x-ui.table-head>Full Name</x-ui.table-head>
-                            <x-ui.table-head>Email</x-ui.table-head>
-                            <x-ui.table-head>Role</x-ui.table-head>
-                            <x-ui.table-head class="w-24 text-right">Action</x-ui.table-head>
-                        </x-ui.table-row>
-                    </x-ui.table-header>
+            <div class="px-0">
+                <div class="relative w-full overflow-x-auto"><table class="table">
+                    <thead class=""><tr class="hover:bg-base-200/60 transition-colors">
+                            <th class="w-12">#</th>
+                            <th class="">Full Name</th>
+                            <th class="">Email</th>
+                            <th class="">Role</th>
+                            <th class="w-24 text-right">Action</th></tr></thead>
 
-                    <x-ui.table-body>
+                    <tbody class="">
                         @forelse ($users as $user)
                             @php
                                 $editName = 'edit-user-'.$user->id;
                                 $deleteName = 'delete-user-'.$user->id;
                             @endphp
 
-                            <x-ui.table-row>
-                                <x-ui.table-cell>{{ $loop->iteration }}</x-ui.table-cell>
-                                <x-ui.table-cell>
+                            <tr class="hover:bg-base-200/60 transition-colors">
+                                <td class="align-middle whitespace-nowrap">{{ $loop->iteration }}</td>
+                                <td class="align-middle whitespace-nowrap">
                                     <div class="flex items-center gap-3">
                                         @if ($user->image)
                                             <img src="{{ $user->image }}" alt="{{ $user->fullname }}-image" class="size-8 rounded-full object-cover" />
                                         @else
-                                            <span class="bg-muted text-muted-foreground flex size-8 items-center justify-center rounded-full">
+                                            <span class="bg-base-200 text-base-content/60 flex size-8 items-center justify-center rounded-full">
                                                 <x-lucide name="user" class="size-4" />
                                             </span>
                                         @endif
                                         <span>{{ $user->fullname }}</span>
                                     </div>
-                                </x-ui.table-cell>
-                                <x-ui.table-cell>{{ $user->email }}</x-ui.table-cell>
-                                <x-ui.table-cell class="capitalize">
-                                    <x-ui.badge variant="{{ $user->isAdmin() ? 'default' : 'secondary' }}">
+                                </td>
+                                <td class="align-middle whitespace-nowrap">{{ $user->email }}</td>
+                                <td class="align-middle whitespace-nowrap capitalize">
+                                    <span @class(['badge', 'badge-secondary' => ! $user->isAdmin()])>
                                         {{ $user->role->value }}
-                                    </x-ui.badge>
-                                </x-ui.table-cell>
-                                <x-ui.table-cell class="text-right">
-                                    <x-ui.button
-                                        type="button"
-                                        variant="ghost"
-                                        size="icon"
-                                        class="size-8"
-                                        x-on:click="$dispatch('open-modal', '{{ $editName }}')"
-                                        aria-label="Edit user"
-                                    >
+                                    </span>
+                                </td>
+                                <td class="align-middle whitespace-nowrap text-right">
+                                    <button type="button" class="btn btn-ghost btn-square size-8" x-on:click="$dispatch('open-modal', '{{ $editName }}')" aria-label="Edit user">
                                         <x-lucide name="pencil" />
-                                    </x-ui.button>
+                                    </button>
 
-                                    <x-ui.button
-                                        type="button"
-                                        variant="ghost"
-                                        size="icon"
-                                        class="size-8 hover:text-destructive"
-                                        x-on:click="$dispatch('open-modal', '{{ $deleteName }}')"
-                                        aria-label="Hapus user"
-                                    >
+                                    <button type="button" class="btn btn-ghost btn-square size-8 hover:text-error" x-on:click="$dispatch('open-modal', '{{ $deleteName }}')" aria-label="Hapus user">
                                         <x-lucide name="trash-2" />
-                                    </x-ui.button>
-                                </x-ui.table-cell>
-                            </x-ui.table-row>
+                                    </button>
+                                </td>
+                            </tr>
 
-                            <x-ui.table-row>
-                                <x-ui.table-cell colspan="5" class="p-0">
+                            <tr class="hover:bg-base-200/60 transition-colors">
+                                <td class="align-middle whitespace-nowrap p-0" colspan="5">
                                     <x-ui.dialog :name="$editName" title="Edit User" description="Ubah informasi akun yang terdaftar di aplikasi" width="sm:max-w-md">
                                         <x-dashboard.user-form
                                             :action="route('dashboard.users.update', $user)"
@@ -122,36 +105,27 @@
                                             @method('DELETE')
 
                                             <div class="space-y-1.5">
-                                                <x-ui.label class="text-xs">
+                                                <label class="label text-sm font-medium text-xs">
                                                     Ketik &quot;{{ $user->fullname }}&quot; untuk konfirmasi
-                                                </x-ui.label>
-                                                <x-ui.input
-                                                    x-model="value"
-                                                    class="border-destructive"
-                                                    autocomplete="off"
-                                                />
+                                                </label>
+                                                <input class="input w-full border-error" x-model="value" autocomplete="off">
                                             </div>
 
-                                            <x-ui.button
-                                                type="submit"
-                                                variant="destructive"
-                                                class="w-full"
-                                                x-bind:disabled="value !== @js($user->fullname)"
-                                            >Hapus</x-ui.button>
+                                            <button type="submit" class="btn btn-error w-full" x-bind:disabled="value !== @js($user->fullname)">Hapus</button>
                                         </form>
                                     </x-ui.confirm-dialog>
-                                </x-ui.table-cell>
-                            </x-ui.table-row>
+                                </td>
+                            </tr>
                         @empty
-                            <x-ui.table-row>
-                                <x-ui.table-cell colspan="5" class="text-muted-foreground h-32 text-center">
+                            <tr class="hover:bg-base-200/60 transition-colors">
+                                <td class="align-middle whitespace-nowrap text-base-content/60 h-32 text-center" colspan="5">
                                     Belum ada data user
-                                </x-ui.table-cell>
-                            </x-ui.table-row>
+                                </td>
+                            </tr>
                         @endforelse
-                    </x-ui.table-body>
-                </x-ui.table>
-            </x-ui.card-content>
-        </x-ui.card>
+                    </tbody>
+                </table></div>
+            </div>
+        </div>
     </div>
 @endsection

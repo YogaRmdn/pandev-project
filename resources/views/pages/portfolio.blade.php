@@ -14,15 +14,15 @@
 
             @include('pages.partials.carousel')
 
-            <p class="text-muted-foreground mt-4 max-w-2xl text-center text-pretty text-base lg:text-xl">
+            <p class="text-base-content/60 mt-4 max-w-2xl text-center text-pretty text-base lg:text-xl">
                 A collection of web, mobile, and desktop applications, plus design
                 projects we have planned, built, and shipped.
             </p>
 
-            <x-ui.button size="lg" href="{{ route('portfolio.index') }}" class="mt-8">
+            <a href="{{ route('portfolio.index') }}" class="btn btn-primary btn-lg mt-8">
                 View All Projects
                 <x-lucide name="move-up-right" />
-            </x-ui.button>
+            </a>
         </section>
 
         <section class="mx-auto w-full max-w-6xl px-4 pb-16">
@@ -30,15 +30,15 @@
                 <h2 class="text-primary font-heading text-2xl font-bold tracking-tight sm:text-3xl">
                     Recent Projects
                 </h2>
-                <p class="text-muted-foreground mt-3 max-w-2xl text-pretty">
+                <p class="text-base-content/60 mt-3 max-w-2xl text-pretty">
                     A closer look at the products our team has delivered recently.
                 </p>
             </div>
 
             @if ($featured->isEmpty())
-                <div class="text-muted-foreground mt-8 flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed p-16 text-center">
-                    <x-lucide name="folder-open" class="text-muted-foreground/60 size-10" />
-                    <p class="text-base font-medium text-foreground">No projects published yet</p>
+                <div class="text-base-content/60 mt-8 flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed p-16 text-center">
+                    <x-lucide name="folder-open" class="text-base-content/60/60 size-10" />
+                    <p class="text-base font-medium text-base-content">No projects published yet</p>
                     <p class="text-sm">New projects are coming soon — check back shortly.</p>
                 </div>
             @else
@@ -46,7 +46,7 @@
                     @foreach ($featured as $project)
                         <a
                             href="{{ route('portfolio.show', $project->id) }}"
-                            class="group bg-muted relative block aspect-[4/3] overflow-hidden rounded-xl border"
+                            class="group bg-base-200 relative block aspect-[4/3] overflow-hidden rounded-xl border"
                         >
                             @if (filled($project->thumbnail))
                                 <img
@@ -57,7 +57,7 @@
                                 />
                             @else
                                 <span class="flex h-full w-full items-center justify-center">
-                                    <x-lucide name="image" class="text-muted-foreground/50 size-10" />
+                                    <x-lucide name="image" class="text-base-content/60/50 size-10" />
                                 </span>
                             @endif
 

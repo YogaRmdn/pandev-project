@@ -5,57 +5,43 @@
         <x-dashboard.header title="Pengaturan" description="Kelola avatar, data diri, dan keamanan akun Anda" />
 
         {{-- Avatar --}}
-        <x-ui.card>
-            <x-ui.card-header>
-                <x-ui.card-title>Avatar</x-ui.card-title>
-                <x-ui.card-description>Edit avatar Anda</x-ui.card-description>
-            </x-ui.card-header>
+        <div class="card gap-6 border p-6 shadow-sm">
+            <div class="flex flex-col gap-1.5">
+                <div class="card-title">Avatar</div>
+                <div class="text-base-content/60 text-sm">Edit avatar Anda</div>
+            </div>
 
-            <x-ui.card-content>
+            <div class="">
                 <div class="relative w-fit">
                     @if ($user->image)
                         <img src="{{ $user->image }}" alt="Avatar {{ $user->fullname }}" class="size-24 rounded-full object-cover" />
                     @else
-                        <span class="bg-muted text-muted-foreground flex size-24 items-center justify-center rounded-full">
+                        <span class="bg-base-200 text-base-content/60 flex size-24 items-center justify-center rounded-full">
                             <x-lucide name="user" class="size-10" />
                         </span>
                     @endif
 
-                    <x-ui.button
-                        type="button"
-                        variant="outline"
-                        size="icon"
-                        class="absolute -top-0.5 -right-4 rounded-full"
-                        x-on:click="$dispatch('open-modal', 'avatar-upload')"
-                        aria-label="Ubah avatar"
-                    >
+                    <button type="button" class="btn btn-outline btn-square absolute -top-0.5 -right-4 rounded-full" x-on:click="$dispatch('open-modal', 'avatar-upload')" aria-label="Ubah avatar">
                         <x-lucide name="pen" />
-                    </x-ui.button>
+                    </button>
 
                     @if ($user->image)
-                        <x-ui.button
-                            type="button"
-                            variant="outline"
-                            size="icon"
-                            class="text-destructive absolute -right-4 -bottom-0.5 rounded-full"
-                            x-on:click="$dispatch('open-modal', 'avatar-remove')"
-                            aria-label="Hapus avatar"
-                        >
+                        <button type="button" class="btn btn-outline btn-square text-error absolute -right-4 -bottom-0.5 rounded-full" x-on:click="$dispatch('open-modal', 'avatar-remove')" aria-label="Hapus avatar">
                             <x-lucide name="trash" />
-                        </x-ui.button>
+                        </button>
                     @endif
                 </div>
-            </x-ui.card-content>
-        </x-ui.card>
+            </div>
+        </div>
 
         {{-- Data diri --}}
-        <x-ui.card>
-            <x-ui.card-header>
-                <x-ui.card-title>Data Diri</x-ui.card-title>
-                <x-ui.card-description>Ubah informasi data diri Anda</x-ui.card-description>
-            </x-ui.card-header>
+        <div class="card gap-6 border p-6 shadow-sm">
+            <div class="flex flex-col gap-1.5">
+                <div class="card-title">Data Diri</div>
+                <div class="text-base-content/60 text-sm">Ubah informasi data diri Anda</div>
+            </div>
 
-            <x-ui.card-content>
+            <div class="">
                 <form
                     id="information-form"
                     method="POST"
@@ -66,44 +52,42 @@
                     @method('PATCH')
 
                     <div class="space-y-2">
-                        <x-ui.label for="email">Email</x-ui.label>
-                        <x-ui.input
-                            id="email"
-                            type="email"
-                            name="email"
-                            value="{{ old('email', $user->email) }}"
-                            placeholder="Email..."
-                            autocomplete="off"
-                            required
-                        />
-                        <x-ui.input-error :messages="$errors->get('email')" />
+                        <label class="label text-sm font-medium" for="email">Email</label>
+                        <input class="input w-full" id="email" type="email" name="email" value="{{ old('email', $user->email) }}" placeholder="Email..." autocomplete="off" required>
+                                                @if ($errors->get('email'))
+                            <ul class="text-error space-y-1 text-sm">
+                                @foreach ($errors->get('email') as $message)
+                                    <li>{{ $message }}</li>
+                                @endforeach
+                            </ul>
+                        @endif
                     </div>
 
                     <div class="space-y-2">
-                        <x-ui.label for="fullname">Nama Lengkap</x-ui.label>
-                        <x-ui.input
-                            id="fullname"
-                            name="fullname"
-                            value="{{ old('fullname', $user->fullname) }}"
-                            placeholder="Nama Lengkap..."
-                            required
-                        />
-                        <x-ui.input-error :messages="$errors->get('fullname')" />
+                        <label class="label text-sm font-medium" for="fullname">Nama Lengkap</label>
+                        <input class="input w-full" id="fullname" name="fullname" value="{{ old('fullname', $user->fullname) }}" placeholder="Nama Lengkap..." required>
+                                                @if ($errors->get('fullname'))
+                            <ul class="text-error space-y-1 text-sm">
+                                @foreach ($errors->get('fullname') as $message)
+                                    <li>{{ $message }}</li>
+                                @endforeach
+                            </ul>
+                        @endif
                     </div>
 
-                    <x-ui.button type="submit">Simpan</x-ui.button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
                 </form>
-            </x-ui.card-content>
-        </x-ui.card>
+            </div>
+        </div>
 
         {{-- Keamanan --}}
-        <x-ui.card>
-            <x-ui.card-header>
-                <x-ui.card-title>Keamanan</x-ui.card-title>
-                <x-ui.card-description>Ubah password Anda</x-ui.card-description>
-            </x-ui.card-header>
+        <div class="card gap-6 border p-6 shadow-sm">
+            <div class="flex flex-col gap-1.5">
+                <div class="card-title">Keamanan</div>
+                <div class="text-base-content/60 text-sm">Ubah password Anda</div>
+            </div>
 
-            <x-ui.card-content>
+            <div class="">
                 <form
                     id="security-form"
                     method="POST"
@@ -119,15 +103,9 @@
                         ['password_confirmation', 'Konfirmasi Password'],
                     ] as [$field, $label])
                         <div class="space-y-2" x-data="{ show: false }">
-                            <x-ui.label :for="$field">{{ $label }}</x-ui.label>
+                            <label class="label text-sm font-medium" for="{{ $field }}">{{ $label }}</label>
                             <div class="relative">
-                                <x-ui.input
-                                    :id="$field"
-                                    x-bind:type="show ? 'text' : 'password'"
-                                    name="{{ $field }}"
-                                    class="pr-10"
-                                    autocomplete="off"
-                                />
+                                <input class="input w-full pr-10" id="{{ $field }}" x-bind:type="show ? 'text' : 'password'" name="{{ $field }}" autocomplete="off">
                                 <button
                                     type="button"
                                     x-on:click="show = !show"
@@ -139,19 +117,37 @@
                                 </button>
                             </div>
                             @if ($field === 'current_password')
-                                <x-ui.input-error :messages="$errors->get('current_password')" />
+                                                                @if ($errors->get('current_password'))
+                                    <ul class="text-error space-y-1 text-sm">
+                                        @foreach ($errors->get('current_password') as $message)
+                                            <li>{{ $message }}</li>
+                                        @endforeach
+                                    </ul>
+                                @endif
                             @elseif ($field === 'password')
-                                <x-ui.input-error :messages="$errors->get('password')" />
+                                                                @if ($errors->get('password'))
+                                    <ul class="text-error space-y-1 text-sm">
+                                        @foreach ($errors->get('password') as $message)
+                                            <li>{{ $message }}</li>
+                                        @endforeach
+                                    </ul>
+                                @endif
                             @else
-                                <x-ui.input-error :messages="$errors->get('password_confirmation')" />
+                                                                @if ($errors->get('password_confirmation'))
+                                    <ul class="text-error space-y-1 text-sm">
+                                        @foreach ($errors->get('password_confirmation') as $message)
+                                            <li>{{ $message }}</li>
+                                        @endforeach
+                                    </ul>
+                                @endif
                             @endif
                         </div>
                     @endforeach
 
-                    <x-ui.button type="submit">Simpan</x-ui.button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
                 </form>
-            </x-ui.card-content>
-        </x-ui.card>
+            </div>
+        </div>
     </div>
 
     {{-- Upload avatar --}}
@@ -166,7 +162,7 @@
             >
                 <x-lucide name="upload" class="size-8" />
                 <span class="font-medium">Upload Gambar</span>
-                <span class="text-muted-foreground text-xs">JPG, PNG, WebP (Maks 2 MB)</span>
+                <span class="text-base-content/60 text-xs">JPG, PNG, WebP (Maks 2 MB)</span>
                 <input
                     id="avatar"
                     type="file"
@@ -177,9 +173,15 @@
                 />
             </label>
 
-            <x-ui.input-error :messages="$errors->get('avatar')" />
+                        @if ($errors->get('avatar'))
+                <ul class="text-error space-y-1 text-sm">
+                    @foreach ($errors->get('avatar') as $message)
+                        <li>{{ $message }}</li>
+                    @endforeach
+                </ul>
+            @endif
 
-            <x-ui.button type="submit" class="w-full">Simpan Avatar</x-ui.button>
+            <button type="submit" class="btn btn-primary w-full">Simpan Avatar</button>
         </form>
     </x-ui.dialog>
 
@@ -193,7 +195,7 @@
             @csrf
             @method('PATCH')
             <input type="hidden" name="remove" value="1">
-            <x-ui.button type="submit" variant="destructive">Hapus</x-ui.button>
+            <button type="submit" class="btn btn-error">Hapus</button>
         </form>
     </x-ui.confirm-dialog>
 @endsection

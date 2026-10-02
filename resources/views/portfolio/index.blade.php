@@ -10,7 +10,7 @@
             <h1 class="font-heading text-primary text-center text-3xl font-bold tracking-tight uppercase sm:text-4xl">
                 All Projects
             </h1>
-            <p class="text-muted-foreground mx-auto mt-4 max-w-4xl text-center text-base lg:text-xl">
+            <p class="text-base-content/60 mx-auto mt-4 max-w-4xl text-center text-base lg:text-xl">
                 A collection of web, mobile, and desktop applications, plus design
                 projects we have planned, built, and shipped
             </p>
@@ -27,7 +27,7 @@
                     @if ($filters['search'])
                         <a
                             href="{{ request()->fullUrlWithQuery(['search' => null, 'page' => null]) }}"
-                            class="bg-secondary text-secondary-foreground hover:text-destructive inline-flex items-center gap-1 rounded-full px-2 py-1 text-sm"
+                            class="bg-secondary text-secondary-foreground hover:text-error inline-flex items-center gap-1 rounded-full px-2 py-1 text-sm"
                         >
                             Search: {{ $filters['search'] }}
                             <x-lucide name="x" class="size-3" />
@@ -37,7 +37,7 @@
                     @foreach ($filters['categories'] as $category)
                         <a
                             href="{{ request()->fullUrlWithQuery(['category' => array_values(array_diff($filters['categories'], [$category])), 'page' => null]) }}"
-                            class="bg-secondary text-secondary-foreground hover:text-destructive inline-flex items-center gap-1 rounded-full px-2 py-1 text-sm"
+                            class="bg-secondary text-secondary-foreground hover:text-error inline-flex items-center gap-1 rounded-full px-2 py-1 text-sm"
                         >
                             Category: {{ $category }}
                             <x-lucide name="x" class="size-3" />
@@ -46,7 +46,7 @@
 
                     <a
                         href="{{ route('portfolio.index') }}"
-                        class="text-destructive hover:bg-destructive/10 inline-flex items-center gap-1 rounded-full px-2 py-1 text-sm"
+                        class="text-error hover:bg-error/10 inline-flex items-center gap-1 rounded-full px-2 py-1 text-sm"
                     >Clear all</a>
                 </div>
             @endif
@@ -55,7 +55,7 @@
                 @forelse ($portfolios as $portfolio)
                     <x-portfolio-card :portfolio="$portfolio" />
                 @empty
-                    <div class="text-muted-foreground col-span-3 flex h-64 items-center justify-center">
+                    <div class="text-base-content/60 col-span-3 flex h-64 items-center justify-center">
                         @if (($filters['search'] ?? null) || count($filters['categories'] ?? []) > 0)
                             No projects match your filters.
                         @else

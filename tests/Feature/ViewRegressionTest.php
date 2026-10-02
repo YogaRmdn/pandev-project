@@ -57,13 +57,11 @@ class ViewRegressionTest extends TestCase
     public function test_card_base_has_horizontal_padding(): void
     {
         // py-6 pernah jadi satu-satunya padding, sehingga kartu yang hanya
-        // memakai card-header/content menempel teksnya ke border.
-        $this->assertStringContainsString(
-            'rounded-xl border p-6 shadow-sm',
-            (string) file_get_contents(resource_path('views/components/ui/card.blade.php')),
-        );
-
+        // memakai card-header/content menempel teksnya ke border. Kelas kartu
+        // kini menempel langsung di call site (markup daisyUI tanpa wrapper).
         $content = $this->get(route('services'))->getContent();
+
+        $this->assertStringContainsString('card gap-6 border p-6 shadow-sm', $content);
 
         foreach (SiteContent::serviceDetails() as $service) {
             $this->assertStringContainsString(e($service['title']), $content);

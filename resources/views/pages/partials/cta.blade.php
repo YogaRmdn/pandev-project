@@ -27,13 +27,9 @@
             next step, whether you need a full product or a quick technical review.
         </p>
 
-        <x-ui.button
-            size="lg"
-            href="{{ route('contact') }}"
-            class="mt-8 h-12 bg-white px-8 text-xl text-black hover:bg-white/90"
-        >
+        <a href="{{ route('contact') }}" class="btn btn-primary btn-lg mt-8 h-12 bg-white px-8 text-xl text-black hover:bg-white/90">
             Let's Talk
             <x-lucide name="move-up-right" />
-        </x-ui.button>
+        </a>
     </div>
 </section>

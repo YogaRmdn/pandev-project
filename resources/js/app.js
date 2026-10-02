@@ -226,7 +226,8 @@ Alpine.data('coverflow', (count, options = {}) => ({
 }));
 
 Alpine.store('sidebar', {
-    collapsed: localStorage.getItem('sidebar_state') !== 'false',
+    // Terbuka secara default; localStorage hanya berisi kondisi bila pernah dirapikan.
+    collapsed: localStorage.getItem('sidebar_state') === 'true',
     mobileOpen: false,
 
     toggle() {
@@ -235,6 +236,7 @@ Alpine.store('sidebar', {
             this.mobileOpen = !this.mobileOpen;
         } else {
             this.collapsed = !this.collapsed;
+            localStorage.setItem('sidebar_state', this.collapsed ? 'true' : 'false');
         }
     },
 

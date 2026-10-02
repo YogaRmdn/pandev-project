@@ -34,55 +34,33 @@
                 @endif
 
                 <div class="space-y-2">
-                    <x-ui.label for="name" class="text-white">Name</x-ui.label>
-                    <x-ui.input
-                        id="name"
-                        name="name"
-                        value="{{ old('name') }}"
-                        placeholder="Your name"
-                        class="border-white/20 bg-white/5 text-white placeholder:text-white/50"
-                        required
-                    />
+                    <label class="label text-sm font-medium text-white" for="name">Name</label>
+                    <input class="input w-full border-white/20 bg-white/5 text-white placeholder:text-white/50" id="name" name="name" value="{{ old('name') }}" placeholder="Your name" required>
                     @error('name')
                         <p class="text-sm text-red-300">{{ $message }}</p>
                     @enderror
                 </div>
 
                 <div class="space-y-2">
-                    <x-ui.label for="email" class="text-white">Email</x-ui.label>
-                    <x-ui.input
-                        id="email"
-                        name="email"
-                        type="email"
-                        value="{{ old('email') }}"
-                        placeholder="you@company.com"
-                        class="border-white/20 bg-white/5 text-white placeholder:text-white/50"
-                        required
-                    />
+                    <label class="label text-sm font-medium text-white" for="email">Email</label>
+                    <input class="input w-full border-white/20 bg-white/5 text-white placeholder:text-white/50" id="email" name="email" type="email" value="{{ old('email') }}" placeholder="you@company.com" required>
                     @error('email')
                         <p class="text-sm text-red-300">{{ $message }}</p>
                     @enderror
                 </div>
 
                 <div class="space-y-2">
-                    <x-ui.label for="message" class="text-white">Message</x-ui.label>
-                    <x-ui.textarea
-                        id="message"
-                        name="message"
-                        rows="5"
-                        placeholder="Tell us about your project, goals, and timeline..."
-                        class="min-h-30 resize-none border-white/20 bg-white/5 text-white placeholder:text-white/50"
-                        required
-                    >{{ old('message') }}</x-ui.textarea>
+                    <label class="label text-sm font-medium text-white" for="message">Message</label>
+                    <textarea class="textarea w-full min-h-30 resize-none border-white/20 bg-white/5 text-white placeholder:text-white/50" id="message" name="message" rows="5" placeholder="Tell us about your project, goals, and timeline..." required>{{ old('message') }}</textarea>
                     @error('message')
                         <p class="text-sm text-red-300">{{ $message }}</p>
                     @enderror
                 </div>
 
                 <div class="flex justify-end pt-2">
-                    <x-ui.button type="submit" size="lg" class="px-4">
+                    <button type="submit" class="btn btn-primary btn-lg px-4">
                         <x-lucide name="mail" /> Send Message
-                    </x-ui.button>
+                    </button>
                 </div>
             </form>
         </div>

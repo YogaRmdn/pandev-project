@@ -6,7 +6,7 @@
 
 @section('content')
     <main class="mx-auto w-full max-w-6xl flex-1 px-4 py-8">
-        <a href="{{ route('portfolio.index') }}" class="text-muted-foreground hover:text-foreground mb-4 inline-flex items-center gap-1 text-sm">
+        <a href="{{ route('portfolio.index') }}" class="text-base-content/60 hover:text-base-content mb-4 inline-flex items-center gap-1 text-sm">
             <x-lucide name="chevron-left" /> Back to all projects
         </a>
 
@@ -37,33 +37,17 @@
                         @endforeach
 
                         @if ($images->count() > 1)
-                            <x-ui.button
-                                type="button"
-                                variant="secondary"
-                                size="icon"
-                                x-on:click="index = index === 0 ? {{ $images->count() - 1 }} : index - 1"
-                                x-bind:class="hovered ? 'opacity-100' : 'opacity-0'"
-                                class="absolute top-1/2 left-2 rounded-full bg-black/50 text-white transition-opacity hover:bg-black/70"
-                                aria-label="Previous image"
-                            >
+                            <button type="button" class="btn btn-secondary btn-square absolute top-1/2 left-2 rounded-full bg-black/50 text-white transition-opacity hover:bg-black/70" x-on:click="index = index === 0 ? {{ $images->count() - 1 }} : index - 1" x-bind:class="hovered ? 'opacity-100' : 'opacity-0'" aria-label="Previous image">
                                 <x-lucide name="chevron-left" class="size-5" />
-                            </x-ui.button>
+                            </button>
 
-                            <x-ui.button
-                                type="button"
-                                variant="secondary"
-                                size="icon"
-                                x-on:click="index = index === {{ $images->count() - 1 }} ? 0 : index + 1"
-                                x-bind:class="hovered ? 'opacity-100' : 'opacity-0'"
-                                class="absolute top-1/2 right-2 rounded-full bg-black/50 text-white transition-opacity hover:bg-black/70"
-                                aria-label="Next image"
-                            >
+                            <button type="button" class="btn btn-secondary btn-square absolute top-1/2 right-2 rounded-full bg-black/50 text-white transition-opacity hover:bg-black/70" x-on:click="index = index === {{ $images->count() - 1 }} ? 0 : index + 1" x-bind:class="hovered ? 'opacity-100' : 'opacity-0'" aria-label="Next image">
                                 <x-lucide name="chevron-right" class="size-5" />
-                            </x-ui.button>
+                            </button>
                         @endif
                     @else
-                        <div class="bg-muted flex h-full w-full items-center justify-center">
-                            <x-lucide name="image" class="text-muted-foreground/50 size-16" />
+                        <div class="bg-base-200 flex h-full w-full items-center justify-center">
+                            <x-lucide name="image" class="text-base-content/60/50 size-16" />
                         </div>
                     @endif
                 </div>
@@ -84,8 +68,8 @@
                 @endif
             </div>
 
-            <x-ui.card class="h-fit w-full gap-0 lg:w-1/3">
-                <x-ui.card-header>
+            <div class="card gap-6 border p-6 shadow-sm h-fit w-full gap-0 lg:w-1/3">
+                <div class="flex flex-col gap-1.5">
                     <div>
                         <h1 class="font-heading text-2xl font-bold tracking-tight">{{ $portfolio->name }}</h1>
                         <div class="mt-3 flex flex-wrap items-center gap-2">
@@ -93,21 +77,21 @@
                                 <x-lucide name="tag" class="size-3" /> {{ $portfolio->category }}
                             </span>
                             @if ($portfolio->status === \App\Enums\PortfolioStatus::DRAFT)
-                                <x-ui.badge class="bg-amber-500/15 text-amber-700">Draft</x-ui.badge>
+                                <span class="badge bg-amber-500/15 text-amber-700">Draft</span>
                             @endif
                         </div>
                     </div>
-                </x-ui.card-header>
+                </div>
 
-                <x-ui.card-content class="space-y-4">
+                <div class="space-y-4">
                     <div>
-                        <div class="text-muted-foreground text-sm font-semibold uppercase">Description</div>
+                        <div class="text-base-content/60 text-sm font-semibold uppercase">Description</div>
                         <p class="mt-2 whitespace-pre-wrap">{{ $portfolio->description }}</p>
                     </div>
 
                     @if (! empty($portfolio->tech_stacks))
                         <div>
-                            <div class="text-muted-foreground text-sm font-semibold uppercase">Tech Stacks</div>
+                            <div class="text-base-content/60 text-sm font-semibold uppercase">Tech Stacks</div>
                             <div class="mt-2 flex flex-wrap gap-2">
                                 @foreach ($portfolio->tech_stacks as $tech)
                                     <span class="bg-secondary text-secondary-foreground rounded-lg border px-3 py-1 text-sm">{{ $tech }}</span>
@@ -117,26 +101,26 @@
                     @endif
 
                     <div>
-                        <div class="text-muted-foreground text-sm font-semibold uppercase">Links</div>
+                        <div class="text-base-content/60 text-sm font-semibold uppercase">Links</div>
                         <div class="mt-2 flex flex-wrap gap-3">
                             @php($demoLink = \App\Support\Format::url($portfolio->demo_link))
                             @php($repoLink = \App\Support\Format::url($portfolio->repository_link))
 
                             @if ($demoLink)
-                                <x-ui.button href="{{ $demoLink }}" target="_blank" rel="noopener noreferrer">
+                                <a href="{{ $demoLink }}" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
                                     <x-lucide name="external-link" class="mr-2" /> Live Demo
-                                </x-ui.button>
+                                </a>
                             @endif
 
                             @if ($repoLink)
-                                <x-ui.button href="{{ $repoLink }}" variant="outline" target="_blank" rel="noopener noreferrer">
+                                <a href="{{ $repoLink }}" class="btn btn-outline" target="_blank" rel="noopener noreferrer">
                                     <x-lucide name="code" class="mr-2" /> Repository
-                                </x-ui.button>
+                                </a>
                             @endif
                         </div>
                     </div>
-                </x-ui.card-content>
-            </x-ui.card>
+                </div>
+            </div>
         </div>
     </main>
 @endsection

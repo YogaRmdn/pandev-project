@@ -25,14 +25,14 @@
                     class="size-8 shrink-0 rounded-lg object-cover"
                 />
             @else
-                <span class="bg-muted text-muted-foreground flex size-8 shrink-0 items-center justify-center rounded-lg">
+                <span class="bg-base-200 text-base-content/60 flex size-8 shrink-0 items-center justify-center rounded-lg">
                     <x-lucide name="user" class="size-4" />
                 </span>
             @endif
 
             <span class="grid flex-1 text-sm leading-tight" x-show="!$store.sidebar.collapsed">
                 <span class="truncate font-medium">{{ $user->fullname }}</span>
-                <span class="text-muted-foreground truncate text-xs">{{ $user->email }}</span>
+                <span class="text-base-content/60 truncate text-xs">{{ $user->email }}</span>
             </span>
 
             <x-lucide name="ellipsis-vertical" class="ml-auto size-4 shrink-0" />
@@ -43,20 +43,20 @@
             x-cloak
             x-transition.origin.bottom
             role="menu"
-            class="bg-popover text-popover-foreground absolute bottom-full left-0 z-50 mb-2 w-56 min-w-56 rounded-lg border p-1 shadow-lg"
+            class="bg-base-100 text-base-content absolute bottom-full left-0 z-50 mb-2 w-56 min-w-56 rounded-lg border p-1 shadow-lg"
             x-bind:class="$store.sidebar.collapsed ? 'left-12' : 'left-0'"
         >
             <div class="flex items-center gap-2 p-2">
                 @if ($user->image)
                     <img src="{{ $user->image }}" alt="" class="size-9 rounded-full object-cover" />
                 @else
-                    <span class="bg-muted text-muted-foreground flex size-9 items-center justify-center rounded-full">
+                    <span class="bg-base-200 text-base-content/60 flex size-9 items-center justify-center rounded-full">
                         <x-lucide name="user" class="size-4" />
                     </span>
                 @endif
                 <div class="grid min-w-0 flex-1 text-sm leading-tight">
                     <span class="truncate font-semibold">{{ $user->fullname }}</span>
-                    <span class="text-muted-foreground truncate text-xs">{{ $user->email }}</span>
+                    <span class="text-base-content/60 truncate text-xs">{{ $user->email }}</span>
                 </div>
             </div>
 
@@ -65,7 +65,7 @@
             <a
                 href="{{ route('settings.edit') }}"
                 role="menuitem"
-                class="hover:bg-accent hover:text-accent-foreground flex items-center gap-2 rounded-md px-2 py-2 text-sm"
+                class="hover:bg-base-200 hover:text-base-content flex items-center gap-2 rounded-md px-2 py-2 text-sm"
             >
                 <x-lucide name="user" class="size-4" /> Akun
             </a>
@@ -76,7 +76,7 @@
                 <button
                     type="submit"
                     role="menuitem"
-                    class="hover:bg-accent hover:text-accent-foreground flex w-full items-center gap-2 rounded-md px-2 py-2 text-sm"
+                    class="hover:bg-base-200 hover:text-base-content flex w-full items-center gap-2 rounded-md px-2 py-2 text-sm"
                 >
                     <x-lucide name="log-out" class="size-4" /> Log out
                 </button>

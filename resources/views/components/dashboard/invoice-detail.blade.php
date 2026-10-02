@@ -8,7 +8,7 @@
             <img src="{{ asset('assets/common/logo.png') }}" alt="PanDev" width="50" height="50" class="size-12 object-contain" />
             <div>
                 <h2 class="text-primary text-lg font-bold">Pandev</h2>
-                <p class="text-muted-foreground text-sm">Digital Agency Indonesia</p>
+                <p class="text-base-content/60 text-sm">Digital Agency Indonesia</p>
             </div>
         </div>
 
@@ -22,30 +22,27 @@
             Tanggal: <span class="font-medium">{{ \App\Support\Format::date($invoice->date, 'd-m-Y') }}</span>
         </div>
 
-        <x-ui.table>
-            <x-ui.table-header>
-                <x-ui.table-row>
-                    <x-ui.table-head class="w-10">#</x-ui.table-head>
-                    <x-ui.table-head>Item Transaksi</x-ui.table-head>
-                    <x-ui.table-head class="text-right">Harga</x-ui.table-head>
-                    <x-ui.table-head class="w-16 text-right">Jumlah</x-ui.table-head>
-                    <x-ui.table-head class="text-right">Total</x-ui.table-head>
-                </x-ui.table-row>
-            </x-ui.table-header>
-            <x-ui.table-body>
+        <div class="relative w-full overflow-x-auto"><table class="table">
+            <thead class=""><tr class="hover:bg-base-200/60 transition-colors">
+                    <th class="w-10">#</th>
+                    <th class="">Item Transaksi</th>
+                    <th class="text-right">Harga</th>
+                    <th class="w-16 text-right">Jumlah</th>
+                    <th class="text-right">Total</th></tr></thead>
+            <tbody class="">
                 @foreach ($invoice->invoiceItems as $item)
-                    <x-ui.table-row>
-                        <x-ui.table-cell>{{ $loop->iteration }}</x-ui.table-cell>
-                        <x-ui.table-cell>{{ $item->name }}</x-ui.table-cell>
-                        <x-ui.table-cell class="text-right">{{ \App\Support\Format::idr($item->price) }}</x-ui.table-cell>
-                        <x-ui.table-cell class="text-right">{{ $item->quantity }}</x-ui.table-cell>
-                        <x-ui.table-cell class="text-right font-medium">
+                    <tr class="hover:bg-base-200/60 transition-colors">
+                        <td class="align-middle whitespace-nowrap">{{ $loop->iteration }}</td>
+                        <td class="align-middle whitespace-nowrap">{{ $item->name }}</td>
+                        <td class="align-middle whitespace-nowrap text-right">{{ \App\Support\Format::idr($item->price) }}</td>
+                        <td class="align-middle whitespace-nowrap text-right">{{ $item->quantity }}</td>
+                        <td class="align-middle whitespace-nowrap text-right font-medium">
                             {{ \App\Support\Format::idr($item->quantity * $item->price) }}
-                        </x-ui.table-cell>
-                    </x-ui.table-row>
+                        </td>
+                    </tr>
                 @endforeach
-            </x-ui.table-body>
-        </x-ui.table>
+            </tbody>
+        </table></div>
 
         <div class="bg-primary ml-auto w-fit rounded-md p-3 font-semibold text-white">
             Total: {{ \App\Support\Format::idr($total) }}
@@ -57,18 +54,18 @@
                     @csrf
                     @method('PATCH')
                     <input type="hidden" name="status" value="PARTIALLY_PAID">
-                    <x-ui.button type="submit" class="bg-amber-700! text-white! hover:bg-amber-700/90!">
+                    <button type="submit" class="btn btn-primary bg-amber-700! text-white! hover:bg-amber-700/90!">
                         <x-lucide name="circle-dashed-check" /> Sebagian dibayar / DP
-                    </x-ui.button>
+                    </button>
                 </form>
 
                 <form method="POST" action="{{ route('dashboard.invoice.status', $invoice->id) }}">
                     @csrf
                     @method('PATCH')
                     <input type="hidden" name="status" value="PAID">
-                    <x-ui.button type="submit">
+                    <button type="submit" class="btn btn-primary">
                         <x-lucide name="badge-check" /> Lunas
-                    </x-ui.button>
+                    </button>
                 </form>
             @elseif ($invoice->status === \App\Enums\InvoiceStatus::PARTIALLY_PAID)
                 {{-- The original showed a disabled "Lunas" button here with no
@@ -78,18 +75,15 @@
                     @csrf
                     @method('PATCH')
                     <input type="hidden" name="status" value="PAID">
-                    <x-ui.button type="submit">
+                    <button type="submit" class="btn btn-primary">
                         <x-lucide name="badge-check" /> Lunas
-                    </x-ui.button>
+                    </button>
                 </form>
             @endif
 
-            <x-ui.button
-                href="{{ route('dashboard.invoice.pdf', $invoice->id) }}"
-                variant="outline"
-            >
+            <a href="{{ route('dashboard.invoice.pdf', $invoice->id) }}" class="btn btn-outline">
                 <x-lucide name="printer" /> Cetak Invoice
-            </x-ui.button>
+            </a>
         </div>
     </div>
 </x-ui.dialog>

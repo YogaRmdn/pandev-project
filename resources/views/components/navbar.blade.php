@@ -23,7 +23,7 @@
                     class="my-5 flex shrink-0 items-center gap-2.5 font-heading text-lg font-bold tracking-tight"
                     aria-label="PanDev - Beranda"
                 >
-                    <span class="bg-primary text-primary-foreground inline-flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full">
+                    <span class="bg-primary text-primary-content inline-flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full">
                         <img
                             src="{{ asset('assets/common/logo.png') }}"
                             width="50"
@@ -32,7 +32,7 @@
                             class="size-full object-contain"
                         />
                     </span>
-                    <span class="text-foreground">PANDEV</span>
+                    <span class="text-base-content">PANDEV</span>
                 </a>
             </div>
         </div>
@@ -62,7 +62,7 @@
                 <div class="relative" x-data="{ account: false }" x-on:click.outside="account = false">
                     <button
                         type="button"
-                        class="icon-circle text-foreground"
+                        class="icon-circle text-base-content"
                         x-on:click="account = !account"
                         x-bind:aria-expanded="account"
                         aria-haspopup="menu"
@@ -84,12 +84,12 @@
                         x-cloak
                         x-transition.origin.top.right
                         role="menu"
-                        class="bg-popover text-popover-foreground absolute end-0 z-50 mt-3 w-56 rounded-lg border p-1.5 shadow-lg"
+                        class="bg-base-100 text-base-content absolute end-0 z-50 mt-3 w-56 rounded-lg border p-1.5 shadow-lg"
                     >
                         <a
                             href="{{ route('dashboard') }}"
                             role="menuitem"
-                            class="hover:bg-accent hover:text-accent-foreground flex items-center gap-2.5 rounded-md px-3 py-2.5 text-sm font-medium"
+                            class="hover:bg-base-200 hover:text-base-content flex items-center gap-2.5 rounded-md px-3 py-2.5 text-sm font-medium"
                         >
                             <x-lucide name="layout-dashboard" class="size-4" /> Dashboard
                         </a>
@@ -99,7 +99,7 @@
                             <button
                                 type="submit"
                                 role="menuitem"
-                                class="hover:bg-accent hover:text-accent-foreground flex w-full items-center gap-2.5 rounded-md px-3 py-2.5 text-sm font-medium"
+                                class="hover:bg-base-200 hover:text-base-content flex w-full items-center gap-2.5 rounded-md px-3 py-2.5 text-sm font-medium"
                             >
                                 <x-lucide name="log-out" class="size-4" /> Logout
                             </button>
@@ -118,7 +118,7 @@
 
             <button
                 type="button"
-                class="icon-circle bg-primary text-primary-foreground border-transparent"
+                class="icon-circle bg-primary text-primary-content border-transparent"
                 x-on:click="open = true"
                 aria-label="Open navigation menu"
             >
@@ -145,15 +145,15 @@
     >
         <div class="flex items-center justify-between">
             <span class="font-heading flex items-center gap-2.5 text-lg font-bold tracking-tight">
-                <span class="bg-primary text-primary-foreground inline-flex size-8 items-center justify-center overflow-hidden rounded-full">
+                <span class="bg-primary text-primary-content inline-flex size-8 items-center justify-center overflow-hidden rounded-full">
                     <img src="{{ asset('assets/common/logo.png') }}" width="50" height="50" alt="PanDev Logo" class="size-full object-contain" />
                 </span>
-                <span class="text-foreground">PANDEV</span>
+                <span class="text-base-content">PANDEV</span>
             </span>
 
             <button
                 type="button"
-                class="icon-circle text-foreground"
+                class="icon-circle text-base-content"
                 x-on:click="open = false"
                 aria-label="Close menu"
             >
@@ -181,7 +181,7 @@
         </nav>
 
         <div class="mt-auto border-t pt-6">
-            <div class="text-muted-foreground text-xs font-semibold tracking-wider uppercase">
+            <div class="text-base-content/60 text-xs font-semibold tracking-wider uppercase">
                 Follow us
             </div>
             <x-social-links size="size-5" class="mt-3 gap-4" />

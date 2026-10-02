@@ -7,9 +7,9 @@
 
 {{-- p-0 di kartu + padding di konten: thumbnail jadi full-bleed tanpa garis
      card yang mengapit, dan tidak ada padding ganda. --}}
-<x-ui.card class="h-full gap-0 overflow-hidden p-0 transition-shadow duration-300 hover:shadow-md">
+<div class="card gap-6 border p-6 shadow-sm h-full gap-0 overflow-hidden p-0 transition-shadow duration-300 hover:shadow-md">
     <a href="{{ route('portfolio.show', $portfolio->id) }}" class="group flex h-full flex-col">
-        <div class="bg-muted aspect-video w-full overflow-hidden">
+        <div class="bg-base-200 aspect-video w-full overflow-hidden">
             @if (filled($portfolio->thumbnail))
                 <img
                     src="{{ $portfolio->thumbnail }}"
@@ -19,7 +19,7 @@
                 />
             @else
                 <div class="flex h-full w-full items-center justify-center">
-                    <x-lucide name="image" class="text-muted-foreground/50 size-10" />
+                    <x-lucide name="image" class="text-base-content/60/50 size-10" />
                 </div>
             @endif
         </div>
@@ -29,14 +29,14 @@
                 <h3 class="font-heading truncate text-base font-bold tracking-tight" title="{{ $portfolio->name }}">
                     {{ $portfolio->name }}
                 </h3>
-                <div class="text-muted-foreground mt-1.5 flex items-center gap-1.5 text-xs">
+                <div class="text-base-content/60 mt-1.5 flex items-center gap-1.5 text-xs">
                     <x-lucide name="clock" class="size-3.5 shrink-0" />
                     Updated {{ \App\Support\Format::date($portfolio->updated_at) }}
                 </div>
             </div>
 
             @if (filled($portfolio->description))
-                <p class="text-muted-foreground line-clamp-2 text-sm leading-relaxed text-pretty">
+                <p class="text-base-content/60 line-clamp-2 text-sm leading-relaxed text-pretty">
                     {{ $portfolio->description }}
                 </p>
             @endif
@@ -49,13 +49,13 @@
                 @endif
 
                 @foreach ($stacks as $stack)
-                    <span class="bg-muted text-muted-foreground rounded px-2 py-0.5 text-xs">{{ $stack }}</span>
+                    <span class="bg-base-200 text-base-content/60 rounded px-2 py-0.5 text-xs">{{ $stack }}</span>
                 @endforeach
 
                 @if ($extraStacks > 0)
-                    <span class="bg-muted text-muted-foreground rounded px-2 py-0.5 text-xs">+{{ $extraStacks }}</span>
+                    <span class="bg-base-200 text-base-content/60 rounded px-2 py-0.5 text-xs">+{{ $extraStacks }}</span>
                 @endif
             </div>
         </div>
     </a>
-</x-ui.card>
+</div>

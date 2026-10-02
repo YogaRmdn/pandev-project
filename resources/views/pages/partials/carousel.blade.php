@@ -16,6 +16,6 @@
     ];
 @endphp
 
-<div class="w-full overflow-hidden bg-background py-4">
+<div class="w-full overflow-hidden bg-base-100 py-4">
     <x-coverflow-carousel :slides="$slides" />
 </div>

@@ -30,7 +30,7 @@
                     role="group"
                     aria-roledescription="slide"
                     aria-label="{{ $index + 1 }} of {{ count($slides) }}"
-                    class="absolute top-0 left-1/0 aspect-square w-[var(--cf-card)] overflow-hidden rounded-2xl bg-muted shadow-xl"
+                    class="absolute top-0 left-1/0 aspect-square w-[var(--cf-card)] overflow-hidden rounded-2xl bg-base-200 shadow-xl"
                     style="left: 50%; transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1), opacity 420ms ease-out;"
                     x-bind:style="styleFor({{ $index }})"
                 >
@@ -63,7 +63,7 @@
              berubah sendiri). --}}
         <button
             type="button"
-            class="text-muted-foreground hover:text-foreground inline-flex size-8 items-center justify-center rounded-full border transition-colors"
+            class="text-base-content/60 hover:text-base-content inline-flex size-8 items-center justify-center rounded-full border transition-colors"
             x-on:click="toggle()"
             x-bind:aria-label="paused ? 'Play carousel' : 'Pause carousel'"
             x-bind:aria-pressed="paused ? 'true' : 'false'"

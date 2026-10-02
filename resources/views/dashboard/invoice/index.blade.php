@@ -4,16 +4,16 @@
     <div class="space-y-4">
         <x-dashboard.header title="Faktur" description="Kelola faktur dan tagihan projek" />
 
-        <x-ui.card class="w-full gap-2">
-            <x-ui.card-header class="flex flex-wrap items-center justify-between gap-2 border-b">
+        <div class="card gap-6 border p-6 shadow-sm w-full gap-2">
+            <div class="flex flex-col gap-1.5 flex flex-wrap items-center justify-between gap-2 border-b">
                 <div>
-                    <x-ui.card-title class="flex items-center gap-2">
+                    <div class="card-title flex items-center gap-2">
                         Data Faktur
                         @if ($invoices->isNotEmpty())
-                            <x-ui.badge class="bg-green-100! text-primary! px-1 hover:bg-green-100!">Total {{ $invoices->count() }}</x-ui.badge>
+                            <span class="badge badge-success px-1">Total {{ $invoices->count() }}</span>
                         @endif
-                    </x-ui.card-title>
-                    <x-ui.card-description>Berikut semua data faktur yang ada</x-ui.card-description>
+                    </div>
+                    <div class="text-base-content/60 text-sm">Berikut semua data faktur yang ada</div>
                 </div>
 
                 <div class="flex items-center gap-2">
@@ -28,26 +28,23 @@
                         <x-dashboard.invoice-form :action="route('dashboard.invoice.store')" />
                     </x-ui.dialog>
 
-                    <x-ui.button type="button" x-on:click="$dispatch('open-modal', 'create-invoice')">
+                    <button type="button" class="btn btn-primary" x-on:click="$dispatch('open-modal', 'create-invoice')">
                         <x-lucide name="plus" /> Tambah
-                    </x-ui.button>
+                    </button>
                 </div>
-            </x-ui.card-header>
+            </div>
 
-            <x-ui.card-content class="px-0">
-                <x-ui.table>
-                    <x-ui.table-header>
-                        <x-ui.table-row>
-                            <x-ui.table-head class="w-12">#</x-ui.table-head>
-                            <x-ui.table-head>Date</x-ui.table-head>
-                            <x-ui.table-head>Description</x-ui.table-head>
-                            <x-ui.table-head>Status</x-ui.table-head>
-                            <x-ui.table-head>Total</x-ui.table-head>
-                            <x-ui.table-head class="w-32 text-right">Action</x-ui.table-head>
-                        </x-ui.table-row>
-                    </x-ui.table-header>
+            <div class="px-0">
+                <div class="relative w-full overflow-x-auto"><table class="table">
+                    <thead class=""><tr class="hover:bg-base-200/60 transition-colors">
+                            <th class="w-12">#</th>
+                            <th class="">Date</th>
+                            <th class="">Description</th>
+                            <th class="">Status</th>
+                            <th class="">Total</th>
+                            <th class="w-32 text-right">Action</th></tr></thead>
 
-                    <x-ui.table-body>
+                    <tbody class="">
                         @forelse ($invoices as $invoice)
                             @php
                                 $detailName = 'detail-invoice-'.$invoice->id;
@@ -55,56 +52,35 @@
                                 $deleteName = 'delete-invoice-'.$invoice->id;
                             @endphp
 
-                            <x-ui.table-row>
-                                <x-ui.table-cell>{{ $loop->iteration }}</x-ui.table-cell>
-                                <x-ui.table-cell class="font-medium">{{ \App\Support\Format::date($invoice->date) }}</x-ui.table-cell>
-                                <x-ui.table-cell>{{ $invoice->description }}</x-ui.table-cell>
-                                <x-ui.table-cell>
-                                    <x-ui.badge @class([
-                                        'bg-green-100! text-black hover:bg-green-100!' => $invoice->status === \App\Enums\InvoiceStatus::PAID,
-                                        'bg-yellow-100! text-black hover:bg-yellow-100!' => $invoice->status === \App\Enums\InvoiceStatus::PARTIALLY_PAID,
-                                        'bg-red-100! text-black hover:bg-red-100!' => $invoice->status === \App\Enums\InvoiceStatus::UNPAID,
-                                    ])>{{ $invoice->status->label() }}</x-ui.badge>
-                                </x-ui.table-cell>
-                                <x-ui.table-cell class="font-medium">{{ \App\Support\Format::idr($invoice->total) }}</x-ui.table-cell>
-                                <x-ui.table-cell class="text-right">
-                                    <x-ui.button
-                                        type="button"
-                                        variant="ghost"
-                                        size="icon"
-                                        class="size-8"
-                                        x-on:click="$dispatch('open-modal', '{{ $detailName }}')"
-                                        aria-label="Detail invoice"
-                                    >
+                            <tr class="hover:bg-base-200/60 transition-colors">
+                                <td class="align-middle whitespace-nowrap">{{ $loop->iteration }}</td>
+                                <td class="align-middle whitespace-nowrap font-medium">{{ \App\Support\Format::date($invoice->date) }}</td>
+                                <td class="align-middle whitespace-nowrap">{{ $invoice->description }}</td>
+                                <td class="align-middle whitespace-nowrap">
+                                    <span @class(['badge',
+                                        'badge-success' => $invoice->status === \App\Enums\InvoiceStatus::PAID,
+                                        'badge-warning' => $invoice->status === \App\Enums\InvoiceStatus::PARTIALLY_PAID,
+                                        'badge-error' => $invoice->status === \App\Enums\InvoiceStatus::UNPAID,
+                                    ])>{{ $invoice->status->label() }}</span>
+                                </td>
+                                <td class="align-middle whitespace-nowrap font-medium">{{ \App\Support\Format::idr($invoice->total) }}</td>
+                                <td class="align-middle whitespace-nowrap text-right">
+                                    <button type="button" class="btn btn-ghost btn-square size-8" x-on:click="$dispatch('open-modal', '{{ $detailName }}')" aria-label="Detail invoice">
                                         <x-lucide name="external-link" />
-                                    </x-ui.button>
+                                    </button>
 
-                                    <x-ui.button
-                                        type="button"
-                                        variant="ghost"
-                                        size="icon"
-                                        class="size-8"
-                                        x-on:click="$dispatch('open-modal', '{{ $editName }}')"
-                                        aria-label="Edit invoice"
-                                    >
+                                    <button type="button" class="btn btn-ghost btn-square size-8" x-on:click="$dispatch('open-modal', '{{ $editName }}')" aria-label="Edit invoice">
                                         <x-lucide name="pencil" />
-                                    </x-ui.button>
+                                    </button>
 
-                                    <x-ui.button
-                                        type="button"
-                                        variant="ghost"
-                                        size="icon"
-                                        class="size-8 hover:text-destructive"
-                                        x-on:click="$dispatch('open-modal', '{{ $deleteName }}')"
-                                        aria-label="Hapus invoice"
-                                    >
+                                    <button type="button" class="btn btn-ghost btn-square size-8 hover:text-error" x-on:click="$dispatch('open-modal', '{{ $deleteName }}')" aria-label="Hapus invoice">
                                         <x-lucide name="trash-2" />
-                                    </x-ui.button>
-                                </x-ui.table-cell>
-                            </x-ui.table-row>
+                                    </button>
+                                </td>
+                            </tr>
 
-                            <x-ui.table-row>
-                                <x-ui.table-cell colspan="6" class="p-0">
+                            <tr class="hover:bg-base-200/60 transition-colors">
+                                <td class="align-middle whitespace-nowrap p-0" colspan="6">
                                     <x-dashboard.invoice-detail :invoice="$invoice" :name="$detailName" />
                                     <x-ui.confirm-dialog
                                         :name="$deleteName"
@@ -114,14 +90,14 @@
                                         <form method="POST" action="{{ route('dashboard.invoice.destroy', $invoice->id) }}">
                                             @csrf
                                             @method('DELETE')
-                                            <x-ui.button type="submit" variant="destructive">Hapus</x-ui.button>
+                                            <button type="submit" class="btn btn-error">Hapus</button>
                                         </form>
                                     </x-ui.confirm-dialog>
-                                </x-ui.table-cell>
-                            </x-ui.table-row>
+                                </td>
+                            </tr>
 
-                            <x-ui.table-row>
-                                <x-ui.table-cell colspan="6" class="p-0">
+                            <tr class="hover:bg-base-200/60 transition-colors">
+                                <td class="align-middle whitespace-nowrap p-0" colspan="6">
                                     <x-ui.dialog
                                         :name="$editName"
                                         title="Edit Tagihan / Invoice"
@@ -134,18 +110,18 @@
                                             :invoice="$invoice"
                                         />
                                     </x-ui.dialog>
-                                </x-ui.table-cell>
-                            </x-ui.table-row>
+                                </td>
+                            </tr>
                         @empty
-                            <x-ui.table-row>
-                                <x-ui.table-cell colspan="6" class="text-muted-foreground h-32 text-center">
+                            <tr class="hover:bg-base-200/60 transition-colors">
+                                <td class="align-middle whitespace-nowrap text-base-content/60 h-32 text-center" colspan="6">
                                     Belum ada data tagihan
-                                </x-ui.table-cell>
-                            </x-ui.table-row>
+                                </td>
+                            </tr>
                         @endforelse
-                    </x-ui.table-body>
-                </x-ui.table>
-            </x-ui.card-content>
-        </x-ui.card>
+                    </tbody>
+                </table></div>
+            </div>
+        </div>
     </div>
 @endsection

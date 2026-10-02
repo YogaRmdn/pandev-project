@@ -12,6 +12,7 @@
         "alpinejs": "^3.14.9",
         "axios": "^1.11.0",
         "concurrently": "^9.2.1",
+        "daisyui": "^5.7.47",
         "laravel-vite-plugin": "^2.0.0",
         "lucide-static": "^1.48.0",
         "tailwindcss": "^4.1.14",

@@ -4,30 +4,25 @@
     <div class="space-y-4">
         <x-dashboard.header title="Tambah Portfolio" />
 
-        <x-ui.card class="mt-4">
-            <x-ui.card-header>
+        <div class="card gap-6 border p-6 shadow-sm mt-4">
+            <div class="flex flex-col gap-1.5">
                 <div class="flex items-center gap-2">
-                    <x-ui.button
-                        href="{{ route('dashboard.portfolio.index') }}"
-                        variant="ghost"
-                        size="icon"
-                        aria-label="Kembali"
-                    >
+                    <a href="{{ route('dashboard.portfolio.index') }}" class="btn btn-ghost btn-square" aria-label="Kembali">
                         <x-lucide name="arrow-left" />
-                    </x-ui.button>
+                    </a>
                     <div>
                         <h1 class="text-lg font-semibold">Form Tambah Portfolio</h1>
-                        <p class="text-muted-foreground text-sm">Isi form dibawah ini untuk menambahkan portfolio.</p>
+                        <p class="text-base-content/60 text-sm">Isi form dibawah ini untuk menambahkan portfolio.</p>
                     </div>
                 </div>
-            </x-ui.card-header>
+            </div>
 
-            <x-ui.card-content>
+            <div class="">
                 <x-dashboard.portfolio-form
                     :action="route('dashboard.portfolio.store')"
                     method="POST"
                 />
-            </x-ui.card-content>
-        </x-ui.card>
+            </div>
+        </div>
     </div>
 @endsection

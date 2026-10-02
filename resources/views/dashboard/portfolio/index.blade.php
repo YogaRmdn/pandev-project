@@ -18,7 +18,7 @@
                         <div class="flex flex-wrap gap-2">
                             @foreach ($statuses as $status)
                                 @php $checked = in_array($status['value'], $filters['statuses'] ?? [], true) @endphp
-                                <label class="border-border inline-flex cursor-pointer items-center gap-1.5 rounded-md border px-3 py-1.5 text-sm has-[:checked]:border-primary has-[:checked]:bg-primary/10">
+                                <label class="border-base-300 inline-flex cursor-pointer items-center gap-1.5 rounded-md border px-3 py-1.5 text-sm has-[:checked]:border-primary has-[:checked]:bg-primary/10">
                                     <input
                                         type="checkbox"
                                         name="status[]"
@@ -37,7 +37,7 @@
                         <div class="flex flex-wrap gap-2">
                             @foreach ($categories as $category)
                                 @php $checked = in_array($category, $filters['categories'] ?? [], true) @endphp
-                                <label class="border-border inline-flex cursor-pointer items-center gap-1.5 rounded-md border px-3 py-1.5 text-sm has-[:checked]:border-primary has-[:checked]:bg-primary/10">
+                                <label class="border-base-300 inline-flex cursor-pointer items-center gap-1.5 rounded-md border px-3 py-1.5 text-sm has-[:checked]:border-primary has-[:checked]:bg-primary/10">
                                     <input
                                         type="checkbox"
                                         name="category[]"
@@ -52,19 +52,15 @@
                     </div>
 
                     <div class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-                        <x-ui.button type="button" variant="outline" x-on:click="$store.modals.close('portfolio-filter')">
+                        <button type="button" class="btn btn-outline" x-on:click="$store.modals.close('portfolio-filter')">
                             Batal
-                        </x-ui.button>
-                        <x-ui.button type="submit">Terapkan filter</x-ui.button>
+                        </button>
+                        <button type="submit" class="btn btn-primary">Terapkan filter</button>
                     </div>
                 </form>
             </x-ui.dialog>
 
-            <x-ui.button
-                type="button"
-                variant="{{ count($filters['statuses'] ?? []) + count($filters['categories'] ?? []) > 0 ? 'default' : 'outline' }}"
-                x-on:click="$dispatch('open-modal', 'portfolio-filter')"
-            >
+            <button type="button" class="btn" x-on:click="$dispatch('open-modal', 'portfolio-filter')">
                 <x-lucide name="filter" />
                 Filter
                 @if (count($filters['statuses'] ?? []) + count($filters['categories'] ?? []) > 0)
@@ -72,11 +68,11 @@
                         {{ count($filters['statuses'] ?? []) + count($filters['categories'] ?? []) }}
                     </span>
                 @endif
-            </x-ui.button>
+            </button>
 
-            <x-ui.button href="{{ route('dashboard.portfolio.create') }}" class="ml-auto">
+            <a href="{{ route('dashboard.portfolio.create') }}" class="btn btn-primary ml-auto">
                 <x-lucide name="plus" /> Tambah
-            </x-ui.button>
+            </a>
         </div>
 
         @if (($filters['search'] ?? null) || count($filters['categories'] ?? []) > 0 || count($filters['statuses'] ?? []) > 0)
@@ -84,7 +80,7 @@
                 @if ($filters['search'])
                     <a
                         href="{{ request()->fullUrlWithQuery(['search' => null, 'page' => null]) }}"
-                        class="bg-secondary text-secondary-foreground hover:text-destructive inline-flex items-center gap-1 rounded-full px-2 py-1 text-sm"
+                        class="bg-secondary text-secondary-foreground hover:text-error inline-flex items-center gap-1 rounded-full px-2 py-1 text-sm"
                     >
                         Pencarian: {{ $filters['search'] }}
                         <x-lucide name="x" class="size-3" />
@@ -94,7 +90,7 @@
                 @foreach ($filters['statuses'] ?? [] as $status)
                     <a
                         href="{{ request()->fullUrlWithQuery(['status' => array_values(array_diff($filters['statuses'], [$status])), 'page' => null]) }}"
-                        class="bg-secondary text-secondary-foreground hover:text-destructive inline-flex items-center gap-1 rounded-full px-2 py-1 text-sm"
+                        class="bg-secondary text-secondary-foreground hover:text-error inline-flex items-center gap-1 rounded-full px-2 py-1 text-sm"
                     >
                         Status: {{ $statuses[$loop->index]['label'] ?? $status }}
                         <x-lucide name="x" class="size-3" />
@@ -104,7 +100,7 @@
                 @foreach ($filters['categories'] ?? [] as $category)
                     <a
                         href="{{ request()->fullUrlWithQuery(['category' => array_values(array_diff($filters['categories'], [$category])), 'page' => null]) }}"
-                        class="bg-secondary text-secondary-foreground hover:text-destructive inline-flex items-center gap-1 rounded-full px-2 py-1 text-sm"
+                        class="bg-secondary text-secondary-foreground hover:text-error inline-flex items-center gap-1 rounded-full px-2 py-1 text-sm"
                     >
                         Kategori: {{ $category }}
                         <x-lucide name="x" class="size-3" />
@@ -113,7 +109,7 @@
 
                 <a
                     href="{{ route('dashboard.portfolio.index') }}"
-                    class="text-destructive hover:bg-destructive/10 inline-flex items-center gap-1 rounded-full px-2 py-1 text-sm"
+                    class="text-error hover:bg-error/10 inline-flex items-center gap-1 rounded-full px-2 py-1 text-sm"
                 >Hapus Semua</a>
             </div>
         @endif
@@ -122,7 +118,7 @@
             @forelse ($portfolios as $portfolio)
                 <x-dashboard.portfolio-card :portfolio="$portfolio" />
             @empty
-                <div class="text-muted-foreground col-span-3 flex h-64 items-center justify-center text-center">
+                <div class="text-base-content/60 col-span-3 flex h-64 items-center justify-center text-center">
                     @if (($filters['search'] ?? null) || count($filters['categories'] ?? []) > 0 || count($filters['statuses'] ?? []) > 0)
                         Tidak ada portfolio yang sesuai dengan filter.
                     @else

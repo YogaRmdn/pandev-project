@@ -7,14 +7,14 @@
             :description="'Update data portfolio &quot;'.$portfolio->name.'&quot;'"
         />
 
-        <x-ui.card class="mt-4">
-            <x-ui.card-content>
+        <div class="card gap-6 border p-6 shadow-sm mt-4">
+            <div class="">
                 <x-dashboard.portfolio-form
                     :portfolio="$portfolio"
                     :action="route('dashboard.portfolio.update', $portfolio->id)"
                     method="PUT"
                 />
-            </x-ui.card-content>
-        </x-ui.card>
+            </div>
+        </div>
     </div>
 @endsection

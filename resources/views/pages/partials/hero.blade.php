@@ -17,22 +17,22 @@
 
         <h1 class="text-primary mt-6 text-2xl font-bold md:text-4xl lg:text-6xl">PANDEV</h1>
         <div class="mt-1 text-lg font-medium md:text-2xl lg:text-4xl">From bold ideas to reliable software</div>
-        <p class="text-muted-foreground mx-auto mt-4 max-w-2xl text-balance text-base md:text-xl">
+        <p class="text-base-content/60 mx-auto mt-4 max-w-2xl text-balance text-base md:text-xl">
             We design, build, and scale web, mobile, desktop, IoT, and data products
             that help startups and growing businesses move forward.
         </p>
 
         <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
-            <x-ui.button size="lg" href="{{ route('contact') }}" class="h-12 px-8">
+            <a href="{{ route('contact') }}" class="btn btn-primary btn-lg h-12 px-8">
                 Start a Project
                 <x-lucide name="arrow-right" />
-            </x-ui.button>
-            <x-ui.button size="lg" variant="outline" href="{{ route('portfolio') }}" class="h-12 px-8">
+            </a>
+            <a href="{{ route('portfolio') }}" class="btn btn-outline btn-lg h-12 px-8">
                 View Our Work
-            </x-ui.button>
+            </a>
         </div>
 
-        <div class="text-muted-foreground mt-8 flex flex-wrap items-center justify-center gap-x-8 gap-y-2 text-sm">
+        <div class="text-base-content/60 mt-8 flex flex-wrap items-center justify-center gap-x-8 gap-y-2 text-sm">
             <span class="inline-flex items-center gap-2">
                 <x-lucide name="badge-check" class="text-primary size-4" /> 25+ projects shipped
             </span>

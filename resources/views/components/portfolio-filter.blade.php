@@ -1,16 +1,13 @@
 @props(['categories' => [], 'selected' => []])
 
 <div x-data>
-    <x-ui.button
-        variant="{{ count($selected) > 0 ? 'default' : 'outline' }}"
-        x-on:click="$dispatch('open-modal', 'portfolio-filter')"
-    >
+    <button type="button" class="btn" x-on:click="$dispatch('open-modal', 'portfolio-filter')">
         <x-lucide name="filter" />
         Filter
         @if (count($selected) > 0)
             <span class="text-primary bg-primary-foreground ml-1 flex size-5 items-center justify-center rounded-full text-xs">{{ count($selected) }}</span>
         @endif
-    </x-ui.button>
+    </button>
 
     <x-ui.dialog
         name="portfolio-filter"
@@ -41,7 +38,7 @@
                                 class="peer sr-only"
                             />
                             <span
-                                class="border hover:bg-accent hover:text-accent-foreground inline-flex h-8 items-center rounded-md border px-3 text-sm transition-colors peer-checked:bg-primary peer-checked:text-primary-foreground"
+                                class="border hover:bg-base-200 hover:text-base-content inline-flex h-8 items-center rounded-md border px-3 text-sm transition-colors peer-checked:bg-primary peer-checked:text-primary-content"
                             >{{ $category }}</span>
                         </label>
                     @endforeach
@@ -49,8 +46,8 @@
             </fieldset>
 
             <div class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-                <x-ui.button type="button" variant="outline" x-on:click="$store.modals.close('portfolio-filter')">Cancel</x-ui.button>
-                <x-ui.button type="submit">Apply filters</x-ui.button>
+                <button type="button" class="btn btn-outline" x-on:click="$store.modals.close('portfolio-filter')">Cancel</button>
+                <button type="submit" class="btn btn-primary">Apply filters</button>
             </div>
         </form>
     </x-ui.dialog>

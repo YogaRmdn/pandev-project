@@ -21,7 +21,7 @@ app/
   Http/Controllers/    # Dashboard, Portfolio CMS, Finance, UserManagement, Settings, Auth
   Models/              # User, Portfolio, PortfolioGalery, Transaction, Invoice, InvoiceItem
   Services/            # MediaService (Cloudinary fallback ke disk public)
-  Support/             # Format (idr, thousandSeparator, relativeTime, url), PortfolioOptions, Cva
+  Support/             # Format (idr, thousandSeparator, relativeTime, url), PortfolioOptions
   Enums/               # PortfolioStatus, Role, InvoiceStatus, TransactionType
 config/                 # media.php (Cloudinary + constraint upload), services.php
 database/
@@ -29,7 +29,7 @@ database/
   factories/  seeders/  # DatabaseSeeder: 4 user, 5 portfolio, 5 transaksi, 1 invoice
 resources/
   views/                # Blade + Alpine (layouts/, components/ui, components/dashboard, pages/)
-  css/app.css           # Tailwind CSS v4 (@source inline-html)
+  css/app.css           # Tailwind CSS v4 + daisyUI 5 (tema custom panev-light/panev-dark)
   js/app.js             # Alpine, modals, sidebar store, coverflow carousel
 routes/
   web.php               # 36 route publik + dashboard (admin middleware via bootstrap/app.php)
@@ -43,7 +43,7 @@ tests/                  # Feature/MigrationSmokeTest + Auth
 
 - **Auth**: native Laravel session auth. Tidak ada registrasi publik — user dibuat admin dari dashboard. Guest di-redirect ke `route('login')`; route admin dilindungi alias middleware `admin`.
 - **DB**: MySQL `pandev_db` (root, tanpa password). Tabel pakai UUID (`HasUuids`). Admin login seed: `ijichinijika@yopmail.com` / `password123` (semua user seed password: `password123`).
-- **UI**: Blade components `x-ui.*` (shadcn-style, CSS variables oklch), Alpine.js untuk interaktivitas, Lucide icons (lokal `x-lucide`).
+- **UI**: daisyUI 5 — markup memakai kelas daisyUI langsung (`btn btn-primary`, `input`, `card`, `table`, `badge`…), TANPA wrapper thin seperti shadcn. Komponen Blade yang tersisa hanya `x-ui.dialog` / `x-ui.confirm-dialog` (behavior modal Alpine) dan komponen fitur (`pagination-bar`, `search-field`, dll). Tema: `panev-light` (default) / `panev-dark`, situs selalu light (`prefersdark: false`). Alpine.js untuk interaktivitas, Lucide icons (lokal `x-lucide`). Root `<body>` wajib punya `x-data` supaya binding sidebar (`$store.sidebar`) terinisialisasi.
 - **Format angka**: `App\Support\Format::idr()` memformat manual (pemisah ribuan `"."`, desimal `","`) karena PHP di mesin ini TIDAK punya ekstensi `intl`.
 - **PHP tanpa GD**: test upload memakai `UploadedFile::fake()->create()` (bukan `->image()`), karena validasi gambar Laravel hanya membaca MIME.
 - **Media**: `MediaService` memakai `config('media.*')` (bukan `config('cloudinary.*')`). Jika `CLOUDINARY_CLOUD_NAME` kosong, upload jatuh ke disk `public` (`storage/app/public`).
