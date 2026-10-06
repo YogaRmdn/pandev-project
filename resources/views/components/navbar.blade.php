@@ -35,7 +35,7 @@
                         alt="PanDev Logo"
                         class="size-8 shrink-0 object-contain"
                     />
-                    <span class="text-foreground">PANDEV</span>
+                    <span class="text-base-content">PANDEV</span>
                 </a>
             </div>
         </div>

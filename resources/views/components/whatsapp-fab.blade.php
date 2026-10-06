@@ -37,7 +37,7 @@
             rel="noopener noreferrer"
             aria-label="Hubungi PanDev lewat WhatsApp"
             title="Hubungi PanDev lewat WhatsApp"
-            class="bg-primary text-primary-foreground pointer-events-auto inline-flex size-14 shrink-0 items-center justify-center rounded-full shadow-lg transition-transform duration-200 hover:scale-105 hover:shadow-xl focus-visible:outline-primary focus-visible:outline-2 focus-visible:outline-offset-2 active:scale-95 motion-reduce:transform-none motion-reduce:hover:scale-100"
+            class="bg-primary text-primary-content pointer-events-auto inline-flex size-14 shrink-0 items-center justify-center rounded-full shadow-lg transition-transform duration-200 hover:scale-105 hover:shadow-xl focus-visible:outline-primary focus-visible:outline-2 focus-visible:outline-offset-2 active:scale-95 motion-reduce:transform-none motion-reduce:hover:scale-100"
         >
             <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="size-7">
                 <path d="{{ App\Support\SiteContent::whatsappPath() }}" />

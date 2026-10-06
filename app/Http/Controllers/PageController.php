@@ -32,7 +32,9 @@ class PageController extends Controller
 
     public function contact(): View
     {
-        return view('pages.contact');
+        return view('pages.contact', [
+            'accessKey' => config('services.web3forms.access_key'),
+        ]);
     }
 
     public function portfolio(): View
@@ -60,15 +62,12 @@ class PageController extends Controller
             'email' => ['required', 'email', 'max:255'],
             'message' => ['required', 'string', 'max:5000'],
         ]);
-
         $accessKey = config('services.web3forms.access_key');
-
         if (blank($accessKey)) {
             return back()->withErrors([
                 'message' => 'The contact form is not configured yet. Set WEB3FORMS_ACCESS_KEY in the .env file.',
             ]);
         }
-
         $response = Http::asForm()->post('https://api.web3forms.com/submit', [
             'access_key' => $accessKey,
             'subject' => 'New message from PanDev',

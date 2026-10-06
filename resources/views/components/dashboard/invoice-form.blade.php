@@ -32,7 +32,29 @@
         formatRupiah(value) {
             return new Intl.NumberFormat('id-ID').format(Number(value) || 0);
         },
+        priceDisplay(value) {
+            return value === '' || value === null ? '' : `Rp ${this.formatRupiah(value)}`;
+        },
+        syncPrice(index, el) {
+            const raw = el.value.replace(/\D/g, '');
+            this.items[index].price = raw;
+            let message = '';
+            if (raw !== '' && Number(raw) < 1) {
+                message = 'Harga minimal Rp 1';
+            } else if (raw.length > 13) {
+                message = 'Maksimal Rp 9.999.999.999.999';
+            }
+            el.setCustomValidity(message);
+        },
+        bootForm(form) {
+            form.addEventListener('submit', () => {
+                form.querySelectorAll(`input[name$='[price]']`).forEach((el) => {
+                    el.value = el.value.replace(/\D/g, '');
+                });
+            });
+        },
     }"
+    x-init="bootForm($el)"
 >
     @csrf
     @if ($isEdit)
@@ -43,7 +65,7 @@
         <div class="grid gap-4 sm:grid-cols-2">
             <div class="space-y-2">
                 <label class="label text-sm font-medium" for="description">Deskripsi</label>
-                <input class="input w-full" id="description" name="description" value="{{ old('description', $invoice->description) }}" placeholder="Deskripsi transaksi..." required>
+                <input class="input w-full" id="description" name="description" value="{{ old('description', $invoice->description) }}" placeholder="Deskripsi transaksi..." maxlength="255" required>
                                 @if ($errors->get('description'))
                     <ul class="text-error space-y-1 text-sm">
                         @foreach ($errors->get('description') as $message)
@@ -78,7 +100,7 @@
                 <div class="flex items-end gap-2">
                     <div class="flex-1 space-y-1">
                         <label x-bind:for="'item-name-' + index" class="text-xs leading-none font-medium select-none">Nama Item</label>
-                        <input class="input w-full" x-bind:name="'invoice_items[' + index + '][name]'" x-bind:id="'item-name-' + index" x-model="item.name" placeholder="Nama item..." required>
+                        <input class="input w-full" x-bind:name="'invoice_items[' + index + '][name]'" x-bind:id="'item-name-' + index" x-model="item.name" placeholder="Nama item..." maxlength="255" required>
                     </div>
 
                     <div class="w-24 space-y-1">
@@ -88,7 +110,7 @@
 
                     <div class="w-36 space-y-1">
                         <label x-bind:for="'item-price-' + index" class="text-xs leading-none font-medium select-none">Harga</label>
-                        <input class="input w-full" x-bind:name="'invoice_items[' + index + '][price]'" x-bind:id="'item-price-' + index" inputmode="numeric" x-model="item.price" x-on:input="$el.value = $el.value.replace(/\D/g, '')" placeholder="Rp 0" required>
+                        <input class="input w-full" x-bind:name="'invoice_items[' + index + '][price]'" x-bind:id="'item-price-' + index" inputmode="numeric" x-bind:value="priceDisplay(item.price)" x-on:input="syncPrice(index, $el)" placeholder="Rp 0" required>
                     </div>
 
                     <button type="button" class="btn btn-error btn-square" x-on:click="remove(index)" aria-label="Hapus item">
@@ -132,7 +154,13 @@
         </div>
     </div>
 
-    <button type="submit" class="btn btn-primary h-10 w-full">
-        {{ $isEdit ? 'Simpan' : 'Submit' }}
-    </button>
+    <div class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+        <button type="button" class="btn btn-outline"
+            x-on:click="const d = $el.closest('dialog'); if (d) { d.close(); }">
+            Batal
+        </button>
+        <button type="submit" class="btn btn-primary">
+            {{ $isEdit ? 'Simpan' : 'Submit' }}
+        </button>
+    </div>
 </form>

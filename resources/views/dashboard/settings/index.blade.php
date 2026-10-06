@@ -2,8 +2,8 @@
 
 @section('content')
     <div class="space-y-4">
-        <x-dashboard.header title="Pengaturan" description="Kelola avatar, data diri, dan keamanan akun Anda" />
-
+        <x-dashboard.navbar drawer-id="dashboard-drawer" title="Pengaturan"
+            description="Kelola avatar, data diri, dan keamanan akun Anda" />
         {{-- Avatar --}}
         <div class="card gap-6 border p-6 shadow-sm">
             <div class="flex flex-col gap-1.5">

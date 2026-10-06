@@ -22,7 +22,7 @@ return [
     | Media constraints
     |--------------------------------------------------------------------------
     |
-    | Mirrors the dropzone limits from the original React forms: 5 MB for
+    | Mirrors the dropzone limits from the original React forms: 1 MB for
     | portfolio media, 2 MB for avatars.
     |
     */
@@ -31,7 +31,7 @@ return [
     'portfolio_folder' => 'pandev/portfolio',
     'avatar_folder' => 'pandev/avatars',
 
-    'portfolio_max_kb' => 5120,
+    'portfolio_max_kb' => 1024,
     'avatar_max_kb' => 2048,
 
     'mimes' => ['jpg', 'jpeg', 'png', 'webp'],

@@ -5,18 +5,62 @@
     $isEdit = $portfolio->exists;
     $selectedStacks = (array) ($portfolio->tech_stacks ?? []);
     $existingGallery = $isEdit ? $portfolio->galery : collect();
+
+    $thumbDbUrl = $isEdit ? (string) $portfolio->thumbnail : '';
+
+    $galleryKept = $existingGallery->map(fn ($image) => [
+        'id' => (string) $image->id,
+        'url' => $image->image_url,
+        'deleteUrl' => $isEdit ? route('dashboard.portfolio.galery.destroy', [$portfolio->id, $image->id], false) : null,
+        'status' => 'idle',
+        'error' => '',
+    ])->values()->all();
+
+    // Uploads already done this session survive a validation redirect.
+    $galleryNew = collect(old('galery_urls', []))
+        ->filter()
+        ->map(fn ($url) => [
+            'key' => (string) $url,
+            'preview' => (string) $url,
+            'serverUrl' => (string) $url,
+            'status' => 'idle',
+            'error' => '',
+            'dz' => false,
+        ])->values()->all();
+
+    $statuses = [
+        ['value' => \App\Enums\PortfolioStatus::DRAFT->value, 'label' => 'Draft'],
+        ['value' => \App\Enums\PortfolioStatus::PUBLISHED->value, 'label' => 'Publish'],
+    ];
 @endphp
 
 <form
     method="POST"
     action="{{ $action }}"
     enctype="multipart/form-data"
-    x-data="{
-        tab: 'informasi',
-        techStacks: @js($selectedStacks),
-        removeGallery: [],
-        removeThumbnail: false,
-    }"
+    novalidate
+    x-data="portfolioForm({
+        isEdit: @js($isEdit),
+        uploadUrl: @js(route('dashboard.portfolio.media.store', [], false)),
+        destroyUrl: @js(route('dashboard.portfolio.media.destroy', [], false)),
+        thumbnailDeleteUrl: @js($isEdit ? route('dashboard.portfolio.thumbnail.destroy', $portfolio->id, false) : null),
+        thumbnail: @js(old('thumbnail_url', $portfolio->thumbnail ?? '')),
+        thumbnailDbUrl: @js($thumbDbUrl),
+        values: {
+            name: @js(old('name', $portfolio->name)),
+            description: @js(old('description', $portfolio->description)),
+            status: @js(old('status', $portfolio->status?->value)),
+            category: @js(old('category', $portfolio->category)),
+            demo_link: @js(old('demo_link', $portfolio->demo_link)),
+            repository_link: @js(old('repository_link', $portfolio->repository_link)),
+        },
+        techStacks: @js(old('tech_stacks', $selectedStacks)),
+        categories: @js(\App\Support\PortfolioOptions::categories()),
+        statuses: @js($statuses),
+        galleryKept: @js($galleryKept),
+        galleryNew: @js($galleryNew),
+    })"
+    x-on:submit="onSubmit($event)"
     class="space-y-4"
 >
     @csrf
@@ -44,47 +88,87 @@
         <div class="grid gap-4 md:grid-cols-2">
             <div class="space-y-2 md:col-span-2">
                 <label class="label text-sm font-medium" for="name">Nama</label>
-                <input class="input w-full" id="name" name="name" value="{{ old('name', $portfolio->name) }}" placeholder="Nama projek..." required>
-                                @if ($errors->get('name'))
+                <input @class(['input w-full', 'input-error' => $errors->has('name')])
+                    :class="errors.name.length ? 'input-error' : ''"
+                    id="name" name="name"
+                    x-model="form.name"
+                    x-on:blur="validateField('name')"
+                    x-on:input="errors.name.length && validateField('name')"
+                    value="{{ old('name', $portfolio->name) }}" placeholder="Nama projek..." required>
+                @if ($errors->get('name'))
                     <ul class="text-error space-y-1 text-sm">
                         @foreach ($errors->get('name') as $message)
                             <li>{{ $message }}</li>
                         @endforeach
                     </ul>
                 @endif
+                <ul class="text-error space-y-1 text-sm" x-show="errors.name.length" x-cloak>
+                    <template x-for="message in errors.name" :key="message">
+                        <li x-text="message"></li>
+                    </template>
+                </ul>
             </div>
 
             <div class="space-y-2 md:col-span-2">
                 <label class="label text-sm font-medium" for="description">Deskripsi</label>
-                <textarea class="textarea w-full" id="description" name="description" rows="5" placeholder="Deskripsi..." required>{{ old('description', $portfolio->description) }}</textarea>
-                                @if ($errors->get('description'))
+                <textarea @class(['textarea w-full', 'textarea-error' => $errors->has('description')])
+                    :class="errors.description.length ? 'textarea-error' : ''"
+                    id="description" name="description" rows="5"
+                    x-model="form.description"
+                    x-on:blur="validateField('description')"
+                    x-on:input="errors.description.length && validateField('description')"
+                    placeholder="Deskripsi..." required>{{ old('description', $portfolio->description) }}</textarea>
+                @if ($errors->get('description'))
                     <ul class="text-error space-y-1 text-sm">
                         @foreach ($errors->get('description') as $message)
                             <li>{{ $message }}</li>
                         @endforeach
                     </ul>
                 @endif
+                <ul class="text-error space-y-1 text-sm" x-show="errors.description.length" x-cloak>
+                    <template x-for="message in errors.description" :key="message">
+                        <li x-text="message"></li>
+                    </template>
+                </ul>
             </div>
 
             <div class="space-y-2">
                 <label class="label text-sm font-medium" for="status">Status</label>
-                <select class="select w-full" id="status" name="status" required>
+                <select @class(['select w-full', 'select-error' => $errors->has('status')])
+                    :class="errors.status.length ? 'select-error' : ''"
+                    id="status" name="status"
+                    x-model="form.status"
+                    x-on:change="validateField('status')"
+                    required>
                     <option value="">Pilih status</option>
-                    <option value="draft" @selected(old('status', $portfolio->status?->value) === 'draft')>Draft</option>
-                    <option value="published" @selected(old('status', $portfolio->status?->value) === 'published')>Publish</option>
+                    @foreach ($statuses as $option)
+                        <option value="{{ $option['value'] }}" @selected(old('status', $portfolio->status?->value) === $option['value'])>
+                            {{ $option['label'] }}
+                        </option>
+                    @endforeach
                 </select>
-                                @if ($errors->get('status'))
+                @if ($errors->get('status'))
                     <ul class="text-error space-y-1 text-sm">
                         @foreach ($errors->get('status') as $message)
                             <li>{{ $message }}</li>
                         @endforeach
                     </ul>
                 @endif
+                <ul class="text-error space-y-1 text-sm" x-show="errors.status.length" x-cloak>
+                    <template x-for="message in errors.status" :key="message">
+                        <li x-text="message"></li>
+                    </template>
+                </ul>
             </div>
 
             <div class="space-y-2">
                 <label class="label text-sm font-medium" for="category">Kategori</label>
-                <select class="select w-full" id="category" name="category" required>
+                <select @class(['select w-full', 'select-error' => $errors->has('category')])
+                    :class="errors.category.length ? 'select-error' : ''"
+                    id="category" name="category"
+                    x-model="form.category"
+                    x-on:change="validateField('category')"
+                    required>
                     <option value="">Pilih kategori</option>
                     @foreach (\App\Support\PortfolioOptions::categories() as $category)
                         <option value="{{ $category }}" @selected(old('category', $portfolio->category) === $category)>
@@ -92,37 +176,64 @@
                         </option>
                     @endforeach
                 </select>
-                                @if ($errors->get('category'))
+                @if ($errors->get('category'))
                     <ul class="text-error space-y-1 text-sm">
                         @foreach ($errors->get('category') as $message)
                             <li>{{ $message }}</li>
                         @endforeach
                     </ul>
                 @endif
+                <ul class="text-error space-y-1 text-sm" x-show="errors.category.length" x-cloak>
+                    <template x-for="message in errors.category" :key="message">
+                        <li x-text="message"></li>
+                    </template>
+                </ul>
             </div>
 
             <div class="space-y-2">
                 <label class="label text-sm font-medium" for="demo-link">Link Demo</label>
-                <input class="input w-full" id="demo-link" name="demo_link" value="{{ old('demo_link', $portfolio->demo_link) }}" placeholder="Link demo...">
-                                @if ($errors->get('demo_link'))
+                <input @class(['input w-full', 'input-error' => $errors->has('demo_link')])
+                    :class="errors.demo_link.length ? 'input-error' : ''"
+                    id="demo-link" name="demo_link"
+                    x-model="form.demo_link"
+                    x-on:blur="validateField('demo_link')"
+                    x-on:input="errors.demo_link.length && validateField('demo_link')"
+                    value="{{ old('demo_link', $portfolio->demo_link) }}" placeholder="https://...">
+                @if ($errors->get('demo_link'))
                     <ul class="text-error space-y-1 text-sm">
                         @foreach ($errors->get('demo_link') as $message)
                             <li>{{ $message }}</li>
                         @endforeach
                     </ul>
                 @endif
+                <ul class="text-error space-y-1 text-sm" x-show="errors.demo_link.length" x-cloak>
+                    <template x-for="message in errors.demo_link" :key="message">
+                        <li x-text="message"></li>
+                    </template>
+                </ul>
             </div>
 
             <div class="space-y-2">
                 <label class="label text-sm font-medium" for="repo-link">Link Repository</label>
-                <input class="input w-full" id="repo-link" name="repository_link" value="{{ old('repository_link', $portfolio->repository_link) }}" placeholder="Link repository...">
-                                @if ($errors->get('repository_link'))
+                <input @class(['input w-full', 'input-error' => $errors->has('repository_link')])
+                    :class="errors.repository_link.length ? 'input-error' : ''"
+                    id="repo-link" name="repository_link"
+                    x-model="form.repository_link"
+                    x-on:blur="validateField('repository_link')"
+                    x-on:input="errors.repository_link.length && validateField('repository_link')"
+                    value="{{ old('repository_link', $portfolio->repository_link) }}" placeholder="https://...">
+                @if ($errors->get('repository_link'))
                     <ul class="text-error space-y-1 text-sm">
                         @foreach ($errors->get('repository_link') as $message)
                             <li>{{ $message }}</li>
                         @endforeach
                     </ul>
                 @endif
+                <ul class="text-error space-y-1 text-sm" x-show="errors.repository_link.length" x-cloak>
+                    <template x-for="message in errors.repository_link" :key="message">
+                        <li x-text="message"></li>
+                    </template>
+                </ul>
             </div>
 
             <div class="space-y-2 md:col-span-2">
@@ -130,7 +241,7 @@
 
                 <div class="flex flex-wrap gap-1.5">
                     <template x-for="stack in techStacks" x-bind:key="stack">
-                        <span class="bg-secondary text-secondary-foreground inline-flex items-center gap-1 rounded-md border px-2 py-1 text-sm">
+                        <span class="bg-base-200 text-base-content inline-flex items-center gap-1 rounded-md border px-2 py-1 text-sm">
                             <span x-text="stack"></span>
                             <button
                                 type="button"
@@ -175,7 +286,7 @@
                     <input type="hidden" name="tech_stacks[]" x-bind:value="stack" />
                 </template>
 
-                                @if ($errors->get('tech_stacks'))
+                @if ($errors->get('tech_stacks'))
                     <ul class="text-error space-y-1 text-sm">
                         @foreach ($errors->get('tech_stacks') as $message)
                             <li>{{ $message }}</li>
@@ -187,90 +298,153 @@
     </div>
 
     {{-- Media --}}
-    <div x-show="tab === 'media'" class="space-y-6" x-cloak>
-            <div class="space-y-2">
-                <label class="label text-sm font-medium" for="thumbnail">Thumbnail</label>
+    <div x-show="tab === 'media'" class="space-y-6">
+        {{-- Thumbnail --}}
+        <div class="space-y-2">
+            <label class="label text-sm font-medium" for="thumbnail-drop">Thumbnail</label>
+            <p class="text-base-content/60 text-xs">JPG, PNG, atau WEBP — maksimal 1MB.</p>
 
-                <label
-                    for="thumbnail"
-                    class="hover:bg-primary/20 flex min-h-60 cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dotted border-black/30 transition-transform"
-                >
-                    <x-lucide name="upload" class="size-8" />
-                    <span class="font-medium">Upload Thumbnail</span>
-                    <span class="text-base-content/60 text-xs">Image: jpg/png/webp (Maks 5MB)</span>
-                    <input id="thumbnail" type="file" name="thumbnail" accept="image/jpeg,image/png,image/webp" class="sr-only" />
-                </label>
+            <input type="hidden" name="thumbnail_url" x-bind:value="thumb.url">
+
+            <div x-show="thumb.url || thumb.status !== 'idle'" class="relative w-48 sm:w-64">
+                <img x-show="thumb.preview" x-bind:src="thumb.preview" alt="Pratinjau thumbnail"
+                    class="border-base-300 aspect-video w-full rounded-lg border object-cover">
+                <div x-show="!thumb.preview"
+                    class="border-base-300 bg-base-200 text-base-content/60 grid aspect-video w-full place-items-center rounded-lg border text-sm">
+                    Tidak ada thumbnail
+                </div>
+                <div x-show="thumb.status === 'uploading' || thumb.status === 'deleting'"
+                    class="bg-base-300/70 absolute inset-0 grid place-items-center rounded-lg">
+                    <span class="loading loading-spinner loading-lg"></span>
+                </div>
+                <button type="button" x-on:click="removeThumb()"
+                    x-bind:aria-label="thumb.error ? 'Tutup pesan error' : 'Hapus thumbnail'"
+                    class="btn btn-circle btn-sm btn-error absolute top-2 right-2">
+                    <span class="loading loading-spinner loading-xs" x-show="thumb.status === 'deleting'" x-cloak></span>
+                    <x-lucide name="x" class="size-4" x-show="thumb.status !== 'deleting'" />
+                </button>
             </div>
 
-            @if ($isEdit && $portfolio->thumbnail)
-                <div class="relative mt-3 w-fit" x-show="!removeThumbnail">
-                    <img src="{{ $portfolio->thumbnail }}" alt="Thumbnail saat ini" class="aspect-video w-[500px] max-w-full rounded-lg object-cover" />
-                    <button type="button" class="btn btn-outline btn-square absolute -top-1 -right-1 rounded-full" x-on:click="removeThumbnail = true" aria-label="Hapus thumbnail">
-                        <x-lucide name="x" />
-                    </button>
+            <div x-show="!thumb.url && thumb.status === 'idle'">
+                <div x-ref="thumbDrop" id="thumbnail-drop" tabindex="-1"
+                    class="media-dropzone border-base-300 hover:border-primary hover:bg-base-200/60 border-2 border-dashed rounded-lg p-8 text-center transition-colors">
+                    <div class="pointer-events-none flex flex-col items-center gap-2 text-sm">
+                        <x-lucide name="image-plus" class="text-base-content/40 size-8" />
+                        <p class="font-medium">Drag & drop thumbnail di sini atau klik untuk memilih</p>
+                        <p class="text-base-content/60 text-xs">JPG, PNG, WEBP — maksimal 1MB</p>
+                    </div>
                 </div>
+            </div>
 
-                <input type="hidden" name="remove_thumbnail" x-bind:value="removeThumbnail ? '1' : '0'" />
-            @endif
-
-                        @if ($errors->get('thumbnail'))
+            <p x-show="thumb.error" x-cloak class="text-error text-sm" x-text="thumb.error"></p>
+            @if ($errors->get('thumbnail'))
                 <ul class="text-error space-y-1 text-sm">
                     @foreach ($errors->get('thumbnail') as $message)
                         <li>{{ $message }}</li>
                     @endforeach
                 </ul>
             @endif
+            <ul class="text-error space-y-1 text-sm" x-show="errors.thumbnail.length" x-cloak>
+                <template x-for="message in errors.thumbnail" :key="message">
+                    <li x-text="message"></li>
+                </template>
+            </ul>
         </div>
 
+        {{-- Galeri --}}
         <div class="space-y-2">
-            <label class="label text-sm font-medium" for="galery-files">Galeri</label>
+            <label class="label text-sm font-medium" for="gallery-drop">Galeri</label>
+            <p class="text-base-content/60 text-xs">Maksimal 12 gambar — JPG, PNG, atau WEBP — maksimal 1MB per file.</p>
 
-            <label
-                for="galery-files"
-                class="hover:bg-primary/20 flex min-h-60 cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dotted border-black/30 transition-transform"
-            >
-                <x-lucide name="upload" class="size-8" />
-                <span class="font-medium">Upload Foto Galeri</span>
-                <span class="text-base-content/60 text-xs">Image: jpg/png/webp (Maks 5MB)</span>
-                <input id="galery-files" type="file" name="galery_files[]" accept="image/jpeg,image/png,image/webp" multiple class="sr-only" />
-            </label>
-
-            @if ($existingGallery->isNotEmpty())
-                <div class="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-6">
-                    @foreach ($existingGallery as $image)
-                        <div class="group relative aspect-square overflow-hidden rounded-lg" x-show="!removeGallery.includes(@js($image->image_url))">
-                            <img src="{{ $image->image_url }}" alt="Galeri" loading="lazy" class="h-full w-full object-cover" />
-                            <button type="button" class="btn btn-outline btn-square absolute -top-1 -right-1 rounded-full" x-on:click="removeGallery.push(@js($image->image_url))" aria-label="Hapus foto galeri">
-                                <x-lucide name="x" />
-                            </button>
-                            {{-- Sent to the controller as the URL to keep; the remove
-                                 button disables it so the request omits the photo. --}}
-                            <input
-                                type="hidden"
-                                name="galery[]"
-                                x-bind:value="@js($image->image_url)"
-                                x-bind:disabled="removeGallery.includes(@js($image->image_url))"
-                            />
+            <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4"
+                x-show="galleryKept.length + galleryNew.length > 0">
+                <template x-for="item in galleryKept" x-bind:key="'kept-' + item.id">
+                    <div class="border-base-300 relative overflow-hidden rounded-lg border">
+                        <img x-bind:src="item.url" alt="Galeri" class="aspect-video w-full object-cover">
+                        <div x-show="item.status === 'deleting'"
+                            class="bg-base-300/70 absolute inset-0 grid place-items-center">
+                            <span class="loading loading-spinner loading-md"></span>
                         </div>
-                    @endforeach
+                        <div x-show="item.status === 'error'"
+                            class="bg-error/10 absolute inset-x-0 bottom-0 p-1.5 text-center">
+                            <span class="text-error text-[10px] leading-tight" x-text="item.error"></span>
+                        </div>
+                        <button type="button" x-on:click="removeKept(item)" aria-label="Hapus gambar"
+                            class="btn btn-circle btn-xs btn-error absolute top-1.5 right-1.5">
+                            <span class="loading loading-spinner loading-xs" x-show="item.status === 'deleting'" x-cloak></span>
+                            <x-lucide name="x" class="size-3.5" x-show="item.status !== 'deleting'" />
+                        </button>
+                    </div>
+                </template>
+
+                <template x-for="item in galleryNew" x-bind:key="'new-' + item.key">
+                    <div class="border-base-300 relative overflow-hidden rounded-lg border">
+                        <img x-show="item.preview" x-bind:src="item.preview" alt="Galeri baru"
+                            class="aspect-video w-full object-cover">
+                        <div x-show="!item.preview"
+                            class="bg-base-200 text-base-content/60 grid aspect-video w-full place-items-center text-xs">
+                            Tidak ada pratinjau
+                        </div>
+                        <div x-show="item.status === 'uploading' || item.status === 'deleting'"
+                            class="bg-base-300/70 absolute inset-0 grid place-items-center">
+                            <span class="loading loading-spinner loading-md"></span>
+                        </div>
+                        <div x-show="item.status === 'error'"
+                            class="bg-error/10 absolute inset-x-0 bottom-0 p-1.5 text-center">
+                            <span class="text-error text-[10px] leading-tight" x-text="item.error"></span>
+                        </div>
+                        <span x-show="item.status === 'idle'"
+                            class="badge badge-primary badge-sm absolute bottom-1.5 left-1.5">Baru</span>
+                        <button type="button" x-on:click="removeNew(item)"
+                            x-bind:aria-label="item.status === 'error' ? 'Tutup pesan error' : 'Hapus gambar'"
+                            class="btn btn-circle btn-xs btn-error absolute top-1.5 right-1.5">
+                            <span class="loading loading-spinner loading-xs" x-show="item.status === 'deleting'" x-cloak></span>
+                            <x-lucide name="x" class="size-3.5" x-show="item.status !== 'deleting'" />
+                        </button>
+                    </div>
+                </template>
+            </div>
+
+            <div x-show="galleryKept.length + galleryNew.length < 12">
+                <div x-ref="galDrop" id="gallery-drop" tabindex="-1"
+                    class="media-dropzone border-base-300 hover:border-primary hover:bg-base-200/60 border-2 border-dashed rounded-lg p-8 text-center transition-colors">
+                    <div class="pointer-events-none flex flex-col items-center gap-2 text-sm">
+                        <x-lucide name="image-plus" class="text-base-content/40 size-8" />
+                        <p class="font-medium">Drag & drop gambar galeri di sini atau klik untuk memilih</p>
+                        <p class="text-base-content/60 text-xs">Upload langsung tersimpan</p>
+                    </div>
                 </div>
+            </div>
 
-                <p class="text-base-content/60 text-xs">
-                    Foto yang diklik akan dihapus saat form disimpan.
-                </p>
-            @endif
-
-                        @if ($errors->get('galery_files'))
+            @if ($errors->get('galery'))
                 <ul class="text-error space-y-1 text-sm">
-                    @foreach ($errors->get('galery_files') as $message)
+                    @foreach ($errors->get('galery') as $message)
                         <li>{{ $message }}</li>
                     @endforeach
                 </ul>
             @endif
+            <ul class="text-error space-y-1 text-sm" x-show="errors.galery.length" x-cloak>
+                <template x-for="message in errors.galery" :key="message">
+                    <li x-text="message"></li>
+                </template>
+            </ul>
         </div>
+
+        <template x-for="item in galleryKept" x-bind:key="'kept-input-' + item.id">
+            <input type="hidden" name="galery[]" x-bind:value="item.url">
+        </template>
+        <template x-for="item in galleryNew" x-bind:key="'new-input-' + item.key">
+            <input type="hidden" name="galery_urls[]" x-bind:value="item.serverUrl">
+        </template>
     </div>
 
     <button type="submit" class="btn btn-primary mt-4 h-10 w-full">
         {{ $isEdit ? 'Update' : 'Submit' }}
     </button>
+
+    <div class="toast toast-end z-[100]" x-show="toastVisible" x-cloak x-transition role="status">
+        <div class="alert alert-warning">
+            <span x-text="toastMsg"></span>
+        </div>
+    </div>
 </form>

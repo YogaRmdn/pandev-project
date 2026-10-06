@@ -24,36 +24,40 @@ class DatabaseSeeder extends Seeder
         $password = Hash::make('password123');
 
         $accounts = [
-            ['Ijichi Nijika', 'ijichinijika@yopmail.com', Role::ADMIN],
-            ['Gotou Hitori', 'gotouhitori@yopmail.com', Role::USER],
-            ['Yamada Ryou', 'yamadaryou@yopmail.com', Role::USER],
-            ['Kita Ikuyo', 'kitaikuyo@yopmail.com', Role::USER],
+            ['Yoga Ramadhan', 'yogaramadhan@gmail.com'],
+            ['Muhammad Eagel Triutama', 'muhammadeagel@gmail.com'],
+            ['Yamada Ryou', 'yamadaryou@yopmail.com'],
+            ['Kita Ikuyo', 'kitaikuyo@yopmail.com'],
         ];
 
         $users = collect($accounts)->map(function (array $row) use ($password) {
-            [$fullname, $email, $role] = $row;
+            [$fullname, $email] = $row;
 
             return User::create([
                 'fullname' => $fullname,
                 'email' => $email,
                 'email_verified_at' => now(),
                 'password' => $password,
-                'role' => $role,
             ]);
         });
 
-        foreach ($users as $user) {
-            $this->command->line("  {$user->email} | password123 | {$user->role->value}");
-        }
-
         $admin = $users->first();
-
         $portfolios = collect([
             ['Sistem Informasi Sekolah', 'Web App', PortfolioStatus::PUBLISHED, ['Laravel', 'MySQL', 'Tailwind CSS']],
             ['Aplikasi Kasir Kopi', 'Web App', PortfolioStatus::PUBLISHED, ['Next.js', 'TypeScript', 'PostgreSQL']],
             ['Dashboard Analytics Pendapatan', 'Data & GIS', PortfolioStatus::PUBLISHED, ['Python', 'PostgreSQL']],
             ['Sistem Absensi Fingerprint', 'IoT', PortfolioStatus::DRAFT, ['Arduino', 'MySQL']],
             ['Website Company Profile', 'Design & Video', PortfolioStatus::DRAFT, ['Adobe Premiere', 'Photoshop']],
+            ['E-Commerce Platform', 'E-Commerce', PortfolioStatus::PUBLISHED, ['React', 'Node.js', 'MongoDB']],
+            ['Sistem Manajemen Karyawan', 'Human Resource', PortfolioStatus::PUBLISHED, ['Laravel', 'Vue.js']],
+            ['Aplikasi Tracking Pengiriman', 'Logistics', PortfolioStatus::PUBLISHED, ['Go', 'MySQL']],
+            ['Portal Berita Online', 'Media', PortfolioStatus::PUBLISHED, ['PHP', 'MySQL']],
+            ['Aplikasi Sistem Keuangan', 'Finance', PortfolioStatus::PUBLISHED, ['Laravel', 'React']],
+            ['Dashboard Sistem Pendukung Keputusan', 'Data & GIS', PortfolioStatus::DRAFT, ['R', 'Python']],
+            ['Aplikasi Reservasi Kamar', 'Hotel', PortfolioStatus::PUBLISHED, ['PHP', 'MySQL']],
+            ['Sistem Manajemen Inventaris', 'Warehouse', PortfolioStatus::PUBLISHED, ['Laravel', 'Vue.js']],
+            ['Aplikasi Pelacak Proyek', 'Project Management', PortfolioStatus::PUBLISHED, ['Python', 'JavaScript']],
+            ['Aplikasi CMS', 'Content Management', PortfolioStatus::PUBLISHED, ['Laravel', 'Vue.js']],
         ])->map(function (array $row, int $i) use ($admin) {
             [$name, $category, $status, $stacks] = $row;
 

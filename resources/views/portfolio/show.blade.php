@@ -94,7 +94,7 @@
                             <div class="text-base-content/60 text-sm font-semibold uppercase">Tech Stacks</div>
                             <div class="mt-2 flex flex-wrap gap-2">
                                 @foreach ($portfolio->tech_stacks as $tech)
-                                    <span class="bg-secondary text-secondary-foreground rounded-lg border px-3 py-1 text-sm">{{ $tech }}</span>
+                                    <span class="bg-base-200 text-base-content rounded-lg border px-3 py-1 text-sm">{{ $tech }}</span>
                                 @endforeach
                             </div>
                         </div>

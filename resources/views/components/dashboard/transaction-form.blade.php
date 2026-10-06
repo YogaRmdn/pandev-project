@@ -5,12 +5,8 @@
     $isEdit = $transaction->exists;
 @endphp
 
-<form method="POST" action="{{ $action }}" class="space-y-4">
+<form method="{{ $method }}" action="{{ $action }}" class="space-y-4">
     @csrf
-    @if ($isEdit)
-        @method('PUT')
-    @endif
-
     <div class="grid gap-4 sm:grid-cols-2">
         <div class="space-y-2">
             <label class="label text-sm font-medium" for="type">Tipe Transaksi</label>
@@ -33,7 +29,12 @@
 
         <div class="space-y-2">
             <label class="label text-sm font-medium" for="amount">Total</label>
-            <input class="input w-full" id="amount" name="amount" inputmode="numeric" value="{{ old('amount', $transaction?->amount ? (int) $transaction->amount : '') }}" placeholder="Rp 0" required x-data x-on:input="$el.value = $el.value.replace(/\D/g, '')">
+            <input class="input w-full" id="amount" name="amount" inputmode="numeric"
+                value="{{ old('amount', $transaction?->amount ? (int) $transaction->amount : '') }}"
+                placeholder="Rp 0" required
+                x-data="rupiahInput({ minMessage: 'Total minimal Rp 1' })"
+                x-init="boot($el)"
+                x-on:input="sync($el)">
                         @if ($errors->get('amount'))
                 <ul class="text-error space-y-1 text-sm">
                     @foreach ($errors->get('amount') as $message)
@@ -67,6 +68,11 @@
             @endif
         </div>
     </div>
-
-    <button type="submit" class="btn btn-primary h-10 w-full">Submit</button>
+    <div class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+        <button type="button" class="btn btn-outline"
+            x-on:click="const d = $el.closest('dialog'); if (d) { d.close(); }">
+            Batal
+        </button>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
 </form>

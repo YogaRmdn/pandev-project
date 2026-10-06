@@ -2,10 +2,8 @@
 
 @section('content')
     <div class="space-y-4">
-        <x-dashboard.header
-            title="Edit Portfolio"
-            :description="'Update data portfolio &quot;'.$portfolio->name.'&quot;'"
-        />
+        <x-dashboard.navbar drawer-id="dashboard-drawer" title="Edit Portfolio"
+            :description="'Update data portfolio &quot;'.$portfolio->name.'&quot;'" />
 
         <div class="card gap-6 border p-6 shadow-sm mt-4">
             <div class="">

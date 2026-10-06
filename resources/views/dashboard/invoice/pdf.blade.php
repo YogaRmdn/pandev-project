@@ -1,6 +1,10 @@
 @php
     $total = $invoice->total;
     $dp = $total * 0.5;
+    $logoPath = public_path('assets/common/logo-mark.png');
+    $logoSrc = is_file($logoPath)
+        ? 'data:image/png;base64,' . base64_encode(file_get_contents($logoPath))
+        : null;
 @endphp
 <!DOCTYPE html>
 <html lang="id">
@@ -50,7 +54,9 @@
 </head>
 <body>
     <div class="header">
-        <img src="{{ asset('assets/common/logo-mark.png') }}" alt="PanDev">
+        @if ($logoSrc)
+            <img src="{{ $logoSrc }}" alt="PanDev">
+        @endif
         <div>
             <div class="brand">PanDev</div>
             <div class="tagline">Digital Agency</div>
@@ -58,9 +64,7 @@
     </div>
 
     <div class="separator">
-        <div class="line"></div>
         <div class="title">INVOICE</div>
-        <div class="line short"></div>
     </div>
 
     <div class="date-row">Date: {{ \App\Support\Format::date($invoice->date, 'd-m-Y') }}</div>

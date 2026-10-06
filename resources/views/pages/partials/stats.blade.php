@@ -3,7 +3,7 @@
     $stats = SiteContent::stats();
 @endphp
 
-<section id="stats-section" class="bg-secondary/50 w-full border-y border-base-300 py-14 md:py-20" x-data="{ visible: false }" x-intersect="visible = true">
+<section id="stats-section" class="bg-base-200/50 w-full border-y border-base-300 py-14 md:py-20" x-data="{ visible: false }" x-intersect="visible = true">
     <div class="mx-auto w-full max-w-6xl px-4">
         <div class="grid grid-cols-1 gap-px sm:grid-cols-2 lg:grid-cols-4" x-show="visible" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="translate-y-5 opacity-0" x-transition:enter-end="translate-y-0 opacity-100">
             @foreach ($stats as $index => $stat)

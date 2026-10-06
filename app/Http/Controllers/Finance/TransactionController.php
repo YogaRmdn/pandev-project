@@ -36,6 +36,8 @@ class TransactionController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        $this->normalizeAmount($request);
+
         $data = $request->validate($this->rules(), $this->messages());
 
         Transaction::create($data);
@@ -47,6 +49,8 @@ class TransactionController extends Controller
     {
         // The original edit dialog called createTransaction, so saving an edit
         // silently produced a duplicate row. This updates in place.
+        $this->normalizeAmount($request);
+
         $data = $request->validate($this->rules(), $this->messages());
 
         $transaction->update($data);
@@ -59,6 +63,15 @@ class TransactionController extends Controller
         $transaction->delete();
 
         return back()->with('success', 'Transaksi berhasil dihapus');
+    }
+
+    private function normalizeAmount(Request $request): void
+    {
+        $amount = (string) $request->input('amount');
+
+        if ($amount !== '' && ! is_numeric($amount)) {
+            $request->merge(['amount' => preg_replace('/\D/', '', $amount)]);
+        }
     }
 
     /**

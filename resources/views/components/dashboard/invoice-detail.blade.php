@@ -1,9 +1,11 @@
-@props(['invoice', 'name'])
+@props(['invoice'])
 
 @php $total = $invoice->total; @endphp
 
-<x-ui.dialog :name="$name" width="sm:max-w-2xl">
-    <div class="space-y-4">
+<dialog id="detail_invoice_modal_{{ $invoice->id }}" class="modal whitespace-normal">
+    <div class="modal-box sm:max-w-2xl">
+
+        <div class="space-y-4">
         <div class="flex items-center gap-3">
             <img src="{{ asset('assets/common/logo-mark.png') }}" alt="PanDev" width="48" height="48" class="size-12 object-contain" />
             <div>
@@ -86,4 +88,8 @@
             </a>
         </div>
     </div>
-</x-ui.dialog>
+    </div>
+    <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+    </form>
+</dialog>

@@ -35,7 +35,6 @@
                 </div>
             @endforeach
         </div>
-
-        @include('pages.partials.cta')
     </main>
+    @include('pages.partials.cta')
 @endsection

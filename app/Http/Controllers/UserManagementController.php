@@ -38,6 +38,7 @@ class UserManagementController extends Controller
             'fullname' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'confirmed', Password::min(8)],
+            'password_confirmation' => ['required', 'string'],
             'role' => ['required', Rule::enum(Role::class)],
         ], [
             'fullname.required' => 'Nama wajib diisi',
@@ -46,6 +47,7 @@ class UserManagementController extends Controller
             'email.unique' => 'Email sudah digunakan',
             'password.required' => 'Password wajib diisi',
             'password.confirmed' => 'Konfirmasi password tidak cocok',
+            'password_confirmation.required' => 'Konfirmasi password wajib diisi',
             'role.required' => 'Role wajib dipilih',
         ]);
 

@@ -16,7 +16,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('head')
 </head>
-<body class="flex min-h-full flex-col bg-base-100 font-sans text-base-content">
+<body x-data class="flex min-h-full flex-col bg-base-100 font-sans text-base-content">
     @yield('content')
 
     @if (session('status') || session('success'))

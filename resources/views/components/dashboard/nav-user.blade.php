@@ -6,7 +6,7 @@
 
 @if ($user)
     <div
-        class="relative p-2 {{ $class }}"
+        class="relative p-2 is-drawer-close:p-1 {{ $class }}"
         x-data="{ open: false }"
         x-on:click.outside="open = false"
         x-on:keydown.escape.window="open = false"
@@ -14,7 +14,8 @@
         <button
             type="button"
             x-on:click="open = !open"
-            class="hover:bg-sidebar-accent flex w-full items-center gap-2 rounded-lg p-2 text-left"
+            class="hover:bg-sidebar-accent is-drawer-close:tooltip is-drawer-close:tooltip-right flex w-full items-center gap-2 rounded-lg p-2 text-left is-drawer-close:p-1"
+            data-tip="{{ $user->fullname }} — {{ $user->email }}"
             aria-haspopup="menu"
             x-bind:aria-expanded="open"
         >
@@ -29,13 +30,11 @@
                     <x-lucide name="user" class="size-4" />
                 </span>
             @endif
-
-            <span class="grid flex-1 text-sm leading-tight" x-show="!$store.sidebar.collapsed">
+            <span class="grid flex-1 text-sm leading-tight">
                 <span class="truncate font-medium">{{ $user->fullname }}</span>
                 <span class="text-base-content/60 truncate text-xs">{{ $user->email }}</span>
             </span>
-
-            <x-lucide name="ellipsis-vertical" class="ml-auto size-4 shrink-0" />
+            <x-lucide name="ellipsis-vertical" class="ml-auto size-4 shrink-0 is-drawer-close:hidden" />
         </button>
 
         <div

@@ -28,13 +28,6 @@ class UserFactory extends Factory
         ];
     }
 
-    public function admin(): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'role' => Role::ADMIN,
-        ]);
-    }
-
     public function unverified(): static
     {
         return $this->state(fn (array $attributes) => [

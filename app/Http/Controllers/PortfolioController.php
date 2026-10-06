@@ -53,7 +53,7 @@ class PortfolioController extends Controller
 
         $isDraft = $portfolio->status === PortfolioStatus::DRAFT;
         $canView = $request->user()
-            && ($portfolio->created_by === $request->user()->id || $request->user()->isAdmin());
+            && $portfolio->created_by === $request->user()->id;
 
         abort_if($isDraft && ! $canView, 404);
 
@@ -143,7 +143,7 @@ class PortfolioController extends Controller
 
     public function store(PortfolioRequest $request, MediaService $media): RedirectResponse
     {
-        $data = $request->safe()->except(['thumbnail', 'galery_files', 'galery', 'remove_thumbnail']);
+        $data = $request->safe()->except(['thumbnail', 'thumbnail_url', 'galery_files', 'galery_urls', 'galery', 'remove_thumbnail']);
         $data['created_by'] = $request->user()->id;
 
         DB::transaction(function () use ($data, $request, $media) {
@@ -152,6 +152,9 @@ class PortfolioController extends Controller
                     $request->file('thumbnail'),
                     config('media.portfolio_folder').'/thumbnails'
                 )['url'];
+            } elseif (filled($request->input('thumbnail_url'))) {
+                // Already stored by the instant uploader — the form posts its URL.
+                $data['thumbnail'] = $request->input('thumbnail_url');
             }
 
             $portfolio = Portfolio::create($data);
@@ -160,6 +163,10 @@ class PortfolioController extends Controller
                 $portfolio->galery()->create([
                     'image_url' => $media->upload($file, config('media.portfolio_folder').'/gallery')['url'],
                 ]);
+            }
+
+            foreach ((array) $request->input('galery_urls', []) as $url) {
+                $portfolio->galery()->create(['image_url' => $url]);
             }
         });
 
@@ -178,7 +185,7 @@ class PortfolioController extends Controller
     public function update(PortfolioRequest $request, string $uuid, MediaService $media): RedirectResponse
     {
         $portfolio = $this->findOwned($request, $uuid);
-        $data = $request->safe()->except(['thumbnail', 'galery_files', 'galery', 'remove_thumbnail']);
+        $data = $request->safe()->except(['thumbnail', 'thumbnail_url', 'galery_files', 'galery_urls', 'galery', 'remove_thumbnail']);
 
         // `galery` holds the URLs the author chose to keep; anything stored but
         // absent from that list was removed in the form and gets deleted.
@@ -194,6 +201,13 @@ class PortfolioController extends Controller
                     $request->file('thumbnail'),
                     config('media.portfolio_folder').'/thumbnails'
                 )['url'];
+            } elseif (filled($request->input('thumbnail_url'))) {
+                // Instant replace already removed the previous file (and cleared
+                // the column); only overwrite when the URL actually changed.
+                if ($request->input('thumbnail_url') !== $portfolio->thumbnail) {
+                    $media->delete($portfolio->thumbnail);
+                    $data['thumbnail'] = $request->input('thumbnail_url');
+                }
             } elseif ($request->boolean('remove_thumbnail')) {
                 $media->delete($portfolio->thumbnail);
                 // The column is NOT NULL, matching Prisma's `thumbnail String`,
@@ -214,6 +228,10 @@ class PortfolioController extends Controller
                 $portfolio->galery()->create([
                     'image_url' => $media->upload($file, config('media.portfolio_folder').'/gallery')['url'],
                 ]);
+            }
+
+            foreach ((array) $request->input('galery_urls', []) as $url) {
+                $portfolio->galery()->create(['image_url' => $url]);
             }
         });
 
@@ -243,7 +261,7 @@ class PortfolioController extends Controller
         $portfolio = Portfolio::with('galery')->findOrFail($uuid);
 
         abort_if(
-            $portfolio->created_by !== $request->user()->id && ! $request->user()->isAdmin(),
+            $portfolio->created_by !== $request->user()->id,
             403
         );
 

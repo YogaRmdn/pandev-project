@@ -174,8 +174,8 @@ class MigrationSmokeTest extends TestCase
                 'description' => 'Aplikasi_point_of_sale',
                 'category' => 'Web App',
                 'status' => PortfolioStatus::PUBLISHED->value,
-                'demo_link' => 'demo.example.com',
-                'repository_link' => 'github.com/example/repo',
+                'demo_link' => 'https://demo.example.com',
+                'repository_link' => 'https://github.com/example/repo',
                 'tech_stacks' => ['Laravel', 'Vue.js'],
                 'thumbnail' => $this->fakeImage('thumb.png'),
                 'galery_files' => [

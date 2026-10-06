@@ -32,7 +32,7 @@
                     $hasCover = filled($cover) && is_file(public_path(ltrim($cover, '/')));
                 @endphp
 
-                <x-ui.card class="h-full overflow-hidden px-0 py-0 transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-md">
+                <div class="card gap-6 border p-6 shadow-sm h-full overflow-hidden px-0 py-0 transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-md">
                     {{-- Pembungkus tunggal: `x-ui.card` membawa `flex flex-col
                          gap-6`, dan utility gap-6 menang atas gap-0 di CSS.
                          Dengan hanya satu anak, gap itu tidak berlaku sama
@@ -55,19 +55,19 @@
                         @endif
 
                         <div class="flex flex-1 flex-col gap-6 p-6">
-                            <x-ui.card-header>
-                                <x-ui.card-title class="font-heading text-lg font-bold tracking-tight">
+                            <div class="flex flex-col gap-1.5">
+                                <div class="card-title font-heading text-lg font-bold tracking-tight">
                                     {{ $ebook['title'] }}
-                                </x-ui.card-title>
-                                <x-ui.card-description>{{ $ebook['tagline'] }}</x-ui.card-description>
-                            </x-ui.card-header>
+                                </div>
+                                <div class="text-base-content/60 text-sm">{{ $ebook['tagline'] }}</div>
+                            </div>
 
-                            <x-ui.card-content class="flex flex-1 flex-col">
+                            <div class="flex flex-1 flex-col">
                                 <p class="text-sm leading-relaxed text-pretty">{{ $ebook['description'] }}</p>
 
                                 <ul class="mt-4 space-y-2 text-sm">
                                     @foreach ($ebook['topics'] as $topic)
-                                        <li class="text-muted-foreground flex items-start gap-2">
+                                        <li class="text-base-content/60 flex items-start gap-2">
                                             <x-lucide name="check" class="text-primary mt-0.5 size-4 shrink-0" />
                                             {{ $topic }}
                                         </li>
@@ -87,7 +87,7 @@
                                 <div class="flex flex-col gap-4 border-t pt-5">
                                     <div class="flex flex-col gap-1.5">
                                         <div class="font-heading text-xl leading-tight font-bold tabular-nums">{{ \App\Support\Format::idr($ebook['price']) }}</div>
-                                        <div class="text-muted-foreground flex items-center gap-1.5 text-xs">
+                                        <div class="text-base-content/60 flex items-center gap-1.5 text-xs">
                                             <x-lucide name="file-text" class="size-3.5 shrink-0" />
                                             <span class="truncate">{{ $ebook['format'] }} · Lifetime updates</span>
                                         </div>
@@ -99,10 +99,10 @@
                                     >Order now</a>
                                 </div>
                             </div>
-                            </x-ui.card-content>
+                            </div>
                         </div>
                     </div>
-                </x-ui.card>
+                </div>
             @endforeach
         </div>
 

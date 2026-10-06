@@ -4,91 +4,63 @@
      * count, so /dashboard/portfolio/create still highlights "Portfolio".
      */
     $segments = array_slice(array_values(array_filter(explode('/', trim(request()->path(), '/')))), 0, 2);
-    $activePath = '/'.implode('/', $segments);
+    $activePath = '/' . implode('/', $segments);
 
     $mainItems = [
-        ['title' => 'Dashboard', 'href' => route('dashboard'), 'icon' => 'layout-dashboard'],
-        ['title' => 'Portfolio', 'href' => route('dashboard.portfolio.index'), 'icon' => 'briefcase'],
+        ['title' => 'Dashboard', 'href' => '/dashboard', 'icon' => 'lucide-layout-dashboard'],
+        ['title' => 'Portfolio', 'href' => '/dashboard/portfolio', 'icon' => 'heroicon-o-briefcase'],
     ];
 
     $adminItems = [
-        ['title' => 'Manajemen User', 'href' => route('dashboard.users.index'), 'icon' => 'users'],
-        ['title' => 'Keuangan', 'href' => route('dashboard.finance.index'), 'icon' => 'wallet'],
-        ['title' => 'Faktur', 'href' => route('dashboard.invoice.index'), 'icon' => 'receipt-text'],
+        ['title' => 'Manajemen User', 'href' => '/dashboard/user-management', 'icon' => 'lucide-users'],
+        ['title' => 'Keuangan', 'href' => '/dashboard/finance', 'icon' => 'heroicon-o-wallet'],
+        ['title' => 'Faktur', 'href' => '/dashboard/invoice', 'icon' => 'lucide-notepad-text'],
     ];
 
-    $secondaryItems = [
-        ['title' => 'Pengaturan', 'href' => route('settings.edit'), 'icon' => 'settings'],
-    ];
+    $secondaryItems = [['title' => 'Pengaturan', 'href' => '/dashboard/settings', 'icon' => 'hugeicons-setting-07']];
 @endphp
 
-<aside
-    class="fixed inset-y-0 left-0 z-30 hidden h-svh flex-col overflow-y-auto border-r bg-sidebar md:flex"
-    x-bind:class="$store.sidebar.collapsed ? 'w-12' : 'w-64'"
->
-    <a
-        href="{{ route('dashboard') }}"
-        class="flex h-16 items-center gap-2 border-b px-2"
-        aria-label="PanDev"
-    >
-        <img src="{{ asset('assets/common/logo-mark.png') }}" alt="PanDev Logo" width="32" height="32" class="size-8 shrink-0 object-contain" />
-        <span
-            class="truncate font-semibold"
-            x-show="!$store.sidebar.collapsed"
-            x-transition.opacity.duration.150ms
-        >PanDev</span>
-    </a>
-
-    <x-dashboard.nav-group label="Menu" :items="$mainItems" :active-path="$activePath" />
-    @if (auth()->user()->isAdmin())
-        <x-dashboard.nav-group label="Admin" :items="$adminItems" :active-path="$activePath" />
-    @endif
-    <x-dashboard.nav-group label="Akun" :items="$secondaryItems" :active-path="$activePath" />
-
-    <x-dashboard.nav-user class="mt-auto border-t" />
-</aside>
-
-{{-- Off-canvas drawer below md --}}
-<div
-    x-show="$store.sidebar.mobileOpen"
-    x-on:keydown.escape.window="$store.sidebar.close()"
-    class="fixed inset-0 z-50 md:hidden"
-    x-cloak
->
+@props([
+    'id' => 'dashboard-drawer',
+])
+<div class="drawer-side is-drawer-close:overflow-visible">
+    {{-- Overlay untuk mobile --}}
+    <label for="{{ $id }}" aria-label="close sidebar" class="drawer-overlay"></label>
     <div
-        x-show="$store.sidebar.mobileOpen"
-        x-transition.opacity
-        x-on:click="$store.sidebar.close()"
-        class="absolute inset-0 bg-black/50"
-        aria-hidden="true"
-    ></div>
+        class="flex min-h-full flex-col items-start bg-base-200
+               is-drawer-close:w-14
+               is-drawer-open:w-68">
+        <ul class="menu w-full grow space-y-8">
+            <x-dashboard.sidebar-item label="PanDev" class="font-semibold" href="/dashboard">
+                <img src="{{ asset('assets/common/logo-mark.png') }}" class="size-6" />
+            </x-dashboard.sidebar-item>
+            <div>
+                <li
+                    class="text-sidebar-foreground/60 px-2 pb-2 text-xs font-medium tracking-wide uppercase is-drawer-close:hidden">
+                    dashboard</li>
+                @foreach ($mainItems as $item)
+                    <x-dashboard.sidebar-item :label="$item['title']" :href="$item['href']" :icon="$item['icon']" :active="$activePath === $item['href']" />
+                @endforeach
+            </div>
+            <div>
+                <li
+                    class="text-sidebar-foreground/60 px-2 pb-2 text-xs font-medium tracking-wide uppercase is-drawer-close:hidden">
+                    admin</li>
+                @foreach ($adminItems as $item)
+                    <x-dashboard.sidebar-item :label="$item['title']" :href="$item['href']" :icon="$item['icon']" :active="$activePath === $item['href']" />
+                @endforeach
+            </div>
+            <div>
+                <li
+                    class="text-sidebar-foreground/60 px-2 pb-2 text-xs font-medium tracking-wide uppercase is-drawer-close:hidden">
+                    akun</li>
+                @foreach ($secondaryItems as $item)
+                    <x-dashboard.sidebar-item :label="$item['title']" :href="$item['href']" :icon="$item['icon']"
+                        :active="$activePath === $item['href']" />
+                @endforeach
+            </div>
+        </ul>
 
-    <aside
-        x-show="$store.sidebar.mobileOpen"
-        x-transition:enter="transition ease-in-out duration-200"
-        x-transition:enter-start="-translate-x-full"
-        x-transition:enter-end="translate-x-0"
-        x-transition:leave="transition ease-in-out duration-200"
-        x-transition:leave-start="translate-x-0"
-        x-transition:leave-end="-translate-x-full"
-        class="absolute inset-y-0 left-0 flex h-full w-72 flex-col overflow-y-auto border-r bg-sidebar"
-    >
-        <a
-            href="{{ route('dashboard') }}"
-            x-on:click="$store.sidebar.close()"
-            class="flex h-16 items-center gap-2 border-b px-2"
-            aria-label="PanDev"
-        >
-            <img src="{{ asset('assets/common/logo-mark.png') }}" alt="PanDev Logo" width="32" height="32" class="size-8 shrink-0 object-contain" />
-            <span class="truncate font-semibold">PanDev</span>
-        </a>
-
-        <x-dashboard.nav-group label="Menu" :items="$mainItems" :active-path="$activePath" />
-        @if (auth()->user()->isAdmin())
-            <x-dashboard.nav-group label="Admin" :items="$adminItems" :active-path="$activePath" />
-        @endif
-        <x-dashboard.nav-group label="Akun" :items="$secondaryItems" :active-path="$activePath" />
-
-        <x-dashboard.nav-user class="mt-auto border-t" />
-    </aside>
+        <x-dashboard.nav-user class="w-full border-t" />
+    </div>
 </div>

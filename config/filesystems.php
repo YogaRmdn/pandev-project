@@ -41,7 +41,9 @@ return [
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
-            'url' => rtrim(env('APP_URL', 'http://localhost'), '/').'/storage',
+            // Relative so images resolve against whatever host/port the page
+            // is opened on (APP_URL absolute URLs break cross-origin previews).
+            'url' => '/storage',
             'visibility' => 'public',
             'throw' => false,
             'report' => false,

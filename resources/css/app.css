@@ -609,3 +609,14 @@
         transition: none;
     }
 }
+
+/* Dropzone v6 ships unthemed — the shell is styled with daisyUI/Tailwind and
+   only the state classes Dropzone toggles need rules. */
+.media-dropzone.dz-clickable {
+    cursor: pointer;
+}
+
+.media-dropzone.dz-drag-hover {
+    border-color: var(--color-primary);
+    background: color-mix(in oklab, var(--color-primary) 10%, transparent);
+}

@@ -27,7 +27,7 @@
                     @if ($filters['search'])
                         <a
                             href="{{ request()->fullUrlWithQuery(['search' => null, 'page' => null]) }}"
-                            class="bg-secondary text-secondary-foreground hover:text-error inline-flex items-center gap-1 rounded-full px-2 py-1 text-sm"
+                            class="bg-base-200 text-base-content hover:text-error inline-flex items-center gap-1 rounded-full px-2 py-1 text-sm"
                         >
                             Search: {{ $filters['search'] }}
                             <x-lucide name="x" class="size-3" />
@@ -37,7 +37,7 @@
                     @foreach ($filters['categories'] as $category)
                         <a
                             href="{{ request()->fullUrlWithQuery(['category' => array_values(array_diff($filters['categories'], [$category])), 'page' => null]) }}"
-                            class="bg-secondary text-secondary-foreground hover:text-error inline-flex items-center gap-1 rounded-full px-2 py-1 text-sm"
+                            class="bg-base-200 text-base-content hover:text-error inline-flex items-center gap-1 rounded-full px-2 py-1 text-sm"
                         >
                             Category: {{ $category }}
                             <x-lucide name="x" class="size-3" />
