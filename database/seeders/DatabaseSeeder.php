@@ -30,7 +30,7 @@ class DatabaseSeeder extends Seeder
             ['Kita Ikuyo', 'kitaikuyo@yopmail.com'],
         ];
 
-        $users = collect($accounts)->map(function (array $row) use ($password) {
+        $users = collect($accounts)->map(function (array $row, int $i) use ($password) {
             [$fullname, $email] = $row;
 
             return User::create([
@@ -38,6 +38,8 @@ class DatabaseSeeder extends Seeder
                 'email' => $email,
                 'email_verified_at' => now(),
                 'password' => $password,
+                // Akun pertama adalah administrator; sisanya pengguna biasa.
+                'role' => $i === 0 ? Role::ADMIN : Role::USER,
             ]);
         });
 

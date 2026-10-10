@@ -2,7 +2,10 @@
     $total = $invoice->total;
     $dp = $total * 0.5;
     $logoPath = public_path('assets/common/logo-mark.png');
-    $logoSrc = is_file($logoPath)
+
+    // Dompdf butuh ekstensi GD untuk menanam PNG; kalau tidak ada, PDF tetap
+    // dibuat tanpa logo (bukan error 500) — mesin dev/XAMPP kadang tanpa GD.
+    $logoSrc = (extension_loaded('gd') && is_file($logoPath))
         ? 'data:image/png;base64,' . base64_encode(file_get_contents($logoPath))
         : null;
 @endphp

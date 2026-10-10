@@ -22,16 +22,15 @@
     @stack('head')
 </head>
 
-<body x-data class="bg-base-100 font-sans text-base-content">
+<body x-data class="bg-base-200 font-sans text-base-content">
     <div class="drawer lg:drawer-open">
         {{-- Drawer toggle --}}
         <input id="dashboard-drawer" type="checkbox" class="drawer-toggle" />
         {{-- Main content --}}
-        <div class="drawer-content">
-            {{-- Navbar --}}
-           
-            {{-- Page content --}}
-            <main class="p-4">
+        <div class="drawer-content flex min-h-screen flex-col">
+            <x-dashboard.topbar />
+
+            <main class="flex-1 px-4 py-5 md:px-6 md:py-6 lg:px-8">
                 @yield('content')
             </main>
         </div>

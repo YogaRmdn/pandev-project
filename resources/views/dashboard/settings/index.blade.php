@@ -1,17 +1,13 @@
 @extends('layouts.dashboard')
 
-@section('content')
-    <div class="space-y-4">
-        <x-dashboard.navbar drawer-id="dashboard-drawer" title="Pengaturan"
-            description="Kelola avatar, data diri, dan keamanan akun Anda" />
-        {{-- Avatar --}}
-        <div class="card gap-6 border p-6 shadow-sm">
-            <div class="flex flex-col gap-1.5">
-                <div class="card-title">Avatar</div>
-                <div class="text-base-content/60 text-sm">Edit avatar Anda</div>
-            </div>
+@section('page-title', 'Pengaturan')
+@section('page-description', 'Kelola avatar, data diri, dan keamanan akun Anda')
 
-            <div class="">
+@section('content')
+    <div class="space-y-5">
+        {{-- Avatar --}}
+        <x-dashboard.card title="Avatar" description="Edit avatar Anda" icon="camera">
+            <div class="p-5">
                 <div class="relative w-fit">
                     @if ($user->image)
                         <img src="{{ $user->image }}" alt="Avatar {{ $user->fullname }}" class="size-24 rounded-full object-cover" />
@@ -32,29 +28,19 @@
                     @endif
                 </div>
             </div>
-        </div>
+        </x-dashboard.card>
 
         {{-- Data diri --}}
-        <div class="card gap-6 border p-6 shadow-sm">
-            <div class="flex flex-col gap-1.5">
-                <div class="card-title">Data Diri</div>
-                <div class="text-base-content/60 text-sm">Ubah informasi data diri Anda</div>
-            </div>
-
-            <div class="">
-                <form
-                    id="information-form"
-                    method="POST"
-                    action="{{ route('settings.update') }}"
-                    class="space-y-4"
-                >
+        <x-dashboard.card title="Data Diri" description="Ubah informasi data diri Anda" icon="id-card">
+            <div class="p-5">
+                <form id="information-form" method="POST" action="{{ route('settings.update') }}" class="space-y-4">
                     @csrf
                     @method('PATCH')
 
                     <div class="space-y-2">
                         <label class="label text-sm font-medium" for="email">Email</label>
                         <input class="input w-full" id="email" type="email" name="email" value="{{ old('email', $user->email) }}" placeholder="Email..." autocomplete="off" required>
-                                                @if ($errors->get('email'))
+                        @if ($errors->get('email'))
                             <ul class="text-error space-y-1 text-sm">
                                 @foreach ($errors->get('email') as $message)
                                     <li>{{ $message }}</li>
@@ -66,7 +52,7 @@
                     <div class="space-y-2">
                         <label class="label text-sm font-medium" for="fullname">Nama Lengkap</label>
                         <input class="input w-full" id="fullname" name="fullname" value="{{ old('fullname', $user->fullname) }}" placeholder="Nama Lengkap..." required>
-                                                @if ($errors->get('fullname'))
+                        @if ($errors->get('fullname'))
                             <ul class="text-error space-y-1 text-sm">
                                 @foreach ($errors->get('fullname') as $message)
                                     <li>{{ $message }}</li>
@@ -78,22 +64,12 @@
                     <button type="submit" class="btn btn-primary">Simpan</button>
                 </form>
             </div>
-        </div>
+        </x-dashboard.card>
 
         {{-- Keamanan --}}
-        <div class="card gap-6 border p-6 shadow-sm">
-            <div class="flex flex-col gap-1.5">
-                <div class="card-title">Keamanan</div>
-                <div class="text-base-content/60 text-sm">Ubah password Anda</div>
-            </div>
-
-            <div class="">
-                <form
-                    id="security-form"
-                    method="POST"
-                    action="{{ route('password.update') }}"
-                    class="space-y-4"
-                >
+        <x-dashboard.card title="Keamanan" description="Ubah password Anda" icon="shield">
+            <div class="p-5">
+                <form id="security-form" method="POST" action="{{ route('password.update') }}" class="space-y-4">
                     @csrf
                     @method('PUT')
 
@@ -106,18 +82,15 @@
                             <label class="label text-sm font-medium" for="{{ $field }}">{{ $label }}</label>
                             <div class="relative">
                                 <input class="input w-full pr-10" id="{{ $field }}" x-bind:type="show ? 'text' : 'password'" name="{{ $field }}" autocomplete="off">
-                                <button
-                                    type="button"
-                                    x-on:click="show = !show"
+                                <button type="button" x-on:click="show = !show"
                                     class="absolute top-0 right-0 flex h-full items-center px-3"
-                                    x-bind:aria-label="show ? 'Sembunyikan password' : 'Tampilkan password'"
-                                >
+                                    x-bind:aria-label="show ? 'Sembunyikan password' : 'Tampilkan password'">
                                     <x-lucide name="eye" x-show="!show" class="size-4" />
                                     <x-lucide name="eye-off" x-show="show" x-cloak class="size-4" />
                                 </button>
                             </div>
                             @if ($field === 'current_password')
-                                                                @if ($errors->get('current_password'))
+                                @if ($errors->get('current_password'))
                                     <ul class="text-error space-y-1 text-sm">
                                         @foreach ($errors->get('current_password') as $message)
                                             <li>{{ $message }}</li>
@@ -125,7 +98,7 @@
                                     </ul>
                                 @endif
                             @elseif ($field === 'password')
-                                                                @if ($errors->get('password'))
+                                @if ($errors->get('password'))
                                     <ul class="text-error space-y-1 text-sm">
                                         @foreach ($errors->get('password') as $message)
                                             <li>{{ $message }}</li>
@@ -133,7 +106,7 @@
                                     </ul>
                                 @endif
                             @else
-                                                                @if ($errors->get('password_confirmation'))
+                                @if ($errors->get('password_confirmation'))
                                     <ul class="text-error space-y-1 text-sm">
                                         @foreach ($errors->get('password_confirmation') as $message)
                                             <li>{{ $message }}</li>
@@ -147,7 +120,7 @@
                     <button type="submit" class="btn btn-primary">Simpan</button>
                 </form>
             </div>
-        </div>
+        </x-dashboard.card>
     </div>
 
     {{-- Upload avatar --}}
@@ -163,17 +136,11 @@
                 <x-lucide name="upload" class="size-8" />
                 <span class="font-medium">Upload Gambar</span>
                 <span class="text-base-content/60 text-xs">JPG, PNG, WebP (Maks 2 MB)</span>
-                <input
-                    id="avatar"
-                    type="file"
-                    name="avatar"
-                    accept="image/jpeg,image/png,image/webp"
-                    required
-                    class="sr-only"
-                />
+                <input id="avatar" type="file" name="avatar" accept="image/jpeg,image/png,image/webp" required
+                    class="sr-only" />
             </label>
 
-                        @if ($errors->get('avatar'))
+            @if ($errors->get('avatar'))
                 <ul class="text-error space-y-1 text-sm">
                     @foreach ($errors->get('avatar') as $message)
                         <li>{{ $message }}</li>
@@ -186,11 +153,8 @@
     </x-ui.dialog>
 
     {{-- Hapus avatar --}}
-    <x-ui.confirm-dialog
-        name="avatar-remove"
-        title="Hapus Avatar"
-        description="Apakah Anda yakin ingin menghapus avatar? Tindakan ini tidak dapat dibatalkan."
-    >
+    <x-ui.confirm-dialog name="avatar-remove" title="Hapus Avatar"
+        description="Apakah Anda yakin ingin menghapus avatar? Tindakan ini tidak dapat dibatalkan.">
         <form method="POST" action="{{ route('settings.avatar') }}">
             @csrf
             @method('PATCH')

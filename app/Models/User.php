@@ -44,7 +44,7 @@ class User extends Authenticatable
 
     public function isAdmin(): bool
     {
-        return false;
+        return (bool) ($this->role?->isAdmin() ?? false);
     }
 
     public function getInitialsAttribute(): string
