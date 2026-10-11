@@ -63,25 +63,28 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/dashboard/settings', [SettingsController::class, 'updateProfile'])->name('settings.update');
     Route::patch('/dashboard/settings/avatar', [SettingsController::class, 'updateAvatar'])->name('settings.avatar');
 
-    // User management
-    Route::get('/dashboard/user-management', [UserManagementController::class, 'index'])->name('dashboard.users.index');
-    Route::post('/dashboard/user-management', [UserManagementController::class, 'store'])->name('dashboard.users.store');
-    Route::put('/dashboard/user-management/{user}', [UserManagementController::class, 'update'])->name('dashboard.users.update');
-    Route::delete('/dashboard/user-management/{user}', [UserManagementController::class, 'destroy'])->name('dashboard.users.destroy');
+    // Admin-only screens (user management, finance, invoice).
+    Route::middleware('admin')->group(function () {
+        // User management
+        Route::get('/dashboard/user-management', [UserManagementController::class, 'index'])->name('dashboard.users.index');
+        Route::post('/dashboard/user-management', [UserManagementController::class, 'store'])->name('dashboard.users.store');
+        Route::put('/dashboard/user-management/{user}', [UserManagementController::class, 'update'])->name('dashboard.users.update');
+        Route::delete('/dashboard/user-management/{user}', [UserManagementController::class, 'destroy'])->name('dashboard.users.destroy');
 
-    // Finance
-    Route::get('/dashboard/finance', [TransactionController::class, 'index'])->name('dashboard.finance.index');
-    Route::post('/dashboard/finance', [TransactionController::class, 'store'])->name('dashboard.finance.store');
-    Route::put('/dashboard/finance/{transaction}', [TransactionController::class, 'update'])->name('dashboard.finance.update');
-    Route::delete('/dashboard/finance/{transaction}', [TransactionController::class, 'destroy'])->name('dashboard.finance.destroy');
+        // Finance
+        Route::get('/dashboard/finance', [TransactionController::class, 'index'])->name('dashboard.finance.index');
+        Route::post('/dashboard/finance', [TransactionController::class, 'store'])->name('dashboard.finance.store');
+        Route::put('/dashboard/finance/{transaction}', [TransactionController::class, 'update'])->name('dashboard.finance.update');
+        Route::delete('/dashboard/finance/{transaction}', [TransactionController::class, 'destroy'])->name('dashboard.finance.destroy');
 
-    // Invoice
-    Route::get('/dashboard/invoice', [InvoiceController::class, 'index'])->name('dashboard.invoice.index');
-    Route::post('/dashboard/invoice', [InvoiceController::class, 'store'])->name('dashboard.invoice.store');
-    Route::put('/dashboard/invoice/{invoice}', [InvoiceController::class, 'update'])->name('dashboard.invoice.update');
-    Route::patch('/dashboard/invoice/{invoice}/status', [InvoiceController::class, 'updateStatus'])->name('dashboard.invoice.status');
-    Route::delete('/dashboard/invoice/{invoice}', [InvoiceController::class, 'destroy'])->name('dashboard.invoice.destroy');
-    Route::get('/dashboard/invoice/{invoice}/pdf', [InvoiceController::class, 'pdf'])->name('dashboard.invoice.pdf');
+        // Invoice
+        Route::get('/dashboard/invoice', [InvoiceController::class, 'index'])->name('dashboard.invoice.index');
+        Route::post('/dashboard/invoice', [InvoiceController::class, 'store'])->name('dashboard.invoice.store');
+        Route::put('/dashboard/invoice/{invoice}', [InvoiceController::class, 'update'])->name('dashboard.invoice.update');
+        Route::patch('/dashboard/invoice/{invoice}/status', [InvoiceController::class, 'updateStatus'])->name('dashboard.invoice.status');
+        Route::delete('/dashboard/invoice/{invoice}', [InvoiceController::class, 'destroy'])->name('dashboard.invoice.destroy');
+        Route::get('/dashboard/invoice/{invoice}/pdf', [InvoiceController::class, 'pdf'])->name('dashboard.invoice.pdf');
+    });
 });
 
 require __DIR__.'/auth.php';

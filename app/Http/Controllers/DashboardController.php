@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\InvoiceStatus;
+use App\Models\Invoice;
 use App\Models\Portfolio;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
@@ -19,11 +21,32 @@ class DashboardController extends Controller
         $totalIncome = Transaction::income()->sum('amount');
         $totalExpense = Transaction::expense()->sum('amount');
 
+        $recentPortfolios = Portfolio::ownedBy($user)
+            ->latest('updated_at')
+            ->take(4)
+            ->get();
+
+        $recentTransactions = Transaction::query()
+            ->orderByDesc('date')
+            ->orderByDesc('created_at')
+            ->take(5)
+            ->get();
+
+        $invoices = Invoice::query()->with('invoiceItems')->get();
+
         return view('dashboard.index', [
             'totalPortfolios' => $totalPortfolios,
             'totalIncome' => $totalIncome,
             'totalExpense' => $totalExpense,
             'myPortfolioCount' => Portfolio::ownedBy($user)->count(),
+            'recentPortfolios' => $recentPortfolios,
+            'recentTransactions' => $recentTransactions,
+            'pendingInvoices' => $invoices
+                ->whereIn('status', [InvoiceStatus::UNPAID, InvoiceStatus::PARTIALLY_PAID])
+                ->count(),
+            'outstandingInvoiceTotal' => $invoices
+                ->reject(fn (Invoice $invoice) => $invoice->status === InvoiceStatus::PAID)
+                ->sum(fn (Invoice $invoice) => $invoice->total * (1 - $invoice->status->paidRatio())),
         ]);
     }
 }

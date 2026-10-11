@@ -1,18 +1,16 @@
 @extends('layouts.dashboard')
 
-@section('content')
-    <div class="space-y-4">
-        <x-dashboard.navbar drawer-id="dashboard-drawer" title="Edit Portfolio"
-            :description="'Update data portfolio &quot;'.$portfolio->name.'&quot;'" />
+@section('page-title', 'Edit Portfolio')
+@section('page-description', 'Update data portfolio "'.$portfolio->name.'"')
 
-        <div class="card gap-6 border p-6 shadow-sm mt-4">
-            <div class="">
-                <x-dashboard.portfolio-form
-                    :portfolio="$portfolio"
-                    :action="route('dashboard.portfolio.update', $portfolio->id)"
-                    method="PUT"
-                />
-            </div>
+@section('content')
+    <div class="space-y-5">
+        <div class="rounded-2xl border border-base-300/70 bg-base-100 p-5 shadow-sm md:p-6">
+            <x-dashboard.portfolio-form
+                :portfolio="$portfolio"
+                :action="route('dashboard.portfolio.update', $portfolio->id)"
+                method="PUT"
+            />
         </div>
     </div>
 @endsection

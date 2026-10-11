@@ -1,10 +1,14 @@
 @extends('layouts.dashboard')
 
+@section('page-title', 'Portfolio')
+@section('page-description', 'Kelola, tambah, edit, atau hapus portfolio Anda')
+
 @section('content')
-    <div class="space-y-4">
-        <x-dashboard.navbar drawer-id="dashboard-drawer" title="Portfolio" description="Kelola, tambah, edit, atau hapus portfolio Anda" />
-        <div class="flex flex-wrap items-center gap-1">
-            <x-search-field placeholder="Cari portfolio..." :value="$filters['search'] ?? ''" />
+    <div class="space-y-5">
+        <div class="flex flex-wrap items-center gap-2">
+            <div class="w-full min-w-0 sm:w-72 sm:max-w-md sm:flex-1">
+                <x-search-field placeholder="Cari portfolio..." :value="$filters['search'] ?? ''" />
+            </div>
 
             <x-ui.dialog name="portfolio-filter" title="Filter Portfolio"
                 description="Pilih item-item di bawah ini untuk mengfilter portfolio Anda." width="sm:max-w-md">
@@ -100,16 +104,27 @@
             </div>
         @endif
 
-        <section class="grid grid-cols-1 gap-4 lg:grid-cols-3">
+        <section class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
             @forelse ($portfolios as $portfolio)
                 <x-dashboard.portfolio-card :portfolio="$portfolio" />
             @empty
-                <div class="text-base-content/60 col-span-3 flex h-64 items-center justify-center text-center">
-                    @if (($filters['search'] ?? null) || count($filters['categories'] ?? []) > 0 || count($filters['statuses'] ?? []) > 0)
-                        Tidak ada portfolio yang sesuai dengan filter.
-                    @else
-                        Anda belum menambahkan portfolio.
-                    @endif
+                <div
+                    class="flex h-72 flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-base-300 bg-base-100 px-6 text-center sm:col-span-2 xl:col-span-3">
+                    <span class="grid size-14 place-items-center rounded-full bg-base-200 text-base-content/40">
+                        <x-lucide name="folder-open" class="size-7" />
+                    </span>
+                    <div class="space-y-1">
+                        <p class="text-sm font-semibold text-base-content/70">
+                            @if (($filters['search'] ?? null) || count($filters['categories'] ?? []) > 0 || count($filters['statuses'] ?? []) > 0)
+                                Tidak ada portfolio yang sesuai dengan filter.
+                            @else
+                                Anda belum menambahkan portfolio.
+                            @endif
+                        </p>
+                        @if (! (($filters['search'] ?? null) || count($filters['categories'] ?? []) > 0 || count($filters['statuses'] ?? []) > 0))
+                            <p class="text-xs text-base-content/50">Mulai unggah proyek pertamamu lewat tombol "Tambah".</p>
+                        @endif
+                    </div>
                 </div>
             @endforelse
         </section>
