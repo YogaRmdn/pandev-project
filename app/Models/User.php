@@ -42,9 +42,14 @@ class User extends Authenticatable
         return $this->hasMany(Portfolio::class, 'created_by');
     }
 
+    public function isSuperadmin(): bool
+    {
+        return $this->role?->isSuperadmin() ?? false;
+    }
+
     public function isAdmin(): bool
     {
-        return (bool) ($this->role?->isAdmin() ?? false);
+        return $this->role !== null;
     }
 
     public function getInitialsAttribute(): string

@@ -103,18 +103,18 @@ class MigrationSmokeTest extends TestCase
         $this->get(route('dashboard'))->assertRedirect(route('login'));
     }
 
-    public function test_admin_only_screens_reject_regular_users(): void
+    public function test_user_management_rejects_admins(): void
     {
-        $user = User::factory()->create(['role' => Role::USER]);
+        $admin = User::factory()->create();
 
-        $this->actingAs($user)->get(route('dashboard.users.index'))->assertForbidden();
-        $this->actingAs($user)->get(route('dashboard.finance.index'))->assertForbidden();
-        $this->actingAs($user)->get(route('dashboard.invoice.index'))->assertForbidden();
+        $this->actingAs($admin)->get(route('dashboard.users.index'))->assertForbidden();
+        $this->actingAs($admin)->get(route('dashboard.finance.index'))->assertOk();
+        $this->actingAs($admin)->get(route('dashboard.invoice.index'))->assertOk();
     }
 
     public function test_dashboard_screens_render_for_admin(): void
     {
-        $admin = User::factory()->admin()->create();
+        $admin = User::factory()->create();
         $portfolio = Portfolio::factory()->create(['created_by' => $admin->id]);
         $transaction = Transaction::factory()->create(['type' => TransactionType::INCOME, 'amount' => 500000]);
         $invoice = Invoice::factory()->create(['status' => InvoiceStatus::UNPAID]);
@@ -149,7 +149,7 @@ class MigrationSmokeTest extends TestCase
 
     public function test_dashboard_stats_separate_income_from_expense(): void
     {
-        $admin = User::factory()->admin()->create();
+        $admin = User::factory()->create();
 
         Transaction::factory()->create(['type' => TransactionType::INCOME, 'amount' => 900000]);
         Transaction::factory()->create(['type' => TransactionType::EXPENSE, 'amount' => 250000]);
@@ -245,7 +245,7 @@ class MigrationSmokeTest extends TestCase
 
     public function test_transaction_update_edits_in_place(): void
     {
-        $admin = User::factory()->admin()->create();
+        $admin = User::factory()->create();
         $transaction = Transaction::factory()->create(['description' => 'Awal']);
 
         // The original edit dialog called the create action and duplicated rows.
@@ -265,7 +265,7 @@ class MigrationSmokeTest extends TestCase
 
     public function test_invoice_status_books_matching_income(): void
     {
-        $admin = User::factory()->admin()->create();
+        $admin = User::factory()->create();
         $invoice = Invoice::factory()->create(['status' => InvoiceStatus::UNPAID]);
         $invoice->invoiceItems()->create(['name' => 'Website', 'quantity' => 2, 'price' => 500000]);
 
@@ -283,7 +283,7 @@ class MigrationSmokeTest extends TestCase
 
     public function test_invoice_status_books_only_the_remaining_delta(): void
     {
-        $admin = User::factory()->admin()->create();
+        $admin = User::factory()->create();
         $invoice = Invoice::factory()->create(['status' => InvoiceStatus::UNPAID]);
         $invoice->invoiceItems()->create(['name' => 'Website', 'quantity' => 2, 'price' => 500000]);
 
@@ -314,7 +314,7 @@ class MigrationSmokeTest extends TestCase
 
     public function test_invoice_update_replaces_items(): void
     {
-        $admin = User::factory()->admin()->create();
+        $admin = User::factory()->create();
         $invoice = Invoice::factory()->create();
         $invoice->invoiceItems()->create(['name' => 'Lama', 'quantity' => 1, 'price' => 1000]);
 
@@ -335,7 +335,7 @@ class MigrationSmokeTest extends TestCase
 
     public function test_invoice_pdf_is_generated(): void
     {
-        $admin = User::factory()->admin()->create();
+        $admin = User::factory()->create();
         $invoice = Invoice::factory()->create(['description' => 'Proyekwebsite']);
         $invoice->invoiceItems()->create(['name' => 'Website', 'quantity' => 1, 'price' => 750000]);
 
@@ -347,8 +347,8 @@ class MigrationSmokeTest extends TestCase
 
     public function test_user_management_update_edits_in_place(): void
     {
-        $admin = User::factory()->admin()->create();
-        $target = User::factory()->create(['fullname' => 'Target Lama', 'role' => Role::USER]);
+        $admin = User::factory()->superadmin()->create();
+        $target = User::factory()->create(['fullname' => 'Target Lama']);
 
         $this->actingAs($admin)
             ->put(route('dashboard.users.update', $target), [
@@ -360,12 +360,11 @@ class MigrationSmokeTest extends TestCase
 
         $this->assertSame(2, User::count()); // admin + target, no duplicate
         $this->assertSame('Target Baru', $target->fresh()->fullname);
-        $this->assertTrue($target->fresh()->isAdmin());
     }
 
     public function test_user_management_rejects_duplicate_email(): void
     {
-        $admin = User::factory()->admin()->create();
+        $admin = User::factory()->superadmin()->create();
         $target = User::factory()->create();
 
         $this->actingAs($admin)
@@ -374,14 +373,14 @@ class MigrationSmokeTest extends TestCase
                 'email' => $target->email,
                 'password' => 'rahasia123',
                 'password_confirmation' => 'rahasia123',
-                'role' => Role::USER->value,
+                'role' => Role::ADMIN->value,
             ])
             ->assertSessionHasErrors('email');
     }
 
     public function test_user_management_list_hides_the_signed_in_user(): void
     {
-        $admin = User::factory()->admin()->create();
+        $admin = User::factory()->superadmin()->create();
         User::factory()->create(['fullname' => 'Orang Lain']);
 
         $content = $this->actingAs($admin)
@@ -400,7 +399,7 @@ class MigrationSmokeTest extends TestCase
 
     public function test_admin_cannot_delete_their_own_account_from_user_management(): void
     {
-        $admin = User::factory()->admin()->create();
+        $admin = User::factory()->superadmin()->create();
 
         $this->actingAs($admin)
             ->delete(route('dashboard.users.destroy', $admin))

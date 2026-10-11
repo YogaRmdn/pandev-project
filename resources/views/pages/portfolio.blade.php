@@ -16,7 +16,7 @@
 
             <p class="text-base-content/60 mt-4 max-w-2xl text-center text-pretty text-base lg:text-xl">
                 A collection of web, mobile, and desktop applications, plus design
-                projects we have planned, built, and shipped.
+            projects we have planned, built, and shipped.
             </p>
 
             <a href="{{ route('portfolio.index') }}" class="btn btn-primary btn-lg mt-8">

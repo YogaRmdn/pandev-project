@@ -4,19 +4,19 @@ namespace App\Enums;
 
 enum Role: string
 {
-    case USER = 'USER';
+    case SUPERADMIN = 'SUPERADMIN';
     case ADMIN = 'ADMIN';
 
     public function label(): string
     {
         return match ($this) {
-            self::USER => 'Pengguna',
+            self::SUPERADMIN => 'Super Admin',
             self::ADMIN => 'Administrator',
         };
     }
 
-    public function isAdmin(): bool
+    public function isSuperadmin(): bool
     {
-        return $this === self::ADMIN;
+        return $this === self::SUPERADMIN;
     }
 }

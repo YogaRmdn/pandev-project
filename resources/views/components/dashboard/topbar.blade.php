@@ -5,19 +5,12 @@
 @endphp
 
 <header class="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-base-300/80 bg-base-100/85 px-4 backdrop-blur md:px-6 lg:px-8">
-    {{-- Mobile drawer toggle --}}
-    <label for="dashboard-drawer" class="btn btn-square btn-ghost btn-sm lg:hidden" aria-label="Buka menu">
-        <x-lucide name="menu" class="size-5" />
+    {{-- Sidebar toggle --}}
+    <label for="dashboard-drawer" class="btn btn-square btn-ghost btn-sm" aria-label="Buka/tutup sidebar">
+        <x-lucide name="panel-left-close" class="size-5" />
     </label>
 
     <div class="min-w-0 flex-1">
-        @if ($pageTitle !== '')
-            <nav class="flex items-center gap-1 text-xs text-base-content/50">
-                <a href="{{ route('dashboard') }}" class="transition-colors hover:text-primary">Dashboard</a>
-                <x-lucide name="chevron-right" class="size-3" />
-                <span class="truncate">{{ $pageTitle }}</span>
-            </nav>
-        @endif
         <h1 class="truncate font-heading text-lg font-semibold leading-tight text-base-content">
             {{ $pageTitle !== '' ? $pageTitle : 'Dashboard' }}
         </h1>
@@ -48,7 +41,7 @@
                 @endif
                 <span class="hidden pe-1 text-start text-sm leading-tight md:block">
                     <span class="block max-w-32 truncate font-semibold">{{ $user->fullname }}</span>
-                    <span class="block text-[11px] text-base-content/50">{{ $user->role?->label() ?? 'Pengguna' }}</span>
+                    <span class="block text-[11px] text-base-content/50">{{ $user->email }}</span>
                 </span>
                 <x-lucide name="chevron-down" class="hidden size-4 text-base-content/40 md:block" />
             </button>

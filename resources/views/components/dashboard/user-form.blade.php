@@ -11,7 +11,7 @@
             email: @js(old('email', $user?->email)),
             password: '',
             password_confirmation: @js(old('password_confirmation', '')),
-            role: @js(old('role', $user?->role?->value ?? 'USER')),
+            role: @js(old('role', $user?->role?->value ?? 'ADMIN')),
         },
     })"
     x-on:submit="onSubmit($event)">
@@ -149,8 +149,8 @@
             x-on:change="validateField('role')">
             <option value="">Pilih role</option>
             @foreach ($roles as $role)
-                <option value="{{ $role->value }}" @selected(old('role', $user->role?->value ?? 'USER') === $role->value)>
-                    {{ $role->value }}
+                <option value="{{ $role->value }}" @selected(old('role', $user->role?->value ?? 'ADMIN') === $role->value)>
+                    {{ $role->label() }}
                 </option>
             @endforeach
         </select>

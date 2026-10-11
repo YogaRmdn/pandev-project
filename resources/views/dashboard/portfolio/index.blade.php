@@ -5,58 +5,11 @@
 
 @section('content')
     <div class="space-y-5">
-        <div class="flex flex-wrap items-center gap-2">
+        <div class="flex flex-wrap items-center gap-2 bg-white p-4 rounded-lg">
             <div class="w-full min-w-0 sm:w-72 sm:max-w-md sm:flex-1">
                 <x-search-field placeholder="Cari portfolio..." :value="$filters['search'] ?? ''" />
             </div>
-
-            <x-ui.dialog name="portfolio-filter" title="Filter Portfolio"
-                description="Pilih item-item di bawah ini untuk mengfilter portfolio Anda." width="sm:max-w-md">
-                <form method="GET" action="{{ route('dashboard.portfolio.index') }}" class="space-y-4">
-                    @if ($filters['search'])
-                        <input type="hidden" name="search" value="{{ $filters['search'] }}">
-                    @endif
-
-                    <div>
-                        <div class="mb-2 text-sm font-medium">Status</div>
-                        <div class="flex flex-wrap gap-2">
-                            @foreach ($statuses as $status)
-                                @php $checked = in_array($status['value'], $filters['statuses'] ?? [], true) @endphp
-                                <label
-                                    class="border-base-300 inline-flex cursor-pointer items-center gap-1.5 rounded-md border px-3 py-1.5 text-sm has-[:checked]:border-primary has-[:checked]:bg-primary/10">
-                                    <input type="checkbox" name="status[]" value="{{ $status['value'] }}"
-                                        @checked($checked) class="accent-primary">
-                                    {{ $status['label'] }}
-                                </label>
-                            @endforeach
-                        </div>
-                    </div>
-
-                    <div>
-                        <div class="mb-2 text-sm font-medium">Kategori</div>
-                        <div class="flex flex-wrap gap-2">
-                            @foreach ($categories as $category)
-                                @php $checked = in_array($category, $filters['categories'] ?? [], true) @endphp
-                                <label
-                                    class="border-base-300 inline-flex cursor-pointer items-center gap-1.5 rounded-md border px-3 py-1.5 text-sm has-[:checked]:border-primary has-[:checked]:bg-primary/10">
-                                    <input type="checkbox" name="category[]" value="{{ $category }}"
-                                        @checked($checked) class="accent-primary">
-                                    {{ $category }}
-                                </label>
-                            @endforeach
-                        </div>
-                    </div>
-
-                    <div class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-                        <button type="button" class="btn btn-outline" x-on:click="$store.modals.close('portfolio-filter')">
-                            Batal
-                        </button>
-                        <button type="submit" class="btn btn-primary">Terapkan filter</button>
-                    </div>
-                </form>
-            </x-ui.dialog>
-
-            <button type="button" class="btn" x-on:click="$dispatch('open-modal', 'portfolio-filter')">
+            <button type="button" class="btn" onclick="portfolio_filter_modal.showModal()">
                 <x-lucide name="filter" />
                 Filter
                 @if (count($filters['statuses'] ?? []) + count($filters['categories'] ?? []) > 0)
@@ -66,6 +19,59 @@
                     </span>
                 @endif
             </button>
+
+            <dialog id="portfolio_filter_modal" class="modal whitespace-normal">
+                <div class="modal-box sm:max-w-md">
+                    <h3 class="text-lg font-bold">Filter Portfolio</h3>
+                    <p class="text-base-content/60 py-4 text-sm">Pilih item-item di bawah ini untuk mengfilter portfolio Anda.</p>
+                    <form method="GET" action="{{ route('dashboard.portfolio.index') }}" class="space-y-4">
+                        @if ($filters['search'])
+                            <input type="hidden" name="search" value="{{ $filters['search'] }}">
+                        @endif
+
+                        <div>
+                            <div class="mb-2 text-sm font-medium">Status</div>
+                            <div class="flex flex-wrap gap-2">
+                                @foreach ($statuses as $status)
+                                    @php $checked = in_array($status['value'], $filters['statuses'] ?? [], true) @endphp
+                                    <label
+                                        class="border-base-300 inline-flex cursor-pointer items-center gap-1.5 rounded-md border px-3 py-1.5 text-sm has-[:checked]:border-primary has-[:checked]:bg-primary/10">
+                                        <input type="checkbox" name="status[]" value="{{ $status['value'] }}"
+                                            @checked($checked) class="accent-primary">
+                                        {{ $status['label'] }}
+                                    </label>
+                                @endforeach
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="mb-2 text-sm font-medium">Kategori</div>
+                            <div class="flex flex-wrap gap-2">
+                                @foreach ($categories as $category)
+                                    @php $checked = in_array($category, $filters['categories'] ?? [], true) @endphp
+                                    <label
+                                        class="border-base-300 inline-flex cursor-pointer items-center gap-1.5 rounded-md border px-3 py-1.5 text-sm has-[:checked]:border-primary has-[:checked]:bg-primary/10">
+                                        <input type="checkbox" name="category[]" value="{{ $category }}"
+                                            @checked($checked) class="accent-primary">
+                                        {{ $category }}
+                                    </label>
+                                @endforeach
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+                            <button type="button" class="btn btn-outline"
+                                x-on:click="const d = $el.closest('dialog'); if (d) { d.close(); }">
+                                Batal
+                            </button>
+                            <button type="submit" class="btn btn-primary">Terapkan filter</button>
+                        </div>
+                    </form>
+                </div>
+                <form method="dialog" class="modal-backdrop">
+                    <button>close</button>
+                </form>
+            </dialog>
 
             <a href="{{ route('dashboard.portfolio.create') }}" class="btn btn-primary ml-auto">
                 <x-lucide name="plus" /> Tambah

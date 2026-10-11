@@ -11,16 +11,18 @@
         ],
     ];
 
-    // Layar administrasi hanya relevan (dan hanya bisa diakses) oleh admin.
+    // Layar administrasi: keuangan/faktur untuk admin, manajemen user untuk superadmin.
     if ($user?->isAdmin()) {
-        $groups[] = [
-            'label' => 'Administrasi',
-            'items' => [
-                ['title' => 'Manajemen User', 'route' => 'dashboard.users.index', 'icon' => 'users', 'patterns' => ['dashboard.users.*']],
-                ['title' => 'Keuangan', 'route' => 'dashboard.finance.index', 'icon' => 'wallet', 'patterns' => ['dashboard.finance.*']],
-                ['title' => 'Faktur', 'route' => 'dashboard.invoice.index', 'icon' => 'notepad-text', 'patterns' => ['dashboard.invoice.*']],
-            ],
-        ];
+        $adminItems = [];
+
+        if ($user?->isSuperadmin()) {
+            $adminItems[] = ['title' => 'Manajemen User', 'route' => 'dashboard.users.index', 'icon' => 'users', 'patterns' => ['dashboard.users.*']];
+        }
+
+        $adminItems[] = ['title' => 'Keuangan', 'route' => 'dashboard.finance.index', 'icon' => 'wallet', 'patterns' => ['dashboard.finance.*']];
+        $adminItems[] = ['title' => 'Faktur', 'route' => 'dashboard.invoice.index', 'icon' => 'notepad-text', 'patterns' => ['dashboard.invoice.*']];
+
+        $groups[] = ['label' => 'Administrasi', 'items' => $adminItems];
     }
 
     $accountItems = [

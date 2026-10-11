@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('name');
             $table->unsignedInteger('quantity')->default(1);
             $table->decimal('price', 15, 2);
-            $table->foreignUuid('invoice_id')->nullable()->constrained('invoices')->nullOnDelete();
+            $table->foreignUuid('invoice_id')->nullable()->constrained('invoices')->cascadeOnDelete();
             $table->timestamps();
         });
 

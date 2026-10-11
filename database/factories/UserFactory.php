@@ -23,7 +23,7 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'image' => null,
             'password' => static::$password ??= Hash::make('password'),
-            'role' => Role::USER,
+            'role' => Role::ADMIN,
             'remember_token' => Str::random(10),
         ];
     }
@@ -35,10 +35,10 @@ class UserFactory extends Factory
         ]);
     }
 
-    public function admin(): static
+    public function superadmin(): static
     {
         return $this->state(fn (array $attributes) => [
-            'role' => Role::ADMIN,
+            'role' => Role::SUPERADMIN,
         ]);
     }
 }

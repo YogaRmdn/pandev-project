@@ -22,7 +22,6 @@ class UserManagementController extends Controller
                 $q->where('fullname', 'like', "%{$search}%")
                     ->orWhere('email', 'like', "%{$search}%");
             }))
-            ->when($request->filled('role'), fn ($query) => $query->where('role', $request->query('role')))
             ->latest()
             ->get();
 

@@ -35,8 +35,7 @@ Route::get('/buy-ebook', [PageController::class, 'buyEbook'])->name('buy-ebook')
 | Authenticated
 |--------------------------------------------------------------------------
 |
-| The `auth` middleware mirrors the original src/proxy.ts route guard, and
-| `admin` covers the screens the original only hid behind a UI check.
+| The `auth` middleware mirrors the original src/proxy.ts route guard.
 |
 */
 
@@ -63,21 +62,21 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/dashboard/settings', [SettingsController::class, 'updateProfile'])->name('settings.update');
     Route::patch('/dashboard/settings/avatar', [SettingsController::class, 'updateAvatar'])->name('settings.avatar');
 
-    // Admin-only screens (user management, finance, invoice).
-    Route::middleware('admin')->group(function () {
-        // User management
+    // User management — superadmin only.
+    Route::middleware('superadmin')->group(function () {
         Route::get('/dashboard/user-management', [UserManagementController::class, 'index'])->name('dashboard.users.index');
         Route::post('/dashboard/user-management', [UserManagementController::class, 'store'])->name('dashboard.users.store');
         Route::put('/dashboard/user-management/{user}', [UserManagementController::class, 'update'])->name('dashboard.users.update');
         Route::delete('/dashboard/user-management/{user}', [UserManagementController::class, 'destroy'])->name('dashboard.users.destroy');
+    });
 
-        // Finance
+    // Finance & invoice — admin (and superadmin) only.
+    Route::middleware('admin')->group(function () {
         Route::get('/dashboard/finance', [TransactionController::class, 'index'])->name('dashboard.finance.index');
         Route::post('/dashboard/finance', [TransactionController::class, 'store'])->name('dashboard.finance.store');
         Route::put('/dashboard/finance/{transaction}', [TransactionController::class, 'update'])->name('dashboard.finance.update');
         Route::delete('/dashboard/finance/{transaction}', [TransactionController::class, 'destroy'])->name('dashboard.finance.destroy');
 
-        // Invoice
         Route::get('/dashboard/invoice', [InvoiceController::class, 'index'])->name('dashboard.invoice.index');
         Route::post('/dashboard/invoice', [InvoiceController::class, 'store'])->name('dashboard.invoice.store');
         Route::put('/dashboard/invoice/{invoice}', [InvoiceController::class, 'update'])->name('dashboard.invoice.update');

@@ -33,35 +33,28 @@
                         class="btn btn-sm border-0 bg-base-100 text-primary hover:bg-base-200">
                         <x-lucide name="plus" class="size-4" /> Portfolio Baru
                     </a>
-                    @if ($user?->isAdmin())
-                        <a href="{{ route('dashboard.finance.index') }}"
-                            class="btn btn-sm border-primary-content/40 bg-transparent text-primary-content hover:border-primary-content/40 hover:bg-primary-content/10">
-                            <x-lucide name="wallet" class="size-4" /> Keuangan
-                        </a>
-                    @endif
+                    <a href="{{ route('dashboard.finance.index') }}"
+                        class="btn btn-sm border-primary-content/40 bg-transparent text-primary-content hover:border-primary-content/40 hover:bg-primary-content/10">
+                        <x-lucide name="wallet" class="size-4" /> Keuangan
+                    </a>
                 </div>
             </div>
         </section>
 
         {{-- Statistik --}}
-        <div class="grid grid-cols-1 gap-4 {{ $user?->isAdmin() ? 'md:grid-cols-3' : 'md:grid-cols-2' }}">
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
             <x-dashboard.stat-card label="Total Proyek Diunggah" :value="number_format($totalPortfolios)" icon="folder"
                 tone="primary" :hint="$myPortfolioCount.' milikmu'" />
-            @if ($user?->isAdmin())
-                <x-dashboard.stat-card label="Total Pendapatan" :value="\App\Support\Format::idr($totalIncome)"
-                    icon="trending-up" tone="success" />
-                <x-dashboard.stat-card label="Total Pengeluaran" :value="\App\Support\Format::idr($totalExpense)"
-                    icon="trending-down" tone="error" />
-            @else
-                <x-dashboard.stat-card label="Faktur Menunggu" :value="number_format($pendingInvoices)"
-                    icon="receipt" tone="warning" />
-            @endif
+            <x-dashboard.stat-card label="Total Pendapatan" :value="\App\Support\Format::idr($totalIncome)"
+                icon="trending-up" tone="success" />
+            <x-dashboard.stat-card label="Total Pengeluaran" :value="\App\Support\Format::idr($totalExpense)"
+                icon="trending-down" tone="error" />
         </div>
 
         {{-- Aktivitas --}}
         <div class="grid gap-6 lg:grid-cols-5">
             {{-- Portfolio terbaru --}}
-            <div class="{{ $user?->isAdmin() ? 'lg:col-span-3' : 'lg:col-span-5' }}">
+            <div class="lg:col-span-3">
                 <x-dashboard.card title="Portfolio Terbaru" description="Proyek yang terakhir kamu perbarui" icon="briefcase"
                     class="h-full">
                     <x-slot:actions>
@@ -114,8 +107,7 @@
                 </x-dashboard.card>
             </div>
 
-            {{-- Transaksi terbaru (admin saja) --}}
-            @if ($user?->isAdmin())
+            {{-- Transaksi terbaru --}}
             <div class="lg:col-span-2">
                 <x-dashboard.card title="Aktivitas Keuangan" description="Transaksi terakhir yang tercatat" icon="activity"
                     class="h-full">
@@ -166,7 +158,6 @@
                     @endforelse
                 </x-dashboard.card>
             </div>
-            @endif
         </div>
     </div>
 @endsection

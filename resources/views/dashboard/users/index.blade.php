@@ -5,16 +5,16 @@
 
 @section('content')
     <div class="space-y-5">
-        <x-dashboard.card title="Data User" description="Berikut semua data user yang ada" icon="users"
-            :count="$users->isNotEmpty() ? $users->count() : null">
+        <x-dashboard.card title="Data User" description="Berikut semua data user yang ada" icon="users" :count="$users->isNotEmpty() ? $users->count() : null">
             <x-slot:actions>
-                <div class="w-full sm:max-w-xs">
-                    <x-search-field placeholder="Cari user..." />
+                <div class="flex gap-4">
+                    <div class="w-full sm:max-w-xs">
+                        <x-search-field placeholder="Cari user..." />
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="create_user_modal.showModal()">
+                        <x-lucide name="plus" class="size-4" /> Tambah User
+                    </button>
                 </div>
-
-                <button type="button" class="btn btn-primary" onclick="create_user_modal.showModal()">
-                    <x-lucide name="plus" class="size-4" /> Tambah User
-                </button>
             </x-slot:actions>
 
             <div class="overflow-x-auto">
@@ -70,8 +70,8 @@
                                 <td class="align-middle whitespace-nowrap p-0" colspan="5">
                                     <x-ui.dialog :name="$editName" title="Edit User"
                                         description="Ubah informasi akun yang terdaftar di aplikasi" width="sm:max-w-md">
-                                        <x-dashboard.user-form :action="route('dashboard.users.update', $user)" method="PUT"
-                                            :user="$user" :roles="$roles" />
+                                        <x-dashboard.user-form :action="route('dashboard.users.update', $user)" method="PUT" :user="$user"
+                                            :roles="$roles" />
                                     </x-ui.dialog>
 
                                     {{-- The original required typing the exact full name before
@@ -87,8 +87,7 @@
                                                 <label class="label text-xs font-medium">
                                                     Ketik &quot;{{ $user->fullname }}&quot; untuk konfirmasi
                                                 </label>
-                                                <input class="input w-full border-error" x-model="value"
-                                                    autocomplete="off">
+                                                <input class="input w-full border-error" x-model="value" autocomplete="off">
                                             </div>
 
                                             <button type="submit" class="btn btn-error w-full"
