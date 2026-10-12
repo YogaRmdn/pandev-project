@@ -39,7 +39,9 @@ class MediaService
             return $this->uploadToCloudinary($file, $folder, $publicId);
         }
 
-        $name = ($publicId ? Str::last($publicId) : Str::random(20)).'.'.$file->getClientOriginalExtension();
+        // $publicId jadi nama file lokal (avatar-1.jpg) supaya unggah ulang menimpa file lama.
+        $extension = $file->getClientOriginalExtension() ?: $file->guessExtension() ?: 'bin';
+        $name = ($publicId ?: Str::random(20)).'.'.$extension;
 
         $path = $file->storeAs($folder, $name, $this->disk());
 
@@ -64,10 +66,41 @@ class MediaService
 
         $relative = str_replace(Storage::disk($this->disk())->url(''), '', $urlOrPublicId);
         $relative = ltrim(parse_url($relative, PHP_URL_PATH) ?: $relative, '/');
+        $relative = static::normalizeRelativePath($relative);
 
         if ($relative !== '' && Storage::disk($this->disk())->exists($relative)) {
             Storage::disk($this->disk())->delete($relative);
         }
+    }
+
+    /**
+     * Collapse `.`/`..` segments and refuse any path that escapes the disk
+     * root, so a URL-embedded traversal can never delete outside the media
+     * folder. Returns '' when the path is unsafe.
+     */
+    public static function normalizeRelativePath(string $path): string
+    {
+        $stack = [];
+
+        foreach (explode('/', $path) as $segment) {
+            if ($segment === '' || $segment === '.') {
+                continue;
+            }
+
+            if ($segment === '..') {
+                if ($stack === []) {
+                    return '';
+                }
+
+                array_pop($stack);
+
+                continue;
+            }
+
+            $stack[] = $segment;
+        }
+
+        return implode('/', $stack);
     }
 
     /**

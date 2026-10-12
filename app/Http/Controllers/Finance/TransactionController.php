@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Finance;
 use App\Enums\TransactionType;
 use App\Http\Controllers\Controller;
 use App\Models\Transaction;
+use App\Support\ActivityLogger;
+use App\Support\Format;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -15,7 +17,7 @@ class TransactionController extends Controller
     public function index(Request $request): View
     {
         $transactions = Transaction::query()
-            ->when($request->filled('search'), fn ($query, $search) => $query->where('description', 'like', "%{$search}%"))
+            ->when($request->input('search'), fn ($query, $search) => $query->where('description', 'like', "%{$search}%"))
             ->when($request->filled('type'), fn ($query) => $query->where('type', $request->query('type')))
             ->latest('date')
             ->latest()
@@ -40,7 +42,13 @@ class TransactionController extends Controller
 
         $data = $request->validate($this->rules(), $this->messages());
 
-        Transaction::create($data);
+        $transaction = Transaction::create($data);
+
+        ActivityLogger::log(
+            'transaction.created',
+            'Mencatat transaksi '.$transaction->type->label().' sebesar '.Format::idr($transaction->amount),
+            ['transaction_id' => $transaction->id],
+        );
 
         return back()->with('success', 'Transaksi berhasil dibuat');
     }
@@ -55,12 +63,24 @@ class TransactionController extends Controller
 
         $transaction->update($data);
 
+        ActivityLogger::log(
+            'transaction.updated',
+            'Memperbarui transaksi '.$transaction->type->label().' sebesar '.Format::idr($transaction->amount),
+            ['transaction_id' => $transaction->id],
+        );
+
         return back()->with('success', 'Transaksi berhasil diperbarui');
     }
 
     public function destroy(Transaction $transaction): RedirectResponse
     {
         $transaction->delete();
+
+        ActivityLogger::log(
+            'transaction.deleted',
+            'Menghapus transaksi sebesar '.Format::idr($transaction->amount),
+            ['transaction_id' => $transaction->id],
+        );
 
         return back()->with('success', 'Transaksi berhasil dihapus');
     }

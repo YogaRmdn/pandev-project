@@ -8,11 +8,11 @@
         <x-dashboard.card title="Data Faktur" description="Berikut semua data faktur yang ada" icon="notepad-text"
             :count="$invoices->isNotEmpty() ? $invoices->count() : null">
             <x-slot:actions>
-                <div class="w-full sm:max-w-xs">
+                <div class="w-full sm:w-72">
                     <x-search-field placeholder="Cari deskripsi..." />
                 </div>
 
-                <button type="button" class="btn btn-primary" onclick="create_invoice_modal.showModal()">
+                <button type="button" class="btn btn-primary ms-auto shrink-0 sm:ms-0" onclick="create_invoice_modal.showModal()">
                     <x-lucide name="plus" class="size-4" /> Tambah
                 </button>
             </x-slot:actions>

@@ -7,7 +7,7 @@
 
 <section {{ $attributes->class(['overflow-hidden rounded-2xl border border-base-300/70 bg-base-100 shadow-sm']) }}>
     @if ($title || isset($actions))
-        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-base-300/70 px-5 py-4">
+        <div class="flex flex-col gap-3 border-b border-base-300/70 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
             <div class="flex min-w-0 items-center gap-3">
                 @if ($icon)
                     <span class="grid size-10 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary">
@@ -31,7 +31,7 @@
             </div>
 
             @isset($actions)
-                <div class="flex flex-wrap items-center gap-2">{{ $actions }}</div>
+                <div class="flex w-full flex-wrap items-center gap-2 sm:w-auto">{{ $actions }}</div>
             @endisset
         </div>
     @endif

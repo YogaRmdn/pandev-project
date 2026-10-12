@@ -30,9 +30,11 @@ return [
     'portfolio_disk' => env('MEDIA_DISK', 'public'),
     'portfolio_folder' => 'pandev/portfolio',
     'avatar_folder' => 'pandev/avatars',
+    'ebook_folder' => 'pandev/ebooks',
 
     'portfolio_max_kb' => 1024,
     'avatar_max_kb' => 2048,
+    'ebook_max_kb' => 2048,
 
     'mimes' => ['jpg', 'jpeg', 'png', 'webp'],
 

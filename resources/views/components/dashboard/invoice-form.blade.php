@@ -97,23 +97,25 @@
             </div>
 
             <template x-for="(item, index) in items" x-bind:key="index">
-                <div class="flex items-end gap-2">
-                    <div class="flex-1 space-y-1">
+                {{-- Di layar kecil baris item dipecah dua (nama lalu jumlah/harga)
+                     supaya tombol hapus tidak terpotong keluar modal. --}}
+                <div class="flex flex-wrap items-end gap-2">
+                    <div class="w-full min-w-0 space-y-1 sm:w-auto sm:flex-1">
                         <label x-bind:for="'item-name-' + index" class="text-xs leading-none font-medium select-none">Nama Item</label>
                         <input class="input w-full" x-bind:name="'invoice_items[' + index + '][name]'" x-bind:id="'item-name-' + index" x-model="item.name" placeholder="Nama item..." maxlength="255" required>
                     </div>
 
-                    <div class="w-24 space-y-1">
+                    <div class="min-w-0 flex-1 space-y-1 sm:w-24 sm:flex-none">
                         <label x-bind:for="'item-qty-' + index" class="text-xs leading-none font-medium select-none">Jumlah</label>
                         <input class="input w-full" x-bind:name="'invoice_items[' + index + '][quantity]'" x-bind:id="'item-qty-' + index" type="number" min="1" x-model="item.quantity" placeholder="0" required>
                     </div>
 
-                    <div class="w-36 space-y-1">
+                    <div class="min-w-0 flex-1 space-y-1 sm:w-36 sm:flex-none">
                         <label x-bind:for="'item-price-' + index" class="text-xs leading-none font-medium select-none">Harga</label>
                         <input class="input w-full" x-bind:name="'invoice_items[' + index + '][price]'" x-bind:id="'item-price-' + index" inputmode="numeric" x-bind:value="priceDisplay(item.price)" x-on:input="syncPrice(index, $el)" placeholder="Rp 0" required>
                     </div>
 
-                    <button type="button" class="btn btn-error btn-square" x-on:click="remove(index)" aria-label="Hapus item">
+                    <button type="button" class="btn btn-error btn-square shrink-0" x-on:click="remove(index)" aria-label="Hapus item">
                         <x-lucide name="x" />
                     </button>
                 </div>

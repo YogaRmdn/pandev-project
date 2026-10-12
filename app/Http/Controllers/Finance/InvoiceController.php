@@ -7,6 +7,7 @@ use App\Enums\TransactionType;
 use App\Http\Controllers\Controller;
 use App\Models\Invoice;
 use App\Models\Transaction;
+use App\Support\ActivityLogger;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -19,7 +20,7 @@ class InvoiceController extends Controller
     public function index(Request $request): View
     {
         $invoices = Invoice::with('invoiceItems')
-            ->when($request->filled('search'), fn ($query, $search) => $query->where('description', 'like', "%{$search}%"))
+            ->when($request->input('search'), fn ($query, $search) => $query->where('description', 'like', "%{$search}%"))
             ->when($request->filled('status'), fn ($query) => $query->where('status', $request->query('status')))
             ->latest('date')
             ->latest()
@@ -37,10 +38,18 @@ class InvoiceController extends Controller
         $items = $data['invoice_items'];
         unset($data['invoice_items']);
 
-        DB::transaction(function () use ($data, $items) {
+        $invoice = null;
+
+        DB::transaction(function () use ($data, $items, &$invoice) {
             $invoice = Invoice::create($data);
             $this->syncItems($invoice, $items);
         });
+
+        ActivityLogger::log(
+            'invoice.created',
+            'Membuat faktur "'.$invoice->description.'"',
+            ['invoice_id' => $invoice->id],
+        );
 
         return back()->with('success', 'Tagihan berhasil dibuat');
     }
@@ -55,6 +64,12 @@ class InvoiceController extends Controller
             $invoice->update($data);
             $this->syncItems($invoice, $items);
         });
+
+        ActivityLogger::log(
+            'invoice.updated',
+            'Memperbarui faktur "'.$invoice->description.'"',
+            ['invoice_id' => $invoice->id],
+        );
 
         return back()->with('success', 'Tagihan berhasil diperbarui');
     }
@@ -98,12 +113,26 @@ class InvoiceController extends Controller
             }
         });
 
+        ActivityLogger::log(
+            'invoice.status_updated',
+            'Mengubah status faktur "'.$invoice->description.'" menjadi '.$target->label(),
+            ['invoice_id' => $invoice->id, 'status' => $target->value],
+        );
+
         return back()->with('success', 'Status invoice berhasil diperbarui');
     }
 
     public function destroy(Invoice $invoice): RedirectResponse
     {
+        $description = $invoice->description;
+
         $invoice->delete();
+
+        ActivityLogger::log(
+            'invoice.deleted',
+            'Menghapus faktur "'.$description.'"',
+            ['invoice_id' => $invoice->id],
+        );
 
         return back()->with('success', 'Tagihan berhasil dihapus');
     }
@@ -134,7 +163,10 @@ class InvoiceController extends Controller
         return [
             'description' => ['required', 'string', 'max:255'],
             'date' => ['required', 'date'],
-            'status' => ['nullable', Rule::enum(InvoiceStatus::class)],
+            // Status sengaja tidak diterima di sini: faktur selalu dibuat UNPAID
+            // dan hanya berpindah lewat updateStatus(), yang mencatat delta
+            // income. Menerimanya dari form membuka celah faktur "dilunasi"
+            // tanpa menyentuh pembukuan.
             'invoice_items' => ['required', 'array', 'min:1'],
             'invoice_items.*.name' => ['required', 'string', 'max:255'],
             'invoice_items.*.quantity' => ['required', 'numeric', 'min:1'],

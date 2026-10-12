@@ -7,7 +7,8 @@
 <header class="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-base-300/80 bg-base-100/85 px-4 backdrop-blur md:px-6 lg:px-8">
     {{-- Sidebar toggle --}}
     <label for="dashboard-drawer" class="btn btn-square btn-ghost btn-sm" aria-label="Buka/tutup sidebar">
-        <x-lucide name="panel-left-close" class="size-5" />
+        <x-lucide name="panel-left-open" class="size-5 icon-drawer-closed" />
+        <x-lucide name="panel-left-close" class="size-5 icon-drawer-open" />
     </label>
 
     <div class="min-w-0 flex-1">
@@ -73,6 +74,7 @@
                 <div class="my-1.5 h-px bg-base-300/70"></div>
 
                 <form method="POST" action="{{ route('logout') }}" role="none">
+                    @csrf
                     <button type="submit" role="menuitem"
                         class="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm text-error transition-colors hover:bg-error/10">
                         <x-lucide name="log-out" class="size-4" /> Keluar

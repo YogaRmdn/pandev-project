@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EbookController;
 use App\Http\Controllers\Finance\InvoiceController;
 use App\Http\Controllers\Finance\TransactionController;
 use App\Http\Controllers\PageController;
@@ -68,6 +70,11 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/dashboard/user-management', [UserManagementController::class, 'store'])->name('dashboard.users.store');
         Route::put('/dashboard/user-management/{user}', [UserManagementController::class, 'update'])->name('dashboard.users.update');
         Route::delete('/dashboard/user-management/{user}', [UserManagementController::class, 'destroy'])->name('dashboard.users.destroy');
+
+        // Log aktivitas — superadmin only.
+        Route::get('/dashboard/activity-log', [ActivityLogController::class, 'index'])->name('dashboard.activity-log.index');
+        Route::delete('/dashboard/activity-log', [ActivityLogController::class, 'clear'])->name('dashboard.activity-log.clear');
+        Route::delete('/dashboard/activity-log/{log}', [ActivityLogController::class, 'destroy'])->name('dashboard.activity-log.destroy');
     });
 
     // Finance & invoice — admin (and superadmin) only.
@@ -83,6 +90,14 @@ Route::middleware(['auth'])->group(function () {
         Route::patch('/dashboard/invoice/{invoice}/status', [InvoiceController::class, 'updateStatus'])->name('dashboard.invoice.status');
         Route::delete('/dashboard/invoice/{invoice}', [InvoiceController::class, 'destroy'])->name('dashboard.invoice.destroy');
         Route::get('/dashboard/invoice/{invoice}/pdf', [InvoiceController::class, 'pdf'])->name('dashboard.invoice.pdf');
+
+        // Ebook manager — titik link ke katalog Lynk.id.
+        Route::get('/dashboard/ebook', [EbookController::class, 'index'])->name('dashboard.ebook.index');
+        Route::get('/dashboard/ebook/create', [EbookController::class, 'create'])->name('dashboard.ebook.create');
+        Route::post('/dashboard/ebook', [EbookController::class, 'store'])->name('dashboard.ebook.store');
+        Route::get('/dashboard/ebook/{ebook}/edit', [EbookController::class, 'edit'])->name('dashboard.ebook.edit');
+        Route::put('/dashboard/ebook/{ebook}', [EbookController::class, 'update'])->name('dashboard.ebook.update');
+        Route::delete('/dashboard/ebook/{ebook}', [EbookController::class, 'destroy'])->name('dashboard.ebook.destroy');
     });
 });
 

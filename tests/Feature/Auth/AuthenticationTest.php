@@ -95,16 +95,18 @@ class AuthenticationTest extends TestCase
         ])->assertRedirect(route('dashboard.users.index'));
     }
 
-    public function test_non_admin_users_cannot_reach_admin_only_screens(): void
+    public function test_admins_cannot_reach_superadmin_only_screens(): void
     {
+        // The factory defaults to the ADMIN role; user management is
+        // superadmin-only.
         $this->actingAs(User::factory()->create())
             ->get(route('dashboard.users.index'))
             ->assertForbidden();
     }
 
-    public function test_admin_users_can_reach_admin_only_screens(): void
+    public function test_superadmins_can_reach_superadmin_only_screens(): void
     {
-        $this->actingAs(User::factory()->admin()->create())
+        $this->actingAs(User::factory()->superadmin()->create())
             ->get(route('dashboard.users.index'))
             ->assertOk();
     }

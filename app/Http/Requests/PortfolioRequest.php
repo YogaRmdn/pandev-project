@@ -18,8 +18,10 @@ class PortfolioRequest extends FormRequest
             'description' => ['required', 'string'],
             'category' => ['required', 'string', Rule::in(PortfolioOptions::categories())],
             'status' => ['required', Rule::enum(PortfolioStatus::class)],
-            'demo_link' => ['nullable', 'string', 'max:255', 'url'],
-            'repository_link' => ['nullable', 'string', 'max:255', 'url'],
+            // Aturan `url` Laravel tetap menerima skema `javascript:`; persyaratkan
+            // http/https agar tautan tersimpan tidak menjadi vektor XSS.
+            'demo_link' => ['nullable', 'string', 'max:255', 'url', fn (string $attribute, mixed $value, Closure $fail) => $this->isWebUrl($value, $fail, 'Link demo harus diawali http:// atau https://')],
+            'repository_link' => ['nullable', 'string', 'max:255', 'url', fn (string $attribute, mixed $value, Closure $fail) => $this->isWebUrl($value, $fail, 'Link repository harus diawali http:// atau https://')],
             'tech_stacks' => ['nullable', 'array'],
             'tech_stacks.*' => ['string', 'max:50'],
             // The thumbnail column is NOT NULL, so a thumbnail is required
@@ -66,6 +68,13 @@ class PortfolioRequest extends FormRequest
     private static function maxMegabytes(): int
     {
         return (int) ceil((int) config('media.portfolio_max_kb') / 1024);
+    }
+
+    private function isWebUrl(mixed $value, Closure $fail, string $message): void
+    {
+        if (! is_string($value) || preg_match('#^https?://#i', $value) !== 1) {
+            $fail($message);
+        }
     }
 
     /**

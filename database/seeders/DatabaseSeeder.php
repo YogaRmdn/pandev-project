@@ -23,23 +23,21 @@ class DatabaseSeeder extends Seeder
 
         $password = Hash::make('password123');
 
+        // Hanya dua akun: satu superadmin dan satu admin yang dipakai bersama.
         $accounts = [
-            ['Yoga Ramadhan', 'yogaramadhan@gmail.com'],
-            ['Muhammad Eagel Triutama', 'muhammadeagel@gmail.com'],
-            ['Yamada Ryou', 'yamadaryou@yopmail.com'],
-            ['Kita Ikuyo', 'kitaikuyo@yopmail.com'],
+            ['Super Admin PanDev', 'superadminpndev@pandev.com', Role::SUPERADMIN],
+            ['Admin PanDev', 'adminpandev@pandev.com', Role::ADMIN],
         ];
 
-        $users = collect($accounts)->map(function (array $row, int $i) use ($password) {
-            [$fullname, $email] = $row;
+        $users = collect($accounts)->map(function (array $row) use ($password) {
+            [$fullname, $email, $role] = $row;
 
             return User::create([
                 'fullname' => $fullname,
                 'email' => $email,
                 'email_verified_at' => now(),
                 'password' => $password,
-                // Akun pertama adalah superadmin; sisanya administrator.
-                'role' => $i === 0 ? Role::SUPERADMIN : Role::ADMIN,
+                'role' => $role,
             ]);
         });
 
@@ -118,6 +116,9 @@ class DatabaseSeeder extends Seeder
         }
 
         $this->command->info('Seeded '.count($transactions).' transactions and 1 invoice.');
+
+        $this->call(EbookSeeder::class);
+
         $this->command->newLine();
         $this->command->info('Seed completed successfully!');
     }

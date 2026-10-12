@@ -7,14 +7,12 @@
     <div class="space-y-5">
         <x-dashboard.card title="Data User" description="Berikut semua data user yang ada" icon="users" :count="$users->isNotEmpty() ? $users->count() : null">
             <x-slot:actions>
-                <div class="flex gap-4">
-                    <div class="w-full sm:max-w-xs">
-                        <x-search-field placeholder="Cari user..." />
-                    </div>
-                    <button type="button" class="btn btn-primary" onclick="create_user_modal.showModal()">
-                        <x-lucide name="plus" class="size-4" /> Tambah User
-                    </button>
+                <div class="w-full sm:w-72">
+                    <x-search-field placeholder="Cari user..." />
                 </div>
+                <button type="button" class="btn btn-primary ms-auto shrink-0 sm:ms-0" onclick="create_user_modal.showModal()">
+                    <x-lucide name="plus" class="size-4" /> Tambah User
+                </button>
             </x-slot:actions>
 
             <div class="overflow-x-auto">
@@ -67,7 +65,7 @@
                             </tr>
 
                             <tr>
-                                <td class="align-middle whitespace-nowrap p-0" colspan="5">
+                                <td class="align-middle whitespace-nowrap p-0" colspan="4">
                                     <x-ui.dialog :name="$editName" title="Edit User"
                                         description="Ubah informasi akun yang terdaftar di aplikasi" width="sm:max-w-md">
                                         <x-dashboard.user-form :action="route('dashboard.users.update', $user)" method="PUT" :user="$user"
@@ -98,7 +96,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td class="h-32 text-center text-base-content/60" colspan="5">
+                                <td class="h-32 text-center text-base-content/60" colspan="4">
                                     Belum ada data user
                                 </td>
                             </tr>

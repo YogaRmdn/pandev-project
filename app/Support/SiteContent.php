@@ -240,51 +240,6 @@ class SiteContent
     }
 
     /**
-     * The eBooks offered on /buy-ebook.
-     *
-     * `cover` points at the book artwork under public/assets/ebooks. The page
-     * checks the file actually exists before rendering it, so a title without
-     * artwork yet still shows the icon badge instead of a broken image.
-     *
-     * @return list<array{title: string, tagline: string, description: string, price: int, format: string, icon: string, cover: string, topics: list<string>}>
-     */
-    public static function ebooks(): array
-    {
-        return [
-            [
-                'title' => 'Laravel 12: Zero to Production',
-                'tagline' => 'Build real applications, not toy demos',
-                'description' => 'A hands-on walkthrough of routing, authentication, queues, testing, and deployment using the exact stack we ship for client projects.',
-                'price' => 249000,
-                'format' => 'PDF + ePub',
-                'icon' => 'book-open',
-                'cover' => '/assets/ebooks/laravel-12-zero-to-production.jpg',
-                'topics' => ['Routing & middleware', 'Eloquent in practice', 'Blade components', 'Testing & deployment'],
-            ],
-            [
-                'title' => 'Frontend Engineering That Scales',
-                'tagline' => 'Interfaces that stay fast as they grow',
-                'description' => 'Component architecture, design tokens, accessibility, and the performance workarounds we rely on for weekly product releases.',
-                'price' => 199000,
-                'format' => 'PDF',
-                'icon' => 'layout-template',
-                'cover' => '/assets/ebooks/frontend-engineering-that-scales.jpg',
-                'topics' => ['Component design', 'Design systems', 'Web performance', 'Accessibility'],
-            ],
-            [
-                'title' => 'Cyber Security for Developers',
-                'tagline' => 'Ship software that is hard to break',
-                'description' => 'Threat modelling, secure defaults, and the hardening checklist we run before every production release goes live.',
-                'price' => 275000,
-                'format' => 'PDF + lab files',
-                'icon' => 'shield-check',
-                'cover' => '/assets/ebooks/cyber-security-for-developers.jpg',
-                'topics' => ['Threat modelling', 'Secure coding', 'Dependency audits', 'Hardening checklists'],
-            ],
-        ];
-    }
-
-    /**
      * @return list<array{name: string, icon: string}>
      */
     public static function techStacks(): array

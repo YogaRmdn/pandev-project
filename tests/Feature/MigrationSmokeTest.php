@@ -6,12 +6,11 @@ use App\Enums\InvoiceStatus;
 use App\Enums\PortfolioStatus;
 use App\Enums\Role;
 use App\Enums\TransactionType;
+use App\Models\Ebook;
 use App\Models\Invoice;
 use App\Models\Portfolio;
 use App\Models\Transaction;
 use App\Models\User;
-use App\Support\Format;
-use App\Support\SiteContent;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
@@ -39,16 +38,20 @@ class MigrationSmokeTest extends TestCase
         }
     }
 
-    public function test_buy_ebook_page_lists_every_book_with_a_price(): void
+    public function test_buy_ebook_page_lists_every_book_with_its_link(): void
     {
-        $this->get(route('buy-ebook'))
-            ->assertOk()
-            ->assertSee('Buy eBook');
+        $ebook = Ebook::factory()->create([
+            'title' => 'Laravel 12: Zero to Production',
+            'url' => 'https://lynk.id/pandev/laravel-12',
+        ]);
 
-        foreach (SiteContent::ebooks() as $ebook) {
-            $this->assertStringContainsString($ebook['title'], $this->get(route('buy-ebook'))->getContent());
-            $this->assertStringContainsString(Format::idr($ebook['price']), $this->get(route('buy-ebook'))->getContent());
-        }
+        $content = $this->get(route('buy-ebook'))
+            ->assertOk()
+            ->assertSee('Buy eBook')
+            ->getContent();
+
+        $this->assertStringContainsString($ebook->title, $content);
+        $this->assertStringContainsString($ebook->url, $content);
     }
 
     public function test_public_portfolio_list_and_detail_render(): void
@@ -112,9 +115,11 @@ class MigrationSmokeTest extends TestCase
         $this->actingAs($admin)->get(route('dashboard.invoice.index'))->assertOk();
     }
 
-    public function test_dashboard_screens_render_for_admin(): void
+    public function test_dashboard_screens_render_for_superadmin(): void
     {
-        $admin = User::factory()->create();
+        // User management is superadmin-only, so this render sweep needs the
+        // highest role to reach every screen.
+        $admin = User::factory()->superadmin()->create();
         $portfolio = Portfolio::factory()->create(['created_by' => $admin->id]);
         $transaction = Transaction::factory()->create(['type' => TransactionType::INCOME, 'amount' => 500000]);
         $invoice = Invoice::factory()->create(['status' => InvoiceStatus::UNPAID]);
@@ -142,9 +147,59 @@ class MigrationSmokeTest extends TestCase
             ->assertSee('Data Faktur');
 
         $this->get(route('dashboard.users.index'))->assertOk();
+        $this->get(route('dashboard.ebook.index'))->assertOk();
         $this->get(route('settings.edit'))->assertOk();
 
         $this->assertEqualsWithDelta(500000.0, (float) $transaction->amount, 0.01);
+    }
+
+    public function test_ebook_crud_round_trip(): void
+    {
+        Storage::fake('public');
+        $admin = User::factory()->create();
+
+        $this->actingAs($admin)
+            ->post(route('dashboard.ebook.store'), [
+                'title' => 'Ebook Baru',
+                'description' => 'Deskripsi ebook baru',
+                'url' => 'https://lynk.id/pandev/ebook-baru',
+                'cover' => $this->fakeImage('cover.jpg'),
+            ])
+            ->assertSessionHasNoErrors();
+
+        $ebook = Ebook::firstOrFail();
+        $this->assertSame('Ebook Baru', $ebook->title);
+        $this->assertNotNull($ebook->cover);
+
+        $this->actingAs($admin)
+            ->put(route('dashboard.ebook.update', $ebook), [
+                'title' => 'Ebook Diperbarui',
+                'description' => $ebook->description,
+                'url' => $ebook->url,
+            ])
+            ->assertSessionHasNoErrors();
+
+        $this->assertSame('Ebook Diperbarui', $ebook->fresh()->title);
+
+        $this->actingAs($admin)
+            ->delete(route('dashboard.ebook.destroy', $ebook))
+            ->assertSessionHasNoErrors();
+
+        $this->assertSame(0, Ebook::count());
+    }
+
+    public function test_ebook_requires_title_description_and_url(): void
+    {
+        $admin = User::factory()->create();
+
+        $this->actingAs($admin)
+            ->post(route('dashboard.ebook.store'), [])
+            ->assertSessionHasErrors(['title', 'description', 'url']);
+    }
+
+    public function test_ebook_management_rejects_guests(): void
+    {
+        $this->get(route('dashboard.ebook.index'))->assertRedirect(route('login'));
     }
 
     public function test_dashboard_stats_separate_income_from_expense(): void
@@ -433,6 +488,72 @@ class MigrationSmokeTest extends TestCase
                 'email' => $other->email,
             ])
             ->assertSessionHasErrors('email');
+    }
+
+    public function test_settings_avatar_upload_saves_the_image(): void
+    {
+        Storage::fake('public');
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->patch(route('settings.avatar'), [
+                'avatar' => $this->fakeImage('photo.jpg'),
+            ])
+            ->assertSessionHasNoErrors()
+            ->assertSessionHas('success');
+
+        $image = $user->fresh()->image;
+
+        $this->assertNotNull($image, 'Avatar tidak tersimpan setelah upload');
+        $this->assertStringContainsString('pandev/avatars/avatar-'.$user->id, $image);
+        Storage::disk('public')->assertExists('pandev/avatars/avatar-'.$user->id.'.jpg');
+    }
+
+    public function test_settings_avatar_remove_clears_the_image(): void
+    {
+        Storage::fake('public');
+        $user = User::factory()->create();
+        $user->update(['image' => '/storage/pandev/avatars/avatar-'.$user->id.'.jpg']);
+
+        $this->actingAs($user)
+            ->patch(route('settings.avatar'), ['remove' => 1])
+            ->assertSessionHasNoErrors()
+            ->assertSessionHas('success');
+
+        $this->assertNull($user->fresh()->image);
+    }
+
+    public function test_settings_avatar_rejects_non_image_files(): void
+    {
+        Storage::fake('public');
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->patch(route('settings.avatar'), [
+                'avatar' => UploadedFile::fake()->create('catatan.txt', 10, 'text/plain'),
+            ])
+            ->assertSessionHasErrors('avatar');
+
+        $this->assertNull($user->fresh()->image);
+    }
+
+    public function test_success_flash_renders_as_a_centered_modal_on_the_dashboard(): void
+    {
+        Storage::fake('public');
+        $user = User::factory()->create();
+
+        $content = $this->actingAs($user)
+            ->followingRedirects()
+            ->from(route('settings.edit'))
+            ->patch(route('settings.avatar'), [
+                'avatar' => $this->fakeImage('photo.jpg'),
+            ])
+            ->assertOk()
+            ->assertSee('Avatar berhasil disimpan', false)
+            ->getContent();
+
+        $this->assertStringContainsString('modal modal-open', $content, 'popup sukses harus berupa modal di tengah layar');
+        $this->assertStringContainsString('role="dialog"', $content);
     }
 
     public function test_contact_form_posts_to_web3forms(): void

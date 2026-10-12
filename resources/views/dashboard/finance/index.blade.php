@@ -17,11 +17,12 @@
         <x-dashboard.card title="Data Transaksi" description="Berikut semua data transaksi yang ada" icon="wallet"
             :count="$transactions->isNotEmpty() ? $transactions->count() : null">
             <x-slot:actions>
-                <div class="w-full sm:max-w-xs">
+                <div class="w-full sm:w-72">
                     <x-search-field placeholder="Cari deskripsi..." />
                 </div>
 
-                <button type="button" class="btn btn-primary" onclick="create_transaction_modal.showModal()">
+                <button type="button" class="btn btn-primary ms-auto shrink-0 sm:ms-0"
+                    onclick="create_transaction_modal.showModal()">
                     <x-lucide name="plus" class="size-4" /> Tambah
                 </button>
             </x-slot:actions>

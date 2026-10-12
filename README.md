@@ -15,7 +15,7 @@ npm run build
 php artisan serve
 ```
 
-Login admin seed: `ijichinijika@yopmail.com` / `password123`.
+Login seed (password `password123`): superadmin `superadminpndev@pandev.com`, admin `adminpandev@pandev.com`.
 
 ## Commands
 

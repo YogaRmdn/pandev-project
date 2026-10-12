@@ -42,7 +42,7 @@ tests/                  # Feature/MigrationSmokeTest + Auth
 ## Key Details
 
 - **Auth**: native Laravel session auth. Tidak ada registrasi publik — user dibuat admin dari dashboard. Guest di-redirect ke `route('login')`; route admin dilindungi alias middleware `admin`.
-- **DB**: MySQL `pandev_db` (root, tanpa password). Tabel pakai UUID (`HasUuids`). Admin login seed: `ijichinijika@yopmail.com` / `password123` (semua user seed password: `password123`).
+- **DB**: MySQL `pandev_db` (root, tanpa password). Tabel pakai UUID (`HasUuids`). Hanya dua akun seed (password `password123`): superadmin `superadminpndev@pandev.com`, admin `adminpandev@pandev.com`.
 - **UI**: daisyUI 5 — markup memakai kelas daisyUI langsung (`btn btn-primary`, `input`, `card`, `table`, `badge`…), TANPA wrapper thin seperti shadcn. Komponen Blade yang tersisa hanya `x-ui.dialog` / `x-ui.confirm-dialog` (behavior modal Alpine) dan komponen fitur (`pagination-bar`, `search-field`, dll). Tema: `panev-light` (default) / `panev-dark`, situs selalu light (`prefersdark: false`). Alpine.js untuk interaktivitas, Lucide icons (lokal `x-lucide`). Root `<body>` wajib punya `x-data` supaya binding sidebar (`$store.sidebar`) terinisialisasi.
 - **Format angka**: `App\Support\Format::idr()` memformat manual (pemisah ribuan `"."`, desimal `","`) karena PHP di mesin ini TIDAK punya ekstensi `intl`.
 - **PHP tanpa GD**: test upload memakai `UploadedFile::fake()->create()` (bukan `->image()`), karena validasi gambar Laravel hanya membaca MIME.

@@ -30,7 +30,7 @@
         $pages = $last <= 10 ? range(1, $last) : [1, 2, '…', $last];
     @endphp
 
-    <nav role="navigation" aria-label="Pagination" class="flex items-center gap-1">
+    <nav role="navigation" aria-label="Pagination" class="flex flex-wrap items-center justify-center gap-1 sm:justify-end">
         @if ($paginator && ! $paginator->onFirstPage())
             <a href="{{ $paginator->previousPageUrl() }}" rel="prev"
                 class="border hover:bg-base-200 hover:text-base-content inline-flex h-9 items-center rounded-md px-3 text-sm">Previous</a>

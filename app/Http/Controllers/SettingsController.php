@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\MediaService;
+use App\Support\ActivityLogger;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -33,6 +34,11 @@ class SettingsController extends Controller
 
         $user->update($data);
 
+        ActivityLogger::log(
+            'profile.updated',
+            'Memperbarui profil sendiri',
+        );
+
         return back()->with('success', 'Profil berhasil diperbarui');
     }
 
@@ -43,6 +49,8 @@ class SettingsController extends Controller
         if ($request->boolean('remove')) {
             $media->delete($user->image);
             $user->update(['image' => null]);
+
+            ActivityLogger::log('avatar.deleted', 'Menghapus avatar sendiri');
 
             return back()->with('success', 'Avatar berhasil dihapus');
         }
@@ -64,6 +72,8 @@ class SettingsController extends Controller
                 'avatar-'.$user->id
             )['url'],
         ]);
+
+        ActivityLogger::log('avatar.updated', 'Mengganti avatar sendiri');
 
         return back()->with('success', 'Avatar berhasil disimpan');
     }

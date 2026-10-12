@@ -7,6 +7,7 @@ use App\Http\Requests\PortfolioRequest;
 use App\Models\Portfolio;
 use App\Models\PortfolioGalery;
 use App\Services\MediaService;
+use App\Support\ActivityLogger;
 use App\Support\PortfolioOptions;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -44,8 +45,8 @@ class PortfolioController extends Controller
     }
 
     /**
-     * Public detail. Drafts are only visible to their author or an admin,
-     * matching the draft gate the original client component applied.
+     * Public detail. Drafts are only visible to their author, matching the
+     * draft gate the original client component applied.
      */
     public function show(Request $request, string $uuid): View
     {
@@ -146,7 +147,9 @@ class PortfolioController extends Controller
         $data = $request->safe()->except(['thumbnail', 'thumbnail_url', 'galery_files', 'galery_urls', 'galery', 'remove_thumbnail']);
         $data['created_by'] = $request->user()->id;
 
-        DB::transaction(function () use ($data, $request, $media) {
+        $portfolio = null;
+
+        DB::transaction(function () use ($data, $request, $media, &$portfolio) {
             if ($request->hasFile('thumbnail')) {
                 $data['thumbnail'] = $media->upload(
                     $request->file('thumbnail'),
@@ -169,6 +172,12 @@ class PortfolioController extends Controller
                 $portfolio->galery()->create(['image_url' => $url]);
             }
         });
+
+        ActivityLogger::log(
+            'portfolio.created',
+            'Membuat portfolio "'.$portfolio->name.'"',
+            ['portfolio_id' => $portfolio->id],
+        );
 
         return redirect()
             ->route('dashboard.portfolio.index')
@@ -235,6 +244,12 @@ class PortfolioController extends Controller
             }
         });
 
+        ActivityLogger::log(
+            'portfolio.updated',
+            'Memperbarui portfolio "'.$portfolio->name.'"',
+            ['portfolio_id' => $portfolio->id],
+        );
+
         return redirect()
             ->route('dashboard.portfolio.index')
             ->with('success', 'Portfolio berhasil diperbarui');
@@ -250,6 +265,12 @@ class PortfolioController extends Controller
 
             $portfolio->delete();
         });
+
+        ActivityLogger::log(
+            'portfolio.deleted',
+            'Menghapus portfolio "'.$portfolio->name.'"',
+            ['portfolio_id' => $portfolio->id],
+        );
 
         return redirect()
             ->route('dashboard.portfolio.index')

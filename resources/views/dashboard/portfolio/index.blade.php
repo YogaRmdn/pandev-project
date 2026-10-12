@@ -5,7 +5,7 @@
 
 @section('content')
     <div class="space-y-5">
-        <div class="flex flex-wrap items-center gap-2 bg-white p-4 rounded-lg">
+        <div class="flex flex-wrap items-center gap-2 rounded-2xl border border-base-300/70 bg-base-100 p-4 shadow-sm">
             <div class="w-full min-w-0 sm:w-72 sm:max-w-md sm:flex-1">
                 <x-search-field placeholder="Cari portfolio..." :value="$filters['search'] ?? ''" />
             </div>
@@ -73,7 +73,7 @@
                 </form>
             </dialog>
 
-            <a href="{{ route('dashboard.portfolio.create') }}" class="btn btn-primary ml-auto">
+            <a href="{{ route('dashboard.portfolio.create') }}" class="btn btn-primary ms-auto shrink-0">
                 <x-lucide name="plus" /> Tambah
             </a>
         </div>

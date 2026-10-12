@@ -93,14 +93,27 @@ class PortfolioMediaController extends Controller
     private function ownsUrl(string $url): bool
     {
         $folder = (string) config('media.portfolio_folder');
-        $prefix = Storage::disk((string) config('media.portfolio_disk', 'public'))->url($folder.'/');
 
-        if (str_starts_with($url, $prefix) || str_starts_with($url, $folder.'/')) {
+        if (filled(config('media.cloud_name'))
+            && str_starts_with($url, 'https://res.cloudinary.com/'.config('media.cloud_name').'/')) {
             return true;
         }
 
-        return filled(config('media.cloud_name'))
-            && str_starts_with($url, 'https://res.cloudinary.com/'.config('media.cloud_name').'/');
+        $base = Storage::disk((string) config('media.portfolio_disk', 'public'))->url($folder.'/');
+
+        // Terima dua bentuk: URL storage penuh (…/storage/pandev/portfolio/x.jpg)
+        // atau path relatif (pandev/portfolio/x.jpg).
+        if (str_starts_with($url, $base)) {
+            $relative = substr($url, strlen($base));
+        } elseif (str_starts_with($url, $folder.'/')) {
+            $relative = substr($url, strlen($folder.'/'));
+        } else {
+            return false;
+        }
+
+        // Normalisasi (menolak traversal keluar disk): path yang aman akan tetap
+        // berupa path relatif sederhana dalam folder, bukan ''.
+        return MediaService::normalizeRelativePath($relative) !== '';
     }
 
     private function findOwned(Request $request, string $uuid): Portfolio

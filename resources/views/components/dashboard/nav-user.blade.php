@@ -30,7 +30,7 @@
                     <x-lucide name="user" class="size-4" />
                 </span>
             @endif
-            <span class="grid flex-1 text-sm leading-tight">
+            <span class="grid min-w-0 flex-1 text-sm leading-tight is-drawer-close:hidden">
                 <span class="truncate font-medium">{{ $user->fullname }}</span>
                 <span class="text-base-content/60 truncate text-xs">{{ $user->email }}</span>
             </span>
@@ -72,6 +72,7 @@
             <div class="my-1 h-px bg-border"></div>
 
             <form method="POST" action="{{ route('logout') }}" role="none">
+                @csrf
                 <button
                     type="submit"
                     role="menuitem"

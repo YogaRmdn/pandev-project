@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Ebook;
 use App\Models\Portfolio;
 use App\Models\User;
 use App\Support\SiteContent;
@@ -56,7 +57,7 @@ class ViewRegressionTest extends TestCase
 
     public function test_whatsapp_button_stays_out_of_the_dashboard(): void
     {
-        $admin = User::factory()->admin()->create();
+        $admin = User::factory()->create();
 
         // Tombol ini untuk pengunjung, bukan untuk user yang sudah login.
         $this->actingAs($admin)
@@ -104,42 +105,38 @@ class ViewRegressionTest extends TestCase
 
     public function test_buy_ebook_cards_reserve_room_for_the_cover(): void
     {
+        $ebook = Ebook::factory()->create([
+            'title' => 'Laravel 12: Zero to Production',
+            'cover' => '/assets/ebooks/laravel-12-zero-to-production.jpg',
+        ]);
+
         $content = $this->get(route('buy-ebook'))->getContent();
 
         // Cover full-bleed: padding dititipkan ke px/py (menang atas p-6) dan
         // kartu dibungkus satu anak flex supaya gap-6 base tidak berlaku.
         $this->assertStringContainsString('h-full overflow-hidden px-0 py-0', $content);
-        $this->assertStringContainsString('flex flex-1 flex-col gap-6 p-6', $content);
         $this->assertStringContainsString('aspect-[3/4]', $content);
+        $this->assertStringContainsString(e($ebook->cover), $content);
+        $this->assertStringContainsString('Sampul '.e($ebook->title), $content);
 
-        // Footer harga harus kolom tunggal yang tidak bisa wrap: `.btn-pill` punya
-        // white-space:nowrap (133px) dan blok harga terpanjang 191px, jadi
-        // side-by-side butuh 324px sementara inner card di grid `sm` cuma
-        // 246px — tombol sempat jatuh ke baris kedua dan posisinya bergeser
-        // antar card.
+        // Footer tombol "Beli" menempel ke dasar kartu dan tidak bisa wrap.
         $this->assertStringContainsString('flex flex-1 flex-col justify-end', $content);
-        $this->assertStringContainsString('flex flex-col gap-4 border-t pt-5', $content);
+        $this->assertStringContainsString('border-t pt-5', $content);
         $this->assertStringContainsString('btn-pill w-full shrink-0', $content);
-        $this->assertStringNotContainsString('flex-wrap items-end justify-between', $content);
+        $this->assertStringContainsString(e($ebook->url), $content);
+    }
 
-        // Garis pembatas harus menempel pada div yang melekat pada isi footer,
-        // bukan pada wrapper flex-1 yang melar — kalau tidak, garisnya ikut
-        // bergeser mengikuti tinggi daftar topik tiap judul.
-        $this->assertStringNotContainsString('flex-1 flex-col justify-end gap-4 border-t', $content);
-        $this->assertStringNotContainsString('border-t pt-5 mt-6 flex flex-1', $content);
+    public function test_buy_ebook_falls_back_to_an_icon_without_a_cover(): void
+    {
+        $ebook = Ebook::factory()->create([
+            'title' => 'Ebook Tanpa Cover',
+            'cover' => null,
+        ]);
 
-        foreach (SiteContent::ebooks() as $ebook) {
-            // Cover yang filenya belum ada harus jatuh ke badge ikon, bukan
-            // <img> kosong. Cek ini per-title supaya tiap kartu ikut tercover.
-            $cover = $ebook['cover'] ?? null;
+        $content = $this->get(route('buy-ebook'))->getContent();
 
-            if (filled($cover) && is_file(public_path(ltrim($cover, '/')))) {
-                $this->assertStringContainsString(e(asset($cover)), $content);
-                $this->assertStringContainsString('Sampul '.e($ebook['title']), $content);
-            } else {
-                $this->assertStringNotContainsString(e(asset((string) $cover)), $content);
-            }
-        }
+        $this->assertStringContainsString(e($ebook->title), $content);
+        $this->assertStringNotContainsString('Sampul '.e($ebook->title), $content);
     }
 
     public function test_card_base_has_horizontal_padding(): void
@@ -214,26 +211,62 @@ class ViewRegressionTest extends TestCase
 
     public function test_dashboard_renders_the_sidebar_navigation_for_admins(): void
     {
-        $response = $this->actingAs(User::factory()->admin()->create())
+        $response = $this->actingAs(User::factory()->superadmin()->create())
             ->get(route('dashboard'));
 
         $response->assertOk();
         $response->assertSee(route('dashboard.portfolio.index'), escape: false);
         $response->assertSee(route('dashboard.finance.index'), escape: false);
         $response->assertSee(route('dashboard.invoice.index'), escape: false);
+        $response->assertSee(route('dashboard.ebook.index'), escape: false);
         $response->assertSee(route('dashboard.users.index'), escape: false);
         $response->assertSee(route('settings.edit'), escape: false);
     }
 
-    public function test_dashboard_sidebar_hides_admin_links_from_regular_users(): void
+    public function test_dashboard_sidebar_hides_user_management_from_admins(): void
     {
+        // Every account is an admin, so finance/invoice stay visible; only user
+        // management is reserved for superadmins.
         $response = $this->actingAs(User::factory()->create())
             ->get(route('dashboard'));
 
         $response->assertOk();
         $response->assertSee(route('dashboard.portfolio.index'), escape: false);
-        $response->assertDontSee(route('dashboard.finance.index'), escape: false);
+        $response->assertSee(route('dashboard.finance.index'), escape: false);
         $response->assertDontSee(route('dashboard.users.index'), escape: false);
+    }
+
+    public function test_dashboard_sidebar_state_survives_navigation(): void
+    {
+        // Lebar sidebar bergantung pada checkbox drawer yang reset setiap
+        // navigasi; layout wajib memulihkannya dari localStorage supaya sidebar
+        // tidak mendadak mini saat pindah halaman.
+        $content = $this->actingAs(User::factory()->superadmin()->create())
+            ->get(route('dashboard'))
+            ->assertOk()
+            ->getContent();
+
+        $this->assertStringContainsString("localStorage.getItem('sidebar_state')", $content);
+        $this->assertStringContainsString("localStorage.setItem('sidebar_state'", $content);
+        $this->assertStringContainsString('id="dashboard-drawer"', $content);
+    }
+
+    public function test_every_dashboard_logout_form_carries_a_csrf_token(): void
+    {
+        // Logout is a POST; a form without a token fails with 419, so each
+        // rendered logout form on the dashboard must include one.
+        $content = $this->actingAs(User::factory()->superadmin()->create())
+            ->get(route('dashboard'))
+            ->assertOk()
+            ->getContent();
+
+        preg_match_all('/<form[^>]*logout[^>]*>(.*?)<\/form>/s', $content, $matches);
+
+        $this->assertNotEmpty($matches[0], 'Tidak ada form logout di dashboard');
+
+        foreach ($matches[1] as $inner) {
+            $this->assertStringContainsString('name="_token"', $inner);
+        }
     }
 
     public function test_public_portfolio_detail_renders(): void

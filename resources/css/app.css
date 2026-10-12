@@ -620,3 +620,19 @@
     border-color: var(--color-primary);
     background: color-mix(in oklab, var(--color-primary) 10%, transparent);
 }
+
+/* Ikon toggle sidebar ada di .drawer-content, sedangkan varian is-drawer-* milik
+   daisyUI di-scope ke .drawer-side — jadi varian itu tidak bisa menjangkaunya.
+   State-nya dipasang manual: "buka" saat rail tertutup, "tutup" saat sidebar
+   terbuka, supaya tombolnya jelas di layar kecil. */
+.drawer-content .icon-drawer-open {
+    display: none;
+}
+
+.drawer-toggle:checked ~ .drawer-content .icon-drawer-open {
+    display: block;
+}
+
+.drawer-toggle:checked ~ .drawer-content .icon-drawer-closed {
+    display: none;
+}

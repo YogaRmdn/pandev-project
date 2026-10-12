@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Ebook;
 use App\Models\Portfolio;
 use App\Support\SiteContent;
 use Illuminate\Http\RedirectResponse;
@@ -51,7 +52,7 @@ class PageController extends Controller
     public function buyEbook(): View
     {
         return view('pages.buy-ebook', [
-            'ebooks' => SiteContent::ebooks(),
+            'ebooks' => Ebook::latest()->get(),
         ]);
     }
 
