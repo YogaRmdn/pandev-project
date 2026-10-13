@@ -13,6 +13,7 @@ use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
@@ -488,6 +489,60 @@ class MigrationSmokeTest extends TestCase
                 'email' => $other->email,
             ])
             ->assertSessionHasErrors('email');
+    }
+
+    public function test_settings_save_can_update_profile_and_password_together(): void
+    {
+        $user = User::factory()->create(['fullname' => 'Nama Lama']);
+
+        self::assertTrue(Hash::check('password', $user->password));
+
+        $this->actingAs($user)
+            ->patch(route('settings.update'), [
+                'fullname' => 'Nama Baru',
+                'email' => $user->email,
+                'current_password' => 'password',
+                'password' => 'password-baru-123',
+                'password_confirmation' => 'password-baru-123',
+            ])
+            ->assertSessionHasNoErrors();
+
+        $fresh = $user->fresh();
+
+        $this->assertSame('Nama Baru', $fresh->fullname);
+        $this->assertTrue(Hash::check('password-baru-123', $fresh->password));
+    }
+
+    public function test_settings_save_without_password_keeps_the_current_one(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->patch(route('settings.update'), [
+                'fullname' => 'Nama Baru',
+                'email' => $user->email,
+            ])
+            ->assertSessionHasNoErrors();
+
+        $this->assertSame('Nama Baru', $user->fresh()->fullname);
+        $this->assertTrue(Hash::check('password', $user->fresh()->password));
+    }
+
+    public function test_settings_save_rejects_password_change_with_a_wrong_current_password(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->patch(route('settings.update'), [
+                'fullname' => $user->fullname,
+                'email' => $user->email,
+                'current_password' => 'password-salah',
+                'password' => 'password-baru-123',
+                'password_confirmation' => 'password-baru-123',
+            ])
+            ->assertSessionHasErrors('current_password');
+
+        $this->assertTrue(Hash::check('password', $user->fresh()->password));
     }
 
     public function test_settings_avatar_upload_saves_the_image(): void

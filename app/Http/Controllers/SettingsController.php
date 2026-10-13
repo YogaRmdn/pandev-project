@@ -6,7 +6,9 @@ use App\Services\MediaService;
 use App\Support\ActivityLogger;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Password;
 use Illuminate\View\View;
 
 class SettingsController extends Controller
@@ -22,22 +24,53 @@ class SettingsController extends Controller
     {
         $user = $request->user();
 
-        $data = $request->validate([
+        // Form gabungan: password bersifat opsional. Block keamanan hanya
+        // divalidasi kalau salah satu fieldnya diisi, sehingga menyimpan data
+        // diri saja tetap bisa dengan satu tombol Simpan.
+        $changingPassword = $request->filled('current_password')
+            || $request->filled('password')
+            || $request->filled('password_confirmation');
+
+        $rules = [
             'fullname' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user->id)],
-        ], [
+        ];
+
+        if ($changingPassword) {
+            $rules['current_password'] = ['required', 'current_password'];
+            $rules['password'] = ['required', Password::min(8), 'confirmed'];
+        }
+
+        $data = $request->validate($rules, [
             'fullname.required' => 'Nama wajib diisi',
             'email.required' => 'Email wajib diisi',
             'email.email' => 'Email tidak valid',
             'email.unique' => 'Email sudah digunakan oleh pengguna lain',
+            'current_password.required' => 'Password saat ini wajib diisi',
+            'current_password.current_password' => 'Password saat ini tidak sesuai',
+            'password.required' => 'Password baru wajib diisi',
+            'password.min' => 'Password minimal 8 karakter',
+            'password.confirmed' => 'Konfirmasi password tidak cocok',
         ]);
 
-        $user->update($data);
+        $user->update([
+            'fullname' => $data['fullname'],
+            'email' => $data['email'],
+        ]);
 
         ActivityLogger::log(
             'profile.updated',
             'Memperbarui profil sendiri',
         );
+
+        if ($changingPassword) {
+            $user->update(['password' => Hash::make($data['password'])]);
+
+            ActivityLogger::log(
+                'auth.password_changed',
+                $user->fullname.' mengganti password',
+            );
+        }
 
         return back()->with('success', 'Profil berhasil diperbarui');
     }

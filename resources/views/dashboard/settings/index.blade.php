@@ -30,13 +30,13 @@
             </div>
         </x-dashboard.card>
 
-        {{-- Data diri --}}
-        <x-dashboard.card title="Data Diri" description="Ubah informasi data diri Anda" icon="id-card">
-            <div class="p-5">
-                <form id="information-form" method="POST" action="{{ route('settings.update') }}" class="space-y-4">
-                    @csrf
-                    @method('PATCH')
+        {{-- Data diri + keamanan: satu form, satu tombol Simpan. --}}
+        <form id="settings-form" method="POST" action="{{ route('settings.update') }}" class="space-y-5">
+            @csrf
+            @method('PATCH')
 
+            <x-dashboard.card title="Data Diri" description="Ubah informasi data diri Anda" icon="id-card">
+                <div class="space-y-4 p-5">
                     <div class="space-y-2">
                         <label class="label text-sm font-medium" for="email">Email</label>
                         <input class="input w-full" id="email" type="email" name="email" value="{{ old('email', $user->email) }}" placeholder="Email..." autocomplete="off" required>
@@ -60,19 +60,11 @@
                             </ul>
                         @endif
                     </div>
+                </div>
+            </x-dashboard.card>
 
-                    <button type="submit" class="btn btn-primary">Simpan</button>
-                </form>
-            </div>
-        </x-dashboard.card>
-
-        {{-- Keamanan --}}
-        <x-dashboard.card title="Keamanan" description="Ubah password Anda" icon="shield">
-            <div class="p-5">
-                <form id="security-form" method="POST" action="{{ route('password.update') }}" class="space-y-4">
-                    @csrf
-                    @method('PUT')
-
+            <x-dashboard.card title="Keamanan" description="Kosongkan bila tidak ingin mengganti password" icon="shield">
+                <div class="space-y-4 p-5">
                     @foreach ([
                         ['current_password', 'Password Saat Ini'],
                         ['password', 'Password Baru'],
@@ -89,38 +81,24 @@
                                     <x-lucide name="eye-off" x-show="show" x-cloak class="size-4" />
                                 </button>
                             </div>
-                            @if ($field === 'current_password')
-                                @if ($errors->get('current_password'))
-                                    <ul class="text-error space-y-1 text-sm">
-                                        @foreach ($errors->get('current_password') as $message)
-                                            <li>{{ $message }}</li>
-                                        @endforeach
-                                    </ul>
-                                @endif
-                            @elseif ($field === 'password')
-                                @if ($errors->get('password'))
-                                    <ul class="text-error space-y-1 text-sm">
-                                        @foreach ($errors->get('password') as $message)
-                                            <li>{{ $message }}</li>
-                                        @endforeach
-                                    </ul>
-                                @endif
-                            @else
-                                @if ($errors->get('password_confirmation'))
-                                    <ul class="text-error space-y-1 text-sm">
-                                        @foreach ($errors->get('password_confirmation') as $message)
-                                            <li>{{ $message }}</li>
-                                        @endforeach
-                                    </ul>
-                                @endif
+                            @if ($errors->get($field))
+                                <ul class="text-error space-y-1 text-sm">
+                                    @foreach ($errors->get($field) as $message)
+                                        <li>{{ $message }}</li>
+                                    @endforeach
+                                </ul>
                             @endif
                         </div>
                     @endforeach
+                </div>
+            </x-dashboard.card>
 
-                    <button type="submit" class="btn btn-primary">Simpan</button>
-                </form>
+            <div class="flex justify-end">
+                <button type="submit" class="btn btn-primary">
+                    <x-lucide name="save" class="size-4" /> Simpan
+                </button>
             </div>
-        </x-dashboard.card>
+        </form>
     </div>
 
     {{-- Upload avatar --}}
