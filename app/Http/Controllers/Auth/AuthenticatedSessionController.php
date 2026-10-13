@@ -7,6 +7,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use App\Support\ActivityLogger;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
@@ -35,6 +36,15 @@ class AuthenticatedSessionController extends Controller
         );
 
         return redirect()->intended(route('dashboard', absolute: false));
+    }
+
+    /**
+     * Titik denyut sesi. Middleware EnforceIdleTimeout sudah menyegarkan
+     * stempel aktivitas pada request ini; method ini hanya mengonfirmasi.
+     */
+    public function heartbeat(): Response
+    {
+        return response()->noContent();
     }
 
     /**

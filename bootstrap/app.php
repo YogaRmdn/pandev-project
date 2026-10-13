@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\EnforceIdleTimeout;
 use App\Http\Middleware\EnsureUserIsAdmin;
 use App\Http\Middleware\EnsureUserIsSuperadmin;
 use App\Http\Middleware\SecurityHeaders;
@@ -20,6 +21,10 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         $middleware->append(SecurityHeaders::class);
+
+        // Dijalankan setelah StartSession (di ujung grup web) sehingga bisa
+        // membaca sesi & user, dan berlaku untuk seluruh request terautentikasi.
+        $middleware->appendToGroup('web', EnforceIdleTimeout::class);
 
         $middleware->redirectGuestsTo(fn () => route('login'));
     })

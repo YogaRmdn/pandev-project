@@ -38,6 +38,28 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Idle Timeout (dashboard)
+    |--------------------------------------------------------------------------
+    |
+    | Menit tanpa aktivitas sebelum sesi dashboard otomatis diakhiri dan
+    | pengguna diarahkan kembali ke halaman login. Ditegakkan dua lapis:
+    | middleware App\Http\Middleware\EnforceIdleTimeout di server, dan
+    | komponen Alpine `idleTimeout` di browser. Isi 0 untuk mematikan.
+    |
+    */
+
+    'idle_timeout' => (int) env('SESSION_IDLE_TIMEOUT', 5),
+
+    /*
+    | Berapa detik sebelum batas idle tercapai dialog peringatan "Sesi akan
+    | berakhir" muncul dengan hitung mundur, supaya pengguna bisa memperpanjang.
+    |
+    */
+
+    'idle_warning' => (int) env('SESSION_IDLE_WARNING', 60),
+
+    /*
+    |--------------------------------------------------------------------------
     | Session Encryption
     |--------------------------------------------------------------------------
     |

@@ -58,6 +58,10 @@
             @yield('sidebar')
         </x-dashboard.sidebar>
     </div>
+
+    {{-- Logout otomatis setelah idle beberapa menit; dialog peringatan
+         menampilkan hitung mundur sebelum sesi diputus. --}}
+    <x-idle-timeout />
     {{-- Popup sukses: modal di tengah layar, digerakkan flash session dari
          controller (tambah/hapus/update). `modal-open` dipasang statis supaya
          langsung terlihat sebelum Alpine memuat; tombol OK/Esc/klik area luar

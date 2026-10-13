@@ -868,6 +868,129 @@ Alpine.data('portfolioForm', (config = {}) => ({
     },
 }));
 
+/**
+ * Idle timeout dashboard.
+ *
+ * Setelah beberapa menit tanpa aktivitas, sesi diakhiri dan pengguna
+ * diarahkan kembali ke halaman login. Komponen ini yang menangani tab yang
+ * dibiarkan terbuka: memantau aktivitas, mengirim heartbeat (maks. sekali per
+ * menit) supaya sesi server tetap hidup selama pengguna benar-benar aktif,
+ * lalu memanggil endpoint logout saat hitungan habis. Penjaga di server
+ * (App\Http\Middleware\EnforceIdleTimeout) menjadi cadangan bila JS mati.
+ */
+Alpine.data('idleTimeout', (config = {}) => ({
+    timeout: Math.max(1, Number(config.timeout) || 5) * 60 * 1000,
+    warningWindow: Math.max(5, Number(config.warning) || 60) * 1000,
+    heartbeatUrl: config.heartbeatUrl ?? '',
+    logoutUrl: config.logoutUrl ?? '',
+    loginUrl: config.loginUrl ?? '/',
+
+    warning: false,
+    remaining: 0,
+
+    _last: Date.now(),
+    _lastBeat: Date.now(),
+    _timer: null,
+    _onActivity: null,
+    _onVisibility: null,
+    _loggingOut: false,
+    _events: ['mousemove', 'mousedown', 'touchstart', 'keydown', 'scroll', 'click'],
+
+    init() {
+        this._onActivity = () => this.touch();
+        // Kembali ke tab tidak dihitung sebagai aktivitas: kalau tadi ditinggal
+        // lama, check() langsung memutus sesi alih-alih menyelamatkannya.
+        this._onVisibility = () => this.check();
+
+        this._events.forEach((name) => window.addEventListener(name, this._onActivity, { passive: true }));
+        document.addEventListener('visibilitychange', this._onVisibility);
+
+        this._timer = setInterval(() => this.check(), 1000);
+    },
+
+    destroy() {
+        this._events.forEach((name) => window.removeEventListener(name, this._onActivity));
+        document.removeEventListener('visibilitychange', this._onVisibility);
+        clearInterval(this._timer);
+    },
+
+    /** Ada aktivitas nyata: reset hitungan dan segarkan sesi server. */
+    touch() {
+        this._last = Date.now();
+
+        if (this.warning) {
+            this.warning = false;
+        }
+
+        this.beat();
+    },
+
+    beat() {
+        if (!this.heartbeatUrl || Date.now() - this._lastBeat < 60000) {
+            return;
+        }
+
+        this._lastBeat = Date.now();
+
+        fetch(this.heartbeatUrl, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': this.csrf(),
+                Accept: 'application/json',
+            },
+            keepalive: true,
+        }).catch(() => {});
+    },
+
+    check() {
+        const left = this.timeout - (Date.now() - this._last);
+
+        if (left <= 0) {
+            this.logout();
+            return;
+        }
+
+        if (left <= this.warningWindow) {
+            this.warning = true;
+            this.remaining = Math.ceil(left / 1000);
+        } else if (this.warning) {
+            this.warning = false;
+        }
+    },
+
+    stay() {
+        this.touch();
+    },
+
+    csrf() {
+        return document.querySelector('meta[name="csrf-token"]')?.content ?? '';
+    },
+
+    async logout() {
+        if (this._loggingOut) {
+            return;
+        }
+
+        this._loggingOut = true;
+        clearInterval(this._timer);
+
+        try {
+            await fetch(this.logoutUrl, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': this.csrf(),
+                    Accept: 'application/json',
+                },
+                keepalive: true,
+            });
+        } catch {
+            // Tetap arahkan ke login; penjaga server akan menutup sesinya.
+        }
+
+        window.location.replace(this.loginUrl);
+    },
+}));
+
 Alpine.store('sidebar', {
     // Terbuka secara default; localStorage hanya berisi kondisi bila pernah dirapikan.
     collapsed: localStorage.getItem('sidebar_state') === 'true',

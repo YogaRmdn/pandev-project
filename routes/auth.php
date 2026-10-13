@@ -26,5 +26,10 @@ Route::middleware('auth')->group(function () {
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
 
+    // Titik denyut dari komponen idleTimeout: menyegarkan stempel aktivitas
+    // sesi server selama pengguna benar-benar aktif, tanpa memuat ulang halaman.
+    Route::post('auth/heartbeat', [AuthenticatedSessionController::class, 'heartbeat'])
+        ->name('auth.heartbeat');
+
     Route::put('password', [PasswordController::class, 'update'])->name('password.update');
 });
