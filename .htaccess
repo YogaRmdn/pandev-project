@@ -1,0 +1,33 @@
+# Root .htaccess for shared-hosting deployments (Hostinger).
+#
+# The domain's document root points at the Laravel project root, so this file
+# routes every request into the framework's `public/` directory, hardens the
+# sensitive paths, and forces HTTPS.
+#
+# It must live in version control: Hostinger's git "Publishing" step removes
+# untracked files, which would otherwise delete this on every deploy.
+
+<IfModule mod_negotiation.c>
+    Options -MultiViews -Indexes
+</IfModule>
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Force HTTPS. X-Forwarded-Proto is set by Hostinger's edge (hcdn) so the
+    # rule does not loop when TLS is terminated in front of the origin.
+    RewriteCond %{HTTPS} !=on
+    RewriteCond %{HTTP:X-Forwarded-Proto} !https
+    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+    # Block direct access to Laravel's internal directories.
+    RewriteRule ^(app|bootstrap|config|database|resources|routes|tests|vendor|node_modules)(/|$) - [F,L]
+
+    # Block direct access to sensitive files and repo metadata.
+    RewriteRule ^(\.env|\.env\.[\w.-]+|\.git.*)$ - [F,L]
+    RewriteRule ^(composer\.json|composer\.lock|package\.json|package-lock\.json|artisan|phpunit\.xml|vite\.config\.js|AGENTS\.md|CLAUDE\.md|README\.md|skills-lock\.json|start-dev\.ps1|\.editorconfig|\.gitattributes|\.gitignore)$ - [F,L]
+
+    # Route everything else into the framework's public directory.
+    RewriteCond %{REQUEST_URI} !^/public(/|$)
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
