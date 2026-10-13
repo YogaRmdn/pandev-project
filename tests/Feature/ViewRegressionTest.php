@@ -341,4 +341,27 @@ class ViewRegressionTest extends TestCase
             ->assertOk()
             ->assertSee(route('dashboard'), escape: false);
     }
+
+    public function test_portfolio_card_actions_menu_is_not_clipped_by_the_card(): void
+    {
+        $user = User::factory()->superadmin()->create();
+        Portfolio::factory()->create(['created_by' => $user->id]);
+
+        $content = $this->actingAs($user)
+            ->get(route('dashboard.portfolio.index'))
+            ->assertOk()
+            ->getContent();
+
+        // Menu titik-tiga diposisikan absolut, jadi kartu tidak boleh
+        // overflow-hidden atau popup-nya terpotong di tepi kartu.
+        $this->assertStringContainsString('group relative flex h-full flex-col rounded-2xl', $content);
+        $this->assertStringNotContainsString('flex h-full flex-col overflow-hidden rounded-2xl', $content);
+
+        // Thumbnail yang di-clip, lewat rounded-t-2xl pada pembungkusnya.
+        $this->assertStringContainsString('overflow-hidden rounded-t-2xl', $content);
+
+        // Menu tampil di atas kartu tetangga dan bisa ditutup dengan Escape.
+        $this->assertStringContainsString('absolute right-0 z-50 mt-1 w-44', $content);
+        $this->assertStringContainsString('x-on:keydown.escape.window="open = false"', $content);
+    }
 }

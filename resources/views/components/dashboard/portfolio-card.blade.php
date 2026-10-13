@@ -7,9 +7,9 @@
     $confirmName = 'portfolio-delete-'.$portfolio->id;
 @endphp
 
-<div class="group flex h-full flex-col overflow-hidden rounded-2xl border border-base-300/70 bg-base-100 shadow-sm transition-shadow duration-300 hover:shadow-md">
+<div class="group relative flex h-full flex-col rounded-2xl border border-base-300/70 bg-base-100 shadow-sm transition-shadow duration-300 hover:shadow-md">
     {{-- Thumbnail --}}
-    <div class="relative aspect-video w-full overflow-hidden">
+    <div class="relative aspect-video w-full overflow-hidden rounded-t-2xl">
         @if (filled($portfolio->thumbnail))
             <img
                 src="{{ $portfolio->thumbnail }}"
@@ -44,33 +44,51 @@
                 {{ $portfolio->name }}
             </a>
 
-            <div x-data="{ open: false }" class="relative shrink-0">
-                <button type="button" class="btn btn-ghost btn-square size-8" x-on:click="open = !open" aria-label="Aksi portfolio">
-                    <x-lucide name="ellipsis-vertical" />
+            <div
+                x-data="{ open: false }"
+                class="relative shrink-0"
+                x-on:click.outside="open = false"
+                x-on:keydown.escape.window="open = false"
+            >
+                <button
+                    type="button"
+                    class="btn btn-ghost btn-square size-8"
+                    x-on:click="open = !open"
+                    x-bind:aria-expanded="open"
+                    aria-haspopup="menu"
+                    aria-label="Aksi portfolio"
+                >
+                    <x-lucide name="ellipsis-vertical" class="size-4" />
                 </button>
 
                 <div
                     x-show="open"
                     x-cloak
-                    x-on:click.outside="open = false"
-                    class="bg-base-100 absolute right-0 z-30 mt-1 w-40 rounded-lg border border-base-300/70 p-1 shadow-lg"
+                    x-transition.duration.150ms
+                    role="menu"
+                    class="bg-base-100 absolute right-0 z-50 mt-1 w-44 rounded-xl border border-base-300/70 p-1 shadow-lg"
                 >
                     <a
                         href="{{ route('dashboard.portfolio.edit', $portfolio->id) }}"
-                        class="hover:bg-base-200 hover:text-base-content flex items-center gap-2 rounded-md px-2 py-1.5 text-sm"
+                        role="menuitem"
+                        class="hover:bg-base-200 flex items-center gap-2 rounded-lg px-2.5 py-2 text-sm"
                     >
-                        <x-lucide name="pen" class="size-4" /> Edit
+                        <x-lucide name="pen" class="size-4 text-base-content/60" /> Edit
                     </a>
                     <a
                         href="{{ route('portfolio.show', $portfolio->id) }}"
                         target="_blank"
-                        class="hover:bg-base-200 hover:text-base-content flex items-center gap-2 rounded-md px-2 py-1.5 text-sm"
+                        rel="noopener"
+                        role="menuitem"
+                        class="hover:bg-base-200 flex items-center gap-2 rounded-lg px-2.5 py-2 text-sm"
                     >
-                        <x-lucide name="external-link" class="size-4" /> Preview
+                        <x-lucide name="external-link" class="size-4 text-base-content/60" /> Preview
                     </a>
+                    <div class="bg-base-300/70 my-1 h-px"></div>
                     <button
                         type="button"
-                        class="text-error hover:bg-base-200 flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm"
+                        role="menuitem"
+                        class="text-error hover:bg-error/10 flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-sm"
                         x-on:click="open = false; $dispatch('open-modal', '{{ $confirmName }}')"
                     >
                         <x-lucide name="trash" class="size-4" /> Delete
