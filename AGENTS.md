@@ -12,6 +12,7 @@ php artisan test           # Test suite (PHPUnit; 51+ tests)
 php artisan migrate:fresh --seed   # Rebuild & seed database (pandev_db / MySQL)
 npm run build              # Build aset Vite + Tailwind
 vendor/bin/pint            # PHP Code Style Fixer (Laravel Pint)
+powershell -File .\deploy.ps1   # Build aset lokal + upload ke Hostinger (SSH) + refresh cache
 ```
 
 ## Structure

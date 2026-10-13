@@ -25,7 +25,7 @@
 
     # Block direct access to sensitive files and repo metadata.
     RewriteRule ^(\.env|\.env\.[\w.-]+|\.git.*)$ - [F,L]
-    RewriteRule ^(composer\.json|composer\.lock|package\.json|package-lock\.json|artisan|phpunit\.xml|vite\.config\.js|AGENTS\.md|CLAUDE\.md|README\.md|skills-lock\.json|start-dev\.ps1|\.editorconfig|\.gitattributes|\.gitignore)$ - [F,L]
+    RewriteRule ^(composer\.json|composer\.lock|package\.json|package-lock\.json|artisan|phpunit\.xml|vite\.config\.js|AGENTS\.md|CLAUDE\.md|README\.md|skills-lock\.json|start-dev\.ps1|deploy\.ps1|\.editorconfig|\.gitattributes|\.gitignore)$ - [F,L]
 
     # Route everything else into the framework's public directory.
     RewriteCond %{REQUEST_URI} !^/public(/|$)
