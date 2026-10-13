@@ -23,7 +23,10 @@ if (Test-Port 3306) {
         Write-Host "mysqld.exe tidak ditemukan di $MySQLBin. Periksa lokasi XAMPP." -ForegroundColor Red
         exit 1
     }
-    Start-Process -FilePath $MySQLBin -ArgumentList "--defaults-file=$XAMPP\mysql\data\my.ini" -WorkingDirectory $XAMPP -WindowStyle Hidden
+    # my.ini sebenarnya ada di mysql\bin (lihat mysql_start.bat XAMPP), bukan
+    # mysql\data — path yang salah membuat mysqld jalan tanpa konfigurasi port
+    # sehingga tidak pernah listen di 3306.
+    Start-Process -FilePath $MySQLBin -ArgumentList "--defaults-file=$XAMPP\mysql\bin\my.ini", "--standalone" -WorkingDirectory $XAMPP -WindowStyle Hidden
     $tries = 0
     while (-not (Test-Port 3306) -and $tries -lt 15) {
         Start-Sleep -Seconds 2
@@ -32,7 +35,7 @@ if (Test-Port 3306) {
     if (Test-Port 3306) {
         Write-Host "MySQL berjalan." -ForegroundColor Green
     } else {
-        Write-Host "MySQL gagal start. Cek C:\xampp\mysql\data\DESKTOP-*-5.err" -ForegroundColor Red
+        Write-Host "MySQL gagal start. Cek C:\xampp\mysql\data\mysql_error.log" -ForegroundColor Red
         exit 1
     }
 }
