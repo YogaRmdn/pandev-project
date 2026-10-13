@@ -33,7 +33,6 @@
                     <li><a href="{{ route('portfolio') }}" class="transition-colors hover:text-white">Portfolio</a></li>
                     <li><a href="{{ route('buy-ebook') }}" class="transition-colors hover:text-white">Buy eBook</a></li>
                     <li><a href="{{ route('contact') }}" class="transition-colors hover:text-white">Contact</a></li>
-                    <li><a href="{{ route('login') }}" class="transition-colors hover:text-white">Client Login</a></li>
                 </ul>
             </div>
 

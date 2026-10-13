@@ -24,6 +24,18 @@ class SecurityHeaders
         // XSS modern datang dari escaping + CSP.
         $response->headers->set('X-XSS-Protection', '0');
 
+        // HSTS: paksa HTTPS di sisi browser. Header ini hanya dihormati pada
+        // koneksi HTTPS, jadi aman juga saat dev di http://localhost.
+        $response->headers->set('Strict-Transport-Security', 'max-age=31536000');
+
+        // CSP minimal yang tidak menyentuh script/style inline (UI bergantung
+        // pada handler inline + Alpine): menutup object/embed, pembajakan
+        // <base>, dan clickjacking. Kebijakan penuh sengaja tidak dipasang.
+        $response->headers->set(
+            'Content-Security-Policy',
+            "base-uri 'self'; object-src 'none'; frame-ancestors 'self'"
+        );
+
         return $response;
     }
 }

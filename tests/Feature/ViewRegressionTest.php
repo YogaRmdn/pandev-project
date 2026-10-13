@@ -331,9 +331,11 @@ class ViewRegressionTest extends TestCase
 
     public function test_navbar_offers_the_dashboard_only_to_signed_in_users(): void
     {
+        // Tamu tidak boleh melihat tautan login maupun dashboard: path admin
+        // bersifat rahasia dan tidak boleh bocor dari markup halaman publik.
         $this->get(route('home'))
             ->assertOk()
-            ->assertSee(route('login'), escape: false)
+            ->assertDontSee(route('login'), escape: false)
             ->assertDontSee(route('dashboard'), escape: false);
 
         $this->actingAs(User::factory()->create())

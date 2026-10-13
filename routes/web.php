@@ -38,10 +38,13 @@ Route::get('/buy-ebook', [PageController::class, 'buyEbook'])->name('buy-ebook')
 |--------------------------------------------------------------------------
 |
 | The `auth` middleware mirrors the original src/proxy.ts route guard.
+| Seluruh grup dilayani di bawah prefix rahasia (config admin.path) supaya
+| path-nya tidak mudah ditemukan scanner. Nama route sengaja TIDAK berubah,
+| jadi seluruh `route('dashboard.*')` di view/test ikut menyesuaikan.
 |
 */
 
-Route::middleware(['auth'])->group(function () {
+Route::prefix(config('admin.path'))->middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Portfolio CMS — every action is scoped to the authenticated author.

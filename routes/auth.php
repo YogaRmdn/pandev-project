@@ -15,21 +15,23 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('guest')->group(function () {
-    Route::get('auth/login', [AuthenticatedSessionController::class, 'create'])
-        ->name('login');
+Route::prefix(config('admin.path'))->group(function () {
+    Route::middleware('guest')->group(function () {
+        Route::get('login', [AuthenticatedSessionController::class, 'create'])
+            ->name('login');
 
-    Route::post('auth/login', [AuthenticatedSessionController::class, 'store']);
-});
+        Route::post('login', [AuthenticatedSessionController::class, 'store']);
+    });
 
-Route::middleware('auth')->group(function () {
-    Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
-        ->name('logout');
+    Route::middleware('auth')->group(function () {
+        Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
+            ->name('logout');
 
-    // Titik denyut dari komponen idleTimeout: menyegarkan stempel aktivitas
-    // sesi server selama pengguna benar-benar aktif, tanpa memuat ulang halaman.
-    Route::post('auth/heartbeat', [AuthenticatedSessionController::class, 'heartbeat'])
-        ->name('auth.heartbeat');
+        // Titik denyut dari komponen idleTimeout: menyegarkan stempel aktivitas
+        // sesi server selama pengguna benar-benar aktif, tanpa memuat ulang halaman.
+        Route::post('heartbeat', [AuthenticatedSessionController::class, 'heartbeat'])
+            ->name('auth.heartbeat');
 
-    Route::put('password', [PasswordController::class, 'update'])->name('password.update');
+        Route::put('password', [PasswordController::class, 'update'])->name('password.update');
+    });
 });
