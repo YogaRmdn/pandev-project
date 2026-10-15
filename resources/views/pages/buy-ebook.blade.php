@@ -4,6 +4,31 @@
 
 @section('description', 'Practical eBooks written by the PanDev team — Laravel, frontend engineering, and cyber security, written for developers who ship to production.')
 
+@push('json-ld')
+    <x-json-ld :data="\App\Support\Seo::graph([
+        \App\Support\Seo::breadcrumbs([
+            ['name' => 'Home', 'url' => route('home')],
+            ['name' => 'Buy eBook', 'url' => route('buy-ebook')],
+        ]),
+        [
+            '@type' => 'ItemList',
+            'name' => 'PanDev eBooks',
+            'itemListElement' => $ebooks->values()->map(fn ($ebook, $index) => [
+                '@type' => 'ListItem',
+                'position' => $index + 1,
+                'item' => array_filter([
+                    '@type' => 'Book',
+                    'name' => $ebook->title,
+                    'description' => $ebook->description,
+                    'url' => $ebook->url,
+                    'image' => filled($ebook->cover) ? \App\Support\Seo::image($ebook->cover) : null,
+                    'author' => ['@type' => 'Organization', 'name' => config('seo.organization.name')],
+                ]),
+            ])->all(),
+        ],
+    ])" />
+@endpush
+
 @section('content')
     <main class="mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 py-16 sm:px-6 lg:px-8">
         <div class="max-w-2xl">

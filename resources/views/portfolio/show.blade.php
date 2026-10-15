@@ -4,19 +4,56 @@
 
 @section('description', $portfolio->description)
 
+@section('canonical', route('portfolio.show', $portfolio->id))
+
+@section('og_type', 'article')
+
+@if (filled($portfolio->thumbnail))
+    @section('og_image', $portfolio->thumbnail)
+@endif
+
+{{-- Draft cuma bisa dibuka penulisnya, jadi jangan sampai terindeks. --}}
+@if ($portfolio->status === \App\Enums\PortfolioStatus::DRAFT)
+    @section('robots', 'noindex, nofollow')
+@endif
+
+@php
+    // Galeri dipakai dua kali — Lightbox di konten dan daftar `image` pada
+    // schema CreativeWork — jadi dihitung sekali di sini saja.
+    $images = $portfolio->galery->pluck('image_url')->filter()->values();
+
+    if ($images->isEmpty() && filled($portfolio->thumbnail)) {
+        $images = collect([$portfolio->thumbnail]);
+    }
+@endphp
+
+@push('json-ld')
+    <x-json-ld :data="\App\Support\Seo::graph([
+        \App\Support\Seo::breadcrumbs([
+            ['name' => 'Home', 'url' => route('home')],
+            ['name' => 'Portfolio', 'url' => route('portfolio')],
+            ['name' => $portfolio->name, 'url' => route('portfolio.show', $portfolio->id)],
+        ]),
+        array_filter([
+            '@type' => 'CreativeWork',
+            'name' => $portfolio->name,
+            'description' => \App\Support\Seo::excerpt($portfolio->description, 300),
+            'url' => route('portfolio.show', $portfolio->id),
+            'image' => $images->map(fn ($image) => \App\Support\Seo::image($image))->all(),
+            'author' => ['@id' => url('/').'#organization'],
+            'genre' => $portfolio->category,
+            'keywords' => filled($portfolio->tech_stacks) ? implode(', ', $portfolio->tech_stacks) : null,
+            'dateModified' => $portfolio->updated_at?->toAtomString(),
+            'datePublished' => $portfolio->created_at?->toAtomString(),
+        ]),
+    ])" />
+@endpush
+
 @section('content')
     <main class="mx-auto w-full max-w-6xl flex-1 px-4 py-8">
         <a href="{{ route('portfolio.index') }}" class="text-base-content/60 hover:text-base-content mb-4 inline-flex items-center gap-1 text-sm">
             <x-lucide name="chevron-left" /> Back to all projects
         </a>
-
-        @php
-            $images = $portfolio->galery->pluck('image_url')->filter()->values();
-
-            if ($images->isEmpty() && filled($portfolio->thumbnail)) {
-                $images = collect([$portfolio->thumbnail]);
-            }
-        @endphp
 
         <div class="flex flex-col gap-6 lg:flex-row" x-data="{ index: 0, hovered: false }">
             <div class="w-full lg:w-2/3">

@@ -4,6 +4,21 @@
 
 @section('description', 'Browse all projects and best work delivered by PanDev.')
 
+@push('json-ld')
+    <x-json-ld :data="\App\Support\Seo::graph([
+        \App\Support\Seo::breadcrumbs([
+            ['name' => 'Home', 'url' => route('home')],
+            ['name' => 'Portfolio', 'url' => route('portfolio')],
+            ['name' => 'All Projects', 'url' => route('portfolio.index')],
+        ]),
+        [
+            '@type' => 'CollectionPage',
+            'name' => 'All Projects',
+            'url' => route('portfolio.index'),
+        ],
+    ])" />
+@endpush
+
 @section('content')
     <main class="flex-1 space-y-4">
         <section class="py-16">

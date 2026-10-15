@@ -4,6 +4,29 @@
 
 @section('description', 'Browse the projects and best work delivered by PanDev — web, mobile, desktop, IoT, and data solutions.')
 
+@push('json-ld')
+    <x-json-ld :data="\App\Support\Seo::graph([
+        \App\Support\Seo::breadcrumbs([
+            ['name' => 'Home', 'url' => route('home')],
+            ['name' => 'Portfolio', 'url' => route('portfolio')],
+        ]),
+        [
+            '@type' => 'CollectionPage',
+            'name' => 'PanDev Portfolio',
+            'url' => route('portfolio'),
+            'mainEntity' => [
+                '@type' => 'ItemList',
+                'itemListElement' => $featured->values()->map(fn ($project, $index) => [
+                    '@type' => 'ListItem',
+                    'position' => $index + 1,
+                    'url' => route('portfolio.show', $project->id),
+                    'name' => $project->name,
+                ])->all(),
+            ],
+        ],
+    ])" />
+@endpush
+
 @section('content')
     <main class="flex-1">
         <section class="mx-auto flex w-full max-w-6xl flex-col items-center px-4 py-16">

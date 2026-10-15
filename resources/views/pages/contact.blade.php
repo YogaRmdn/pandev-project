@@ -4,6 +4,21 @@
 
 @section('description', 'Get in touch with PanDev for your digital product needs — we reply within one business day.')
 
+@push('json-ld')
+    <x-json-ld :data="\App\Support\Seo::graph([
+        \App\Support\Seo::breadcrumbs([
+            ['name' => 'Home', 'url' => route('home')],
+            ['name' => 'Contact', 'url' => route('contact')],
+        ]),
+        [
+            '@type' => 'ContactPage',
+            'name' => 'Contact PanDev',
+            'url' => route('contact'),
+            'mainEntity' => ['@id' => url('/').'#organization'],
+        ],
+    ])" />
+@endpush
+
 @section('content')
     <section class="relative flex min-h-[85vh] items-center justify-center py-16 bg-cover"
         style="background-image: url('{{ asset('assets/common/contact-bg.png') }}')">

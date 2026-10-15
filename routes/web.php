@@ -9,6 +9,7 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\PortfolioController;
 use App\Http\Controllers\PortfolioMediaController;
 use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\UserManagementController;
 use Illuminate\Support\Facades\Route;
 
@@ -31,6 +32,21 @@ Route::get('/portfolio/list', [PortfolioController::class, 'index'])->name('port
 Route::get('/portfolio/{uuid}', [PortfolioController::class, 'show'])->name('portfolio.show');
 
 Route::get('/buy-ebook', [PageController::class, 'buyEbook'])->name('buy-ebook');
+
+/*
+|--------------------------------------------------------------------------
+| SEO endpoints
+|--------------------------------------------------------------------------
+|
+| robots.txt dilayani Laravel (bukan file statis di public/) supaya baris
+| `Sitemap:` otomatis mengikuti domain yang sedang aktif — localhost saat
+| dev, domain produksi setelah deploy. Path admin TIDAK didaftarkan di sini
+| karena prefix-nya rahasia.
+|
+*/
+
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
+Route::get('/robots.txt', [SitemapController::class, 'robots'])->name('robots');
 
 /*
 |--------------------------------------------------------------------------

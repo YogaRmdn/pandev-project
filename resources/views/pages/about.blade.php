@@ -4,6 +4,21 @@
 
 @section('description', 'Get to know PanDev, a software development agency in Indonesia focused on reliable technology solutions.')
 
+@push('json-ld')
+    <x-json-ld :data="\App\Support\Seo::graph([
+        \App\Support\Seo::breadcrumbs([
+            ['name' => 'Home', 'url' => route('home')],
+            ['name' => 'About', 'url' => route('about')],
+        ]),
+        [
+            '@type' => 'AboutPage',
+            'name' => 'About PanDev',
+            'url' => route('about'),
+            'mainEntity' => ['@id' => url('/').'#organization'],
+        ],
+    ])" />
+@endpush
+
 @section('content')
     <main class="flex w-full flex-1 flex-col">
         <section class="mx-auto flex w-full max-w-6xl flex-col items-center gap-10 px-4 pt-16 pb-4 sm:flex-row sm:items-center sm:justify-between">

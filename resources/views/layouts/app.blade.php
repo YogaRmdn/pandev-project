@@ -5,11 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', config('app.name'))</title>
-
-    <meta name="description" content="@yield('description', 'PanDev is a professional software development agency in Indonesia. We design, build, and scale web, mobile, desktop, IoT, and data products for startups and growing businesses.')">
+    @include('partials.seo')
 
     <link rel="icon" href="{{ asset('assets/common/logo-mark.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('assets/common/logo-mark.png') }}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

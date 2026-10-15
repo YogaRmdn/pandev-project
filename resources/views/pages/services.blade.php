@@ -4,6 +4,29 @@
 
 @section('description', 'Explore PanDev services for businesses and individuals — from web applications and mobile apps to IoT projects and data analytics.')
 
+@push('json-ld')
+    <x-json-ld :data="\App\Support\Seo::graph([
+        \App\Support\Seo::breadcrumbs([
+            ['name' => 'Home', 'url' => route('home')],
+            ['name' => 'Services', 'url' => route('services')],
+        ]),
+        [
+            '@type' => 'ItemList',
+            'name' => 'PanDev Services',
+            'itemListElement' => collect($services)->values()->map(fn ($service, $index) => [
+                '@type' => 'ListItem',
+                'position' => $index + 1,
+                'item' => [
+                    '@type' => 'Service',
+                    'name' => $service['title'],
+                    'description' => $service['description'],
+                    'provider' => ['@id' => url('/').'#organization'],
+                ],
+            ])->all(),
+        ],
+    ])" />
+@endpush
+
 @section('content')
     <main class="mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 py-16 sm:px-6 lg:px-8">
         <div class="max-w-2xl">

@@ -19,21 +19,21 @@ powershell -File .\deploy.ps1   # Build aset lokal + upload ke Hostinger (SSH) +
 
 ```
 app/
-  Http/Controllers/    # Dashboard, Portfolio CMS, Finance, UserManagement, Settings, Auth
+  Http/Controllers/    # Dashboard, Portfolio CMS, Finance, UserManagement, Settings, Auth, Sitemap
   Models/              # User, Portfolio, PortfolioGalery, Transaction, Invoice, InvoiceItem
   Services/            # MediaService (Cloudinary fallback ke disk public)
-  Support/             # Format (idr, thousandSeparator, relativeTime, url), PortfolioOptions
+  Support/             # Format (idr, thousandSeparator, relativeTime, url), PortfolioOptions, Seo
   Enums/               # PortfolioStatus, Role, InvoiceStatus, TransactionType
-config/                 # media.php (Cloudinary + constraint upload), services.php
+config/                 # media.php (Cloudinary + constraint upload), services.php, seo.php
 database/
   migrations/           # schema portfolio, finance, users (idiomata kolom juga)
   factories/  seeders/  # DatabaseSeeder: 4 user, 5 portfolio, 5 transaksi, 1 invoice
 resources/
-  views/                # Blade + Alpine (layouts/, components/ui, components/dashboard, pages/)
+  views/                # Blade + Alpine (layouts/, components/ui, components/dashboard, pages/, partials/seo, sitemap)
   css/app.css           # Tailwind CSS v4 + daisyUI 5 (tema custom panev-light/panev-dark)
   js/app.js             # Alpine, modals, sidebar store, coverflow carousel
 routes/
-  web.php               # 36 route publik + dashboard (admin middleware via bootstrap/app.php)
+  web.php               # 36 route publik + sitemap.xml/robots.txt + dashboard (admin middleware via bootstrap/app.php)
   auth.php              # login/logout/update password (tidak ada registrasi publik)
 public/
   assets/               # gambar statis (common/, profiles/, tech-stacks/)
@@ -50,6 +50,7 @@ tests/                  # Feature/MigrationSmokeTest + Auth
 - **Format angka**: `App\Support\Format::idr()` memformat manual (pemisah ribuan `"."`, desimal `","`) karena PHP di mesin ini TIDAK punya ekstensi `intl`.
 - **PHP tanpa GD**: test upload memakai `UploadedFile::fake()->create()` (bukan `->image()`), karena validasi gambar Laravel hanya membaca MIME.
 - **Media**: `MediaService` memakai `config('media.*')` (bukan `config('cloudinary.*')`). Jika `CLOUDINARY_CLOUD_NAME` kosong, upload jatuh ke disk `public` (`storage/app/public`).
+- **SEO**: `config/seo.php` + `App\Support\Seo` + `partials/seo` (dipasang di `layouts/app`) merender title/description/canonical/OG/Twitter/JSON-LD; halaman menambah schema via `@push('json-ld')` + `<x-json-ld>`. `SitemapController` melayani `/sitemap.xml` & `/robots.txt` dinamis (`public/robots.txt` statis sudah dihapus agar route tidak tertutup). Verifikasi GSC lewat env `GOOGLE_SITE_VERIFICATION`. Draft portfolio `noindex` dan tidak masuk sitemap; path admin tidak pernah ditulis di `robots.txt`.
 - **Vite**: memakai `@tailwindcss/vite`; `vite.config.js` mengosongkan `css.postcss.plugins` agar tidak membaca `postcss.config.*` dari parent.
 - **Dev script**: `composer run dev` menjalankan `php artisan serve` + `queue:listen` + `npm run dev` via `npx concurrently`. Pail dihapus dari script karena butuh ekstensi `pcntl` yang tidak ada di Windows/XAMPP (paket `laravel/pail` tetap ada di require-dev untuk deploy Linux/Mac).
 - **Legacy Env**: Akun demo ditanam via seeder. Env vars `WEB3FORMS_ACCESS_KEY`, `CLOUDINARY_*` boleh kosong (fallback local).
