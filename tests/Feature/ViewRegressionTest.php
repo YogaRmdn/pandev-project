@@ -97,7 +97,7 @@ class ViewRegressionTest extends TestCase
         // `mt-16`) karena itu menyisakan celah besar di bawah navbar.
         $this->assertStringContainsString('sticky top-0 z-50', $content);
         $this->assertStringNotContainsString('bg-section-glow mt-16', $content);
-        $this->assertStringContainsString('bg-section-glow px-4 pt-8', $content);
+        $this->assertStringContainsString('bg-section-glow cursor-glow px-4 pt-8', $content);
     }
 
     public function test_process_cards_are_padded_and_render_every_step(): void
@@ -155,10 +155,11 @@ class ViewRegressionTest extends TestCase
     {
         // py-6 pernah jadi satu-satunya padding, sehingga kartu yang hanya
         // memakai card-header/content menempel teksnya ke border. Kelas kartu
-        // kini menempel langsung di call site (markup daisyUI tanpa wrapper).
+        // kini menempel langsung di call site (markup daisyUI tanpa wrapper)
+        // dan kartu layanan membawa `cursor-glow` untuk sapuan gradien kursor.
         $content = $this->get(route('services'))->getContent();
 
-        $this->assertStringContainsString('card gap-6 border p-6 shadow-sm', $content);
+        $this->assertStringContainsString('card cursor-glow gap-6 border p-6 shadow-sm', $content);
 
         foreach (SiteContent::serviceDetails() as $service) {
             $this->assertStringContainsString(e($service['title']), $content);

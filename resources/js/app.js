@@ -1049,6 +1049,49 @@ Alpine.data('idleTimeout', (config = {}) => ({
     },
 }));
 
+/**
+ * Cursor glow.
+ *
+ * Menulis `--glow-x`/`--glow-y` ke elemen bertanda `.cursor-glow` saat
+ * pointer bergerak di atasnya, sehingga lapisan gradien di `::after`
+ * (resources/css/app.css) mengikuti kursor. Sengaja memakai listener DOM
+ * biasa — bukan Alpine — supaya bisa dipasang pada elemen yang sudah punya
+ * `x-data` sendiri (hero, section, kartu) tanpa bentrok. Hanya aktif untuk
+ * pointing device presisi; di perangkat sentuh CSS sudah menyembunyikan
+ * lapisannya.
+ */
+function initCursorGlow() {
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+        return;
+    }
+
+    document.querySelectorAll('.cursor-glow').forEach((el) => {
+        let frame = null;
+
+        el.addEventListener('pointermove', (event) => {
+            if (frame) {
+                return;
+            }
+
+            // Catat posisi lalu catat ulang di frame berikutnya: gerak kursor
+            // bisa ratusan event/detik dan menulis variabel CSS di setiap
+            // event pemborosan layout.
+            frame = requestAnimationFrame(() => {
+                frame = null;
+                const rect = el.getBoundingClientRect();
+                el.style.setProperty('--glow-x', `${event.clientX - rect.left}px`);
+                el.style.setProperty('--glow-y', `${event.clientY - rect.top}px`);
+            });
+        });
+    });
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCursorGlow);
+} else {
+    initCursorGlow();
+}
+
 Alpine.store('sidebar', {
     // Terbuka secara default; localStorage hanya berisi kondisi bila pernah dirapikan.
     collapsed: localStorage.getItem('sidebar_state') === 'true',

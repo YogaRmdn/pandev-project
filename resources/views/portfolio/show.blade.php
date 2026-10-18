@@ -105,8 +105,8 @@
                 @endif
             </div>
 
-            <div class="card gap-6 border p-6 shadow-sm h-fit w-full gap-0 lg:w-1/3">
-                <div class="flex flex-col gap-1.5">
+            <div class="card cursor-glow gap-6 border p-6 shadow-sm h-fit w-full gap-0 lg:w-1/3">
+                <div class="relative z-[1] flex flex-col gap-1.5">
                     <div>
                         <h1 class="font-heading text-2xl font-bold tracking-tight">{{ $portfolio->name }}</h1>
                         <div class="mt-3 flex flex-wrap items-center gap-2">
@@ -120,7 +120,7 @@
                     </div>
                 </div>
 
-                <div class="space-y-4">
+                <div class="relative z-[1] space-y-4">
                     <div>
                         <div class="text-base-content/60 text-sm font-semibold uppercase">Description</div>
                         <p class="mt-2 whitespace-pre-wrap">{{ $portfolio->description }}</p>

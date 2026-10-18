@@ -397,6 +397,45 @@
         radial-gradient(40rem 26rem at 100% 8%, color-mix(in oklab, var(--gradient-to) 14%, transparent), transparent 65%);
 }
 
+/* Sapuan gradien hijau yang mengikuti kursor di section/kartu terpilih.
+   Posisinya dikendalikan `--glow-x`/`--glow-y` (ditulis skrip app.js saat
+   pointer bergerak); warnanya diambil dari `--gradient-to` (ujung hijau
+   gradien brand) sehingga otomatis menyesuaikan mode terang & gelap.
+   Lapisan glow ber-`z-0` di bawah konten (`z-[1]`) dan `pointer-events-none`
+   supaya tidak menelan klik; hanya dipasang pada perangkat dengan pointing
+   device presisi. */
+.cursor-glow {
+    position: relative;
+    isolation: isolate;
+}
+
+.cursor-glow::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 400ms ease;
+    background: radial-gradient(
+        circle 260px at var(--glow-x, 50%) var(--glow-y, 50%),
+        color-mix(in oklab, var(--gradient-to) 34%, transparent) 0%,
+        color-mix(in oklab, var(--gradient-to) 14%, transparent) 40%,
+        transparent 72%
+    );
+}
+
+.cursor-glow:hover::after {
+    opacity: 1;
+}
+
+@media (hover: none), (prefers-reduced-motion: reduce) {
+    .cursor-glow::after {
+        display: none;
+    }
+}
+
 [x-cloak] {
     display: none !important;
 }

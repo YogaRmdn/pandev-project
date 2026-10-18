@@ -1,6 +1,6 @@
 <section
     id="cta-section"
-    class="relative mt-16 w-full overflow-hidden bg-cover bg-center bg-no-repeat py-24"
+    class="cursor-glow relative mt-16 w-full overflow-hidden bg-cover bg-center bg-no-repeat py-24"
     style="background-image: url('{{ asset('assets/common/grid-bg.jpg') }}')"
 >
     <div class="absolute inset-0 bg-gradient-to-br from-black via-black/90 to-primary/40"></div>

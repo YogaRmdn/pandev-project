@@ -24,8 +24,8 @@
                     x-transition:enter-start="translate-y-8 opacity-0"
                     x-transition:enter-end="translate-y-0 opacity-100"
                 >
-                    <div class="card gap-6 border p-6 shadow-sm h-full transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-md">
-                        <div class="flex h-full flex-col gap-4">
+                    <div class="card cursor-glow gap-6 border p-6 shadow-sm h-full transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-md">
+                        <div class="relative z-[1] flex h-full flex-col gap-4">
                             <span class="bg-brand-gradient flex size-12 shrink-0 items-center justify-center rounded-xl md:size-14">
                                 <x-lucide :name="$service['icon']" class="size-6 md:size-7" />
                             </span>

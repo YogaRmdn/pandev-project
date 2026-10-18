@@ -7,8 +7,8 @@
 
 {{-- p-0 di kartu + padding di konten: thumbnail jadi full-bleed tanpa garis
      card yang mengapit, dan tidak ada padding ganda. --}}
-<div class="card gap-6 border p-6 shadow-sm h-full gap-0 overflow-hidden p-0 transition-shadow duration-300 hover:shadow-md">
-    <a href="{{ route('portfolio.show', $portfolio->id) }}" class="group flex h-full flex-col">
+<div class="card cursor-glow gap-6 border p-6 shadow-sm h-full gap-0 overflow-hidden p-0 transition-shadow duration-300 hover:shadow-md">
+    <a href="{{ route('portfolio.show', $portfolio->id) }}" class="group relative z-[1] flex h-full flex-col">
         <div class="bg-base-200 aspect-video w-full overflow-hidden">
             @if (filled($portfolio->thumbnail))
                 <img

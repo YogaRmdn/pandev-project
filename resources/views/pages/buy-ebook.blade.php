@@ -53,8 +53,8 @@
                      dan kartu dibungkus satu anak flex supaya gap-6 base tidak
                      berlaku. Cover yang kosong jatuh ke badge ikon. --}}
                 <div
-                    class="card gap-6 border p-6 shadow-sm h-full overflow-hidden px-0 py-0 transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-md">
-                    <div class="flex flex-1 flex-col">
+                    class="card cursor-glow gap-6 border p-6 shadow-sm h-full overflow-hidden px-0 py-0 transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-md">
+                    <div class="relative z-[1] flex flex-1 flex-col">
                         @if (filled($ebook->cover))
                             <img src="{{ $ebook->cover }}" width="900" height="1200"
                                 alt="Sampul {{ $ebook->title }}" loading="lazy"

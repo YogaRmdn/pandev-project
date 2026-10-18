@@ -60,8 +60,8 @@
                  baris terisi penuh tanpa kartu menggantung. --}}
             <div class="mt-10 grid grid-cols-2 gap-5 sm:grid-cols-4 sm:gap-6">
                 @foreach ($team as $member)
-                    <div class="card gap-6 border p-6 shadow-sm h-full gap-0 transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-md">
-                        <div class="flex h-full flex-col items-center gap-3 text-center">
+                    <div class="card cursor-glow gap-6 border p-6 shadow-sm h-full gap-0 transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-md">
+                        <div class="relative z-[1] flex h-full flex-col items-center gap-3 text-center">
                             <div class="bg-base-200 w-full overflow-hidden rounded-lg border">
                                 <img
                                     src="{{ asset($member['image']) }}"

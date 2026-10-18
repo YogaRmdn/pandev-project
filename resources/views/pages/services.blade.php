@@ -40,8 +40,8 @@
 
         <div class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             @foreach ($services as $service)
-                <div class="card gap-6 border p-6 shadow-sm h-full gap-0 transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-md">
-                    <div class="flex h-full flex-col gap-4">
+                <div class="card cursor-glow gap-6 border p-6 shadow-sm h-full gap-0 transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-md">
+                    <div class="relative z-[1] flex h-full flex-col gap-4">
                         <span class="bg-brand-gradient inline-flex size-11 shrink-0 items-center justify-center rounded-xl">
                             <x-lucide :name="$service['icon']" class="size-5" />
                         </span>

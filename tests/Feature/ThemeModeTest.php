@@ -217,4 +217,29 @@ class ThemeModeTest extends TestCase
             ->assertOk()
             ->assertSee('text-gradient-light', escape: false);
     }
+
+    public function test_cursor_glow_follows_the_pointer_with_theme_colors(): void
+    {
+        $css = $this->css();
+
+        // Utility glow: posisi dikendalikan variabel yang ditulis skrip,
+        // warnanya diambil dari gradien brand supaya ikut tema terang/gelap.
+        $this->assertStringContainsString('.cursor-glow', $css);
+        $this->assertStringContainsString('--glow-x', $css);
+        $this->assertStringContainsString('--glow-y', $css);
+        $this->assertStringContainsString('color-mix(in oklab, var(--gradient-to)', $css);
+
+        // Perangkat sentuh / prefers-reduced-motion tidak mengaktifkan glow.
+        $this->assertStringContainsString('(hover: none), (prefers-reduced-motion: reduce)', $css);
+
+        // Skrip tracker memakai pointer presisi & requestAnimationFrame.
+        $js = $this->js();
+        $this->assertStringContainsString('initCursorGlow', $js);
+        $this->assertStringContainsString('(hover: hover) and (pointer: fine)', $js);
+
+        // Section utama & kartu layanan memakai kelas glow.
+        $home = $this->get(route('home'))->assertOk()->getContent();
+        $this->assertStringContainsString('bg-section-glow cursor-glow', $home);
+        $this->assertMatchesRegularExpression('/card cursor-glow/', $home);
+    }
 }

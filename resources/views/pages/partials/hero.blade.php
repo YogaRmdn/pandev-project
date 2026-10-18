@@ -6,8 +6,9 @@
 {{-- Navbar memakai `sticky` sehingga tingginya tetap memakan ruang di alur
      dokumen. Jadi hero tidak butuh margin atas besar — cukup padding tipis
      supaya badge-nya duduk rapat di bawah navbar. --}}
-<section class="bg-section-glow px-4 pt-8 text-center md:pt-10" x-data="{ visible: false }" x-intersect="visible = true">
+<section class="bg-section-glow cursor-glow px-4 pt-8 text-center md:pt-10" x-data="{ visible: false }" x-intersect="visible = true">
     <div
+        class="relative z-[1]"
         x-show="visible"
         x-transition:enter="transition ease-out duration-700"
         x-transition:enter-start="translate-y-5 opacity-0"
@@ -48,7 +49,7 @@
         </div>
     </div>
 
-    <div class="relative mt-4">
+    <div class="relative z-[1] mt-4">
         <div class="relative z-10">
             <img
                 src="{{ asset('assets/common/hero-image.svg') }}"
