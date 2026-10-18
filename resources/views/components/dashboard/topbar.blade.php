@@ -20,6 +20,8 @@
         @endif
     </div>
 
+    <x-theme-toggle class="btn btn-square btn-ghost btn-sm" />
+
     <a href="{{ route('home') }}" target="_blank" rel="noopener" class="btn btn-ghost btn-sm hidden gap-2 sm:inline-flex">
         <x-lucide name="external-link" class="size-4" />
         <span class="hidden md:inline">Lihat Situs</span>

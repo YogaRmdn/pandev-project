@@ -61,6 +61,8 @@
         <div class="ms-auto hidden shrink-0 items-center gap-4 py-6 pe-4 sm:pe-6 lg:pe-8 lg:flex">
             <x-social-links size="size-6" class="gap-4" />
 
+            <x-theme-toggle />
+
             @auth
                 <div class="relative" x-data="{ account: false }" x-on:click.outside="account = false">
                     <button
@@ -115,13 +117,13 @@
         {{-- Mobile: circular accent toggle, matching the reference bar. Ikon
              sosial disembunyikan di bawah sm supaya kartu putih 80% tetap
              menyisakan ruang untuk logo + tombol menu tanpa meluber; socials
-             tetap tersedia di dalam drawer. --}}
+             dan tombol mode gelap tetap tersedia di dalam drawer. --}}
         <div class="ms-auto flex shrink-0 items-center gap-4 py-4 pe-4 lg:hidden">
             <x-social-links size="size-5" class="hidden gap-3 sm:flex" />
 
             <button
                 type="button"
-                class="icon-circle bg-primary text-primary-content border-transparent"
+                class="icon-circle is-brand"
                 x-on:click="open = true"
                 aria-label="Open navigation menu"
             >
@@ -183,7 +185,15 @@
         </nav>
 
         <div class="mt-auto border-t pt-6">
-            <div class="text-base-content/60 text-xs font-semibold tracking-wider uppercase">
+            <div class="flex items-center justify-between gap-3">
+                <div>
+                    <div class="text-base-content text-sm font-bold">Mode gelap</div>
+                    <p class="text-base-content/60 text-xs">Sesuaikan tampilan situs.</p>
+                </div>
+                <x-theme-toggle class="icon-circle text-base-content" />
+            </div>
+
+            <div class="text-base-content/60 mt-6 text-xs font-semibold tracking-wider uppercase">
                 Follow us
             </div>
             <x-social-links size="size-5" class="mt-3 gap-4" />

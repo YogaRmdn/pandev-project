@@ -202,6 +202,13 @@
     --input: oklch(0.92 0.01 200);
     --ring: oklch(0.45 0.1 200);
 
+    /* Gradien brand: dari cyan tua ke teal. Nilainya ikut berubah di mode
+       gelap supaya teks bergradasi tetap kontras di atas latar gelap. */
+    --gradient-from: oklch(0.45 0.1 200);
+    --gradient-to: oklch(0.6 0.13 172);
+    /* Warna ikon di atas permukaan gradien brand. */
+    --gradient-ink: oklch(1 0 0);
+
     --chart-1: oklch(0.45 0.1 200);
     --chart-2: oklch(0.55 0.08 220);
     --chart-3: oklch(0.65 0.1 180);
@@ -248,6 +255,10 @@
     --input: oklch(0.25 0.02 200);
     --ring: oklch(0.55 0.12 200);
 
+    --gradient-from: oklch(0.7 0.13 195);
+    --gradient-to: oklch(0.82 0.15 168);
+    --gradient-ink: oklch(0.12 0.02 200);
+
     --chart-1: oklch(0.55 0.12 200);
     --chart-2: oklch(0.65 0.08 220);
     --chart-3: oklch(0.75 0.1 180);
@@ -271,6 +282,16 @@
 
     body {
         @apply bg-background text-foreground;
+        /* Peralihan halus saat pengguna menukar mode terang/gelap. */
+        transition:
+            background-color 250ms ease,
+            color 250ms ease;
+    }
+
+    /* Warna scrollbar bawaan browser ikut menyesuaikan tema supaya tidak ada
+       scrollbar putih terang di mode gelap. */
+    html {
+        scrollbar-color: color-mix(in oklab, var(--foreground) 28%, transparent) transparent;
     }
 }
 
@@ -280,6 +301,54 @@
     &::-webkit-scrollbar {
         display: none;
     }
+}
+
+/*
+|--------------------------------------------------------------------------
+| Gradient helpers
+|--------------------------------------------------------------------------
+| Dipakai untuk judul section dan badge ikon. Warnanya bersumber dari
+| `--gradient-from`/`--gradient-to` sehingga otomatis menyesuaikan diri
+| antara mode terang dan gelap.
+*/
+
+@utility text-gradient {
+    background-image: linear-gradient(
+        100deg,
+        var(--gradient-from) 0%,
+        var(--gradient-to) 52%,
+        var(--gradient-from) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+/* Varian untuk teks di atas permukaan gelap tetap (footer, CTA, hero kontak)
+   yang tidak boleh ikut menggelap di mode terang. */
+@utility text-gradient-light {
+    background-image: linear-gradient(
+        100deg,
+        oklch(0.86 0.09 195) 0%,
+        oklch(0.98 0.02 190) 50%,
+        oklch(0.82 0.12 170) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+@utility bg-brand-gradient {
+    background-image: linear-gradient(135deg, var(--gradient-from) 0%, var(--gradient-to) 100%);
+    color: var(--primary-content);
+}
+
+/* Sapuan gradien halus untuk latar section; memakai warna brand dengan
+   alpha rendah supaya tidak menabrak konten di atasnya. */
+@utility bg-section-glow {
+    background-image:
+        radial-gradient(60rem 32rem at 50% -12%, color-mix(in oklab, var(--primary) 16%, transparent), transparent 70%),
+        radial-gradient(40rem 26rem at 100% 8%, color-mix(in oklab, var(--gradient-to) 14%, transparent), transparent 65%);
 }
 
 [x-cloak] {
@@ -516,6 +585,25 @@
 
 .icon-circle:hover {
     background-color: var(--accent);
+}
+
+/* Varian terisi: lingkaran brand untuk tombol burger di bar mobile.
+   Ditulis sebagai kelas unlayered, bukan utility `bg-primary`, karena
+   `.icon-circle` di atas juga unlayered dan men-set `background-color:
+   transparent` — utility Tailwind hidup di dalam @layer utilities sehingga
+   selalu kalah oleh aturan tanpa layer. `background-image` dipakai supaya
+   tidak bertabrakan dengan `background-color`. Warna ikon diambil dari
+   `--gradient-ink` yang terang di mode terang dan gelap di mode gelap. */
+.icon-circle.is-brand {
+    background-color: transparent;
+    background-image: linear-gradient(135deg, var(--gradient-from) 0%, var(--gradient-to) 100%);
+    border-color: transparent;
+    color: var(--gradient-ink);
+}
+
+.icon-circle.is-brand:hover {
+    background-color: transparent;
+    filter: brightness(1.08);
 }
 
 .nav-offcanvas {

@@ -30,7 +30,7 @@
                         class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold tracking-wider text-white/80 uppercase">
                         <x-lucide name="mail" class="size-3.5" /> Get in touch
                     </span>
-                    <h2 class="mt-4 text-3xl font-bold text-white">Contact us</h2>
+                    <h2 class="text-gradient-light mt-4 text-3xl font-bold">Contact us</h2>
                     <p class="mx-auto mt-3 max-w-sm text-pretty text-sm text-white/70">
                         Tell us about your project — we'll get back to you within one business day.
                     </p>

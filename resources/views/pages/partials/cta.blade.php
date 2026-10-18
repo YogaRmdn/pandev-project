@@ -3,7 +3,7 @@
     class="relative mt-16 w-full overflow-hidden bg-cover bg-center bg-no-repeat py-24"
     style="background-image: url('{{ asset('assets/common/grid-bg.jpg') }}')"
 >
-    <div class="absolute inset-0 bg-black/90"></div>
+    <div class="absolute inset-0 bg-gradient-to-br from-black via-black/90 to-primary/40"></div>
 
     <div class="relative z-10 mx-auto max-w-3xl px-4 text-center text-white" x-data="{ visible: false }" x-intersect="visible = true">
         <h2
@@ -11,7 +11,7 @@
             x-transition:enter="transition ease-out duration-500"
             x-transition:enter-start="translate-y-5 opacity-0"
             x-transition:enter-end="translate-y-0 opacity-100"
-            class="text-3xl font-bold leading-tight md:text-5xl"
+            class="text-gradient-light text-3xl font-bold leading-tight md:text-5xl"
         >
             Ready to build something impactful?
         </h2>

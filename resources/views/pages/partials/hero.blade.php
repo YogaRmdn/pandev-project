@@ -3,19 +3,22 @@
     $rows = SiteContent::marqueeRows();
 @endphp
 
-<section class="mt-16 px-4 text-center" x-data="{ visible: false }" x-intersect="visible = true">
+{{-- Navbar memakai `sticky` sehingga tingginya tetap memakan ruang di alur
+     dokumen. Jadi hero tidak butuh margin atas besar — cukup padding tipis
+     supaya badge-nya duduk rapat di bawah navbar. --}}
+<section class="bg-section-glow px-4 pt-8 text-center md:pt-10" x-data="{ visible: false }" x-intersect="visible = true">
     <div
         x-show="visible"
         x-transition:enter="transition ease-out duration-700"
         x-transition:enter-start="translate-y-5 opacity-0"
         x-transition:enter-end="translate-y-0 opacity-100"
     >
-        <span class="text-primary bg-primary/10 inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold tracking-widest uppercase">
+        <span class="text-primary bg-primary/10 ring-primary/15 inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold tracking-widest uppercase ring-1 backdrop-blur-sm">
             <x-lucide name="sparkles" class="size-4" />
             Software Development Agency
         </span>
 
-        <h1 class="text-primary mt-6 text-2xl font-bold md:text-4xl lg:text-6xl">PANDEV</h1>
+        <h1 class="text-gradient mt-6 text-2xl font-bold md:text-4xl lg:text-6xl">PANDEV</h1>
         <div class="mt-1 text-lg font-medium md:text-2xl lg:text-4xl">From bold ideas to reliable software</div>
         <p class="text-base-content/60 mx-auto mt-4 max-w-2xl text-balance text-base md:text-xl">
             We design, build, and scale web, mobile, desktop, IoT, and data products
@@ -62,14 +65,14 @@
                             <div class="flex shrink-0 animate-marquee items-center">
                                 @for ($i = 0; $i < 2; $i++)
                                     @foreach ($row as $item)
-                                        <span class="mx-8 shrink-0 text-3xl font-bold tracking-tight uppercase sm:text-4xl lg:text-5xl {{ $item['accent'] ? 'text-primary' : '' }}">{{ $item['text'] }}</span>
+                                        <span class="mx-8 shrink-0 text-3xl font-bold tracking-tight uppercase sm:text-4xl lg:text-5xl {{ $item['accent'] ? 'text-gradient' : '' }}">{{ $item['text'] }}</span>
                                     @endforeach
                                 @endfor
                             </div>
                             <div class="flex shrink-0 animate-marquee items-center" aria-hidden="true">
                                 @for ($i = 0; $i < 2; $i++)
                                     @foreach ($row as $item)
-                                        <span class="mx-8 shrink-0 text-3xl font-bold tracking-tight uppercase sm:text-4xl lg:text-5xl {{ $item['accent'] ? 'text-primary' : '' }}">{{ $item['text'] }}</span>
+                                        <span class="mx-8 shrink-0 text-3xl font-bold tracking-tight uppercase sm:text-4xl lg:text-5xl {{ $item['accent'] ? 'text-gradient' : '' }}">{{ $item['text'] }}</span>
                                     @endforeach
                                 @endfor
                             </div>

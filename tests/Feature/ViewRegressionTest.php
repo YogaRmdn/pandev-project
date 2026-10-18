@@ -88,6 +88,18 @@ class ViewRegressionTest extends TestCase
         $response->assertSee('TECH STACKS', escape: false);
     }
 
+    public function test_hero_sits_tight_under_the_sticky_navbar(): void
+    {
+        $content = $this->get(route('home'))->assertOk()->getContent();
+
+        // Navbar memakai `sticky` sehingga tingginya sudah memakan ruang di
+        // alur dokumen — hero tidak boleh menambah margin atas lagi (dulu
+        // `mt-16`) karena itu menyisakan celah besar di bawah navbar.
+        $this->assertStringContainsString('sticky top-0 z-50', $content);
+        $this->assertStringNotContainsString('bg-section-glow mt-16', $content);
+        $this->assertStringContainsString('bg-section-glow px-4 pt-8', $content);
+    }
+
     public function test_process_cards_are_padded_and_render_every_step(): void
     {
         $content = $this->get(route('home'))->getContent();
@@ -157,8 +169,12 @@ class ViewRegressionTest extends TestCase
     {
         $content = $this->get(route('portfolio'))->getContent();
 
-        // Auto-advance dengan interval yang diteruskan ke Alpine.
-        $this->assertStringContainsString('x-data="coverflow(8, { interval: 3800 })"', $content);
+        // Auto-advance dengan interval yang diteruskan ke Alpine. Jumlah slide
+        // ikut turun saat satu slide (mis. Arduino) dihapus dari daftar.
+        $this->assertStringContainsString('x-data="coverflow(7, { interval: 3800 })"', $content);
+
+        // Slide Arduino tidak lagi tampil di carousel portfolio.
+        $this->assertStringNotContainsString('tech-stacks/arduino.svg', $content);
 
         // Berhenti saat reader hover/fokus, dan ada tombol jeda (WCAG).
         $this->assertStringContainsString('x-on:mouseenter="hovering = true; sync()"', $content);
@@ -267,6 +283,29 @@ class ViewRegressionTest extends TestCase
         foreach ($matches[1] as $inner) {
             $this->assertStringContainsString('name="_token"', $inner);
         }
+    }
+
+    public function test_recent_projects_last_row_stretches_edge_to_edge(): void
+    {
+        Portfolio::factory()->published()->count(5)->create();
+
+        $content = $this->get(route('portfolio'))->assertOk()->getContent();
+
+        // Baris terakhir ikut melebar (flex + grow), bukan grid 3 kolom tetap
+        // yang menyisakan celah kosong di sebelah kanan.
+        $this->assertStringContainsString('mt-8 flex flex-wrap gap-5', $content);
+        $this->assertStringContainsString('grow basis-full', $content);
+
+        // 3 kartu per baris di lg, 2 kartu per baris di sm — sudah dikurangi
+        // gap-nya supaya tidak pernah meluber/wrap ke baris berikutnya.
+        $this->assertStringContainsString('sm:basis-[calc((100%_-_1.25rem)/2)]', $content);
+        $this->assertStringContainsString('lg:basis-[calc((100%_-_2.5rem)/3)]', $content);
+
+        // Tinggi tetap supaya kartu yang lebih lebar di baris kedua tidak
+        // jadi lebih tinggi — barisnya tetap sejajar.
+        $this->assertStringContainsString('h-56 grow', $content);
+        $this->assertStringNotContainsString('aspect-[4/3]', $content);
+        $this->assertStringNotContainsString('lg:grid-cols-3', $content);
     }
 
     public function test_public_portfolio_detail_renders(): void

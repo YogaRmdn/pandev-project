@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full antialiased">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="panev-light" class="h-full antialiased">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    @include('partials.theme')
 
     <title>@yield('title', 'Dashboard | ' . config('app.name'))</title>
 

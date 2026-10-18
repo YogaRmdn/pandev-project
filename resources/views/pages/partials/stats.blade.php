@@ -14,8 +14,8 @@
                     x-transition:enter-start="translate-y-8 opacity-0"
                     x-transition:enter-end="translate-y-0 opacity-100"
                 >
-                    <div class="text-primary text-4xl font-bold tracking-tight md:text-5xl">
-                        {{ $stat['value'] }}<span class="text-primary">{{ $stat['suffix'] }}</span>
+                    <div class="text-gradient text-4xl font-bold tracking-tight md:text-5xl">
+                        {{ $stat['value'] }}<span>{{ $stat['suffix'] }}</span>
                     </div>
                     <div class="font-semibold">{{ $stat['label'] }}</div>
                     <p class="text-base-content/60 text-sm text-balance">{{ $stat['description'] }}</p>

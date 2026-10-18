@@ -270,8 +270,6 @@ class SiteContent
             ['name' => 'Eagel', 'role' => 'Developer', 'image' => '/assets/profiles/eagel.png'],
             ['name' => 'Masyitah', 'role' => 'Designer', 'image' => '/assets/profiles/masyitah.png'],
             ['name' => 'Tahta', 'role' => 'Developer', 'image' => '/assets/profiles/tahta.png'],
-            ['name' => 'Farjihan', 'role' => 'Developer', 'image' => '/assets/profiles/farjihan.png'],
-            ['name' => 'Ilham', 'role' => 'Developer', 'image' => '/assets/profiles/ilham.png'],
         ];
     }
 

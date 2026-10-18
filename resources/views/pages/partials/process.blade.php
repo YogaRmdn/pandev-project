@@ -13,7 +13,7 @@
             class="mx-auto max-w-2xl text-center"
         >
             <div class="text-primary text-sm font-semibold tracking-wider uppercase">How we work</div>
-            <h2 class="text-primary mt-2 text-2xl font-bold uppercase md:text-4xl">A clear path from idea to launch</h2>
+            <h2 class="text-gradient mt-2 text-2xl font-bold uppercase md:text-4xl">A clear path from idea to launch</h2>
             <p class="text-base-content/60 mt-3 text-lg">
                 A disciplined process that keeps you informed at every step, so there are no surprises.
             </p>
@@ -29,7 +29,7 @@
                     <div class="card gap-6 border p-6 shadow-sm h-full gap-0 px-5 transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-md" x-show="visible" x-transition:enter="transition ease-out duration-500 {{ ['delay-100', 'delay-200', 'delay-300', 'delay-400', 'delay-500'][$index] ?? '' }}" x-transition:enter-start="translate-y-8 opacity-0" x-transition:enter-end="translate-y-0 opacity-100">
                         <div class="flex h-full flex-col gap-4">
                             <div class="flex items-start justify-between gap-3">
-                                <span class="bg-primary text-primary-content inline-flex size-11 shrink-0 items-center justify-center rounded-xl">
+                                <span class="bg-brand-gradient inline-flex size-11 shrink-0 items-center justify-center rounded-xl">
                                     <x-lucide :name="$step['icon']" class="size-5" />
                                 </span>
 

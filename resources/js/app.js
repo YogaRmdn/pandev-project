@@ -45,6 +45,64 @@ Alpine.store('modals', {
 });
 
 /**
+ * Theme (mode terang / gelap).
+ *
+ * State awal sudah dipasang oleh skrip anti-flash di <head> (partials/theme),
+ * jadi store ini hanya membaca kondisi yang sedang aktif lalu menyinkronkan
+ * tombol. Preferensi disimpan di localStorage; selama pengguna belum memilih,
+ * mode mengikuti pengaturan sistem (prefers-color-scheme).
+ */
+Alpine.store('theme', {
+    dark: false,
+    _mql: null,
+    _onSystemChange: null,
+
+    init() {
+        this.dark = document.documentElement.classList.contains('dark');
+        this._mql = window.matchMedia('(prefers-color-scheme: dark)');
+
+        // Ikut sistem hanya bila pengguna belum pernah menekan tombolnya.
+        this._onSystemChange = (event) => {
+            if (!localStorage.getItem('theme')) {
+                this.set(event.matches);
+            }
+        };
+        this._mql.addEventListener('change', this._onSystemChange);
+
+        // Sinkron antar-tab.
+        window.addEventListener('storage', (event) => {
+            if (event.key === 'theme') {
+                this.set(event.newValue === 'dark');
+            }
+        });
+    },
+
+    /** Pasang tema ke <html>: daisyUI (data-theme) + varian `dark` kelas. */
+    set(dark) {
+        this.dark = Boolean(dark);
+
+        const root = document.documentElement;
+        root.classList.toggle('dark', this.dark);
+        root.setAttribute('data-theme', this.dark ? 'panev-dark' : 'panev-light');
+        root.style.colorScheme = this.dark ? 'dark' : 'light';
+    },
+
+    /** Simpan pilihan pengguna, lalu terapkan. */
+    persist(dark) {
+        try {
+            localStorage.setItem('theme', dark ? 'dark' : 'light');
+        } catch {
+            // localStorage bisa diblokir (mode privat); tema tetap diterapkan.
+        }
+        this.set(dark);
+    },
+
+    toggle() {
+        this.persist(!this.dark);
+    },
+});
+
+/**
  * Coverflow carousel.
  *
  * A direct port of the React component the site used before, with the same

@@ -31,7 +31,7 @@
     <main class="flex-1">
         <section class="mx-auto flex w-full max-w-6xl flex-col items-center px-4 py-16">
             <div class="text-primary text-center text-sm font-semibold tracking-wider uppercase">Portfolio</div>
-            <h1 class="font-heading text-primary mt-2 text-center text-3xl font-bold tracking-tight sm:text-4xl">
+            <h1 class="font-heading text-gradient mt-2 text-center text-3xl font-bold tracking-tight sm:text-4xl">
                 Our Work
             </h1>
 
@@ -65,11 +65,16 @@
                     <p class="text-sm">New projects are coming soon — check back shortly.</p>
                 </div>
             @else
-                <div class="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {{-- Flex + `grow`: baris terakhir yang belum penuh (mis. 2 kartu
+                     dari 3 kolom) ikut melebar sampai tepi kiri & kanan
+                     kontainer, jadi tidak ada celah sisa di ujung baris.
+                     Tinggi dipatok supaya kartu yang jadi lebih lebar tidak
+                     ikut jadi lebih tinggi — semua baris tetap sejajar. --}}
+                <div class="mt-8 flex flex-wrap gap-5">
                     @foreach ($featured as $project)
                         <a
                             href="{{ route('portfolio.show', $project->id) }}"
-                            class="group bg-base-200 relative block aspect-[4/3] overflow-hidden rounded-xl border"
+                            class="group bg-base-200 relative h-56 grow basis-full overflow-hidden rounded-xl border sm:h-64 sm:basis-[calc((100%_-_1.25rem)/2)] lg:h-72 lg:basis-[calc((100%_-_2.5rem)/3)]"
                         >
                             @if (filled($project->thumbnail))
                                 <img

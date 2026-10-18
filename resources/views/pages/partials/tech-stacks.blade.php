@@ -9,6 +9,10 @@
     class="relative isolate flex min-h-[520px] w-full items-center justify-center overflow-hidden bg-cover bg-center bg-no-repeat py-14 md:min-h-[640px] md:py-20"
     style="background-image: url('{{ asset('assets/common/tech-stacks-background.jpg') }}')"
 >
+    {{-- Tirai peredup: hanya muncul di mode gelap supaya latar terang tidak
+         menyilaukan dan teks pusat tetap kontras. --}}
+    <div class="pointer-events-none absolute inset-0 hidden bg-base-100/85 dark:block" aria-hidden="true"></div>
+
     <div class="orbit relative aspect-square w-[min(88vw,680px)]">
         <div class="absolute inset-[4%] rounded-full border border-base-300/40"></div>
         <div class="orbit-ring absolute inset-[14%] rounded-full border border-dashed border-base-300/25"></div>
@@ -45,7 +49,7 @@
 
     <div class="pointer-events-none absolute inset-0 z-20 flex items-center justify-center px-6">
         <div class="max-w-[200px] text-center sm:max-w-sm md:max-w-md">
-            <h2 class="text-primary text-2xl font-bold sm:text-4xl md:text-6xl">TECH STACKS</h2>
+            <h2 class="text-gradient text-2xl font-bold sm:text-4xl md:text-6xl">TECH STACKS</h2>
             <p class="mt-3 text-sm text-pretty sm:mt-4 sm:text-base md:text-lg">
                 Every project is built on modern, battle-tested technologies
                 that scale as you grow

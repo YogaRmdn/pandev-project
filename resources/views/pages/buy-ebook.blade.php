@@ -36,7 +36,7 @@
                 <x-lucide name="book-open" class="size-4" /> eBooks
             </span>
 
-            <h1 class="font-heading mt-5 text-3xl font-bold tracking-tight sm:text-4xl">
+            <h1 class="text-gradient font-heading mt-5 text-3xl font-bold tracking-tight sm:text-4xl">
                 Buy eBook
             </h1>
 

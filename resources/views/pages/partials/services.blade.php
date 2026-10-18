@@ -12,7 +12,7 @@
             x-transition:enter-end="translate-y-0 opacity-100"
         >
             <div class="text-primary text-sm uppercase tracking-wider sm:text-base">What we do</div>
-            <div class="text-primary mb-1 text-2xl font-bold uppercase md:text-4xl">Technology solutions, built to perform</div>
+            <div class="text-gradient mb-1 text-2xl font-bold uppercase md:text-4xl">Technology solutions, built to perform</div>
             <div class="text-lg md:text-xl">From products and platforms to enterprise-grade infrastructure</div>
         </div>
 
@@ -26,7 +26,7 @@
                 >
                     <div class="card gap-6 border p-6 shadow-sm h-full transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-md">
                         <div class="flex h-full flex-col gap-4">
-                            <span class="bg-primary text-primary-content flex size-12 shrink-0 items-center justify-center rounded-xl md:size-14">
+                            <span class="bg-brand-gradient flex size-12 shrink-0 items-center justify-center rounded-xl md:size-14">
                                 <x-lucide :name="$service['icon']" class="size-6 md:size-7" />
                             </span>
 
