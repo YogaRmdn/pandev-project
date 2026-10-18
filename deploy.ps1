@@ -34,6 +34,26 @@ function Invoke-Remote([string]$Command) {
     ssh -p $SshPort $SshTarget $Command
 }
 
+# Prefix admin itu rahasia (config/admin.php -> ADMIN_PATH). Ambil dari .env
+# LOKAL (server memakai nilai yang sama) dan jangan pernah mencetaknya — yang
+# ditampilkan hanya status HTTP-nya.
+$AdminPath = ''
+$EnvFile = Join-Path $PSScriptRoot '.env'
+if (Test-Path $EnvFile) {
+    $line = Get-Content $EnvFile | Where-Object { $_ -match '^\s*ADMIN_PATH\s*=' } | Select-Object -First 1
+    if ($line) {
+        $AdminPath = ($line -replace '^\s*ADMIN_PATH\s*=\s*', '').Trim().Trim('"').Trim("'").Trim('/')
+    }
+}
+
+# Aset hasil build: dibaca dari manifest supaya verifikasi ikut nama file baru.
+$AssetCss = ''
+$Manifest = Join-Path $PSScriptRoot 'public/build/manifest.json'
+if (Test-Path $Manifest) {
+    $manifest = Get-Content $Manifest -Raw | ConvertFrom-Json
+    $AssetCss = [string] $manifest.'resources/css/app.css'.file
+}
+
 Write-Host "=== PanDev Deploy -> Hostinger ===" -ForegroundColor Cyan
 
 # 1) Build aset lokal
@@ -68,7 +88,15 @@ if ($LASTEXITCODE -ne 0) {
 
 # 4) Verifikasi singkat
 Write-Host "[4/4] Verifikasi ..." -ForegroundColor Yellow
-Invoke-Remote "echo -n 'home   -> '; curl -sk -o /dev/null -w '%{http_code}\n' $Site/; echo -n 'login  -> '; curl -sk -o /dev/null -w '%{http_code}\n' $Site/auth/login"
+$checks = @("echo -n 'home       -> '; curl -sk -o /dev/null -w '%{http_code}\n' $Site/")
+if ($AdminPath -ne '') {
+    # Path-nya sengaja tidak dicetak (rahasia); hanya statusnya.
+    $checks += "echo -n 'admin area -> '; curl -sk -o /dev/null -w '%{http_code}\n' $Site/$AdminPath/login"
+}
+if ($AssetCss -ne '') {
+    $checks += "echo -n 'build css  -> '; curl -sk -o /dev/null -w '%{http_code}\n' $Site/build/$AssetCss"
+}
+Invoke-Remote ($checks -join '; ')
 
 Write-Host ""
 Write-Host "Selesai: $Site" -ForegroundColor Green
