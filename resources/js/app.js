@@ -1052,36 +1052,85 @@ Alpine.data('idleTimeout', (config = {}) => ({
 /**
  * Cursor glow.
  *
- * Menulis `--glow-x`/`--glow-y` ke elemen bertanda `.cursor-glow` saat
- * pointer bergerak di atasnya, sehingga lapisan gradien di `::after`
- * (resources/css/app.css) mengikuti kursor. Sengaja memakai listener DOM
- * biasa — bukan Alpine — supaya bisa dipasang pada elemen yang sudah punya
- * `x-data` sendiri (hero, section, kartu) tanpa bentrok. Hanya aktif untuk
- * pointing device presisi; di perangkat sentuh CSS sudah menyembunyikan
- * lapisannya.
+ * Menulis `--glow-x`/`--glow-y` ke elemen bertanda `.cursor-glow` sehingga
+ * lapisan gradien di `::after` (resources/css/app.css) mengikuti kursor.
+ * Posisi TIDAK ditempelkan langsung: titik kursor dikejar dengan easing
+ * berbasis waktu (lerp per frame), jadi glow melayang ±150–200ms di belakang
+ * kursor — gerakan yang jauh lebih halus dan tenang dibanding menempel kilat.
+ * Listener memakai DOM biasa — bukan Alpine — supaya bisa dipasang pada
+ * elemen yang sudah punya `x-data` sendiri (hero, section, kartu). Hanya
+ * aktif untuk pointing device presisi; di perangkat sentuh CSS sudah
+ * menyembunyikan lapisannya.
  */
 function initCursorGlow() {
     if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
         return;
     }
 
-    document.querySelectorAll('.cursor-glow').forEach((el) => {
-        let frame = null;
+    // Kekejaran easing (0..1 per ±16.7ms). Kecil = jeda follow lebih panjang.
+    const EASE = 0.09;
 
-        el.addEventListener('pointermove', (event) => {
-            if (frame) {
+    document.querySelectorAll('.cursor-glow').forEach((el) => {
+        let target = null; // posisi kursor (koordinat viewport)
+        let current = null; // posisi glow yang sedang dikejar
+        let frame = null;
+        let last = null;
+
+        const paint = (now) => {
+            if (!target || !current) {
+                frame = null;
+                last = null;
                 return;
             }
 
-            // Catat posisi lalu catat ulang di frame berikutnya: gerak kursor
-            // bisa ratusan event/detik dan menulis variabel CSS di setiap
-            // event pemborosan layout.
-            frame = requestAnimationFrame(() => {
+            const rect = el.getBoundingClientRect();
+            const dx = target.x - current.x;
+            const dy = target.y - current.y;
+
+            // Easing berbasis waktu supaya kecepatan follow konsisten di
+            // layar 60Hz maupun 144Hz (per-frame mentah akan 2x lebih cepat
+            // di layar 120Hz+).
+            const dt = last === null ? 16.7 : Math.min(now - last, 64);
+            const step = 1 - Math.pow(1 - EASE, dt / 16.7);
+            last = now;
+
+            current = { x: current.x + dx * step, y: current.y + dy * step };
+
+            el.style.setProperty('--glow-x', `${current.x - rect.left}px`);
+            el.style.setProperty('--glow-y', `${current.y - rect.top}px`);
+
+            // Berhenti saat sudah nyaris menempel supaya rAF tidak berputar
+            // terus saat kursor diam.
+            if (Math.abs(dx) > 0.4 || Math.abs(dy) > 0.4) {
+                frame = requestAnimationFrame(paint);
+            } else {
                 frame = null;
+                last = null;
+            }
+        };
+
+        el.addEventListener('pointermove', (event) => {
+            target = { x: event.clientX, y: event.clientY };
+
+            if (!current) {
+                // Baru masuk elemen: glow langsung menyala tepat di kursor
+                // (tanpa sapuan melintasi kartu), baru mulai mengejar target.
+                current = { ...target };
                 const rect = el.getBoundingClientRect();
-                el.style.setProperty('--glow-x', `${event.clientX - rect.left}px`);
-                el.style.setProperty('--glow-y', `${event.clientY - rect.top}px`);
-            });
+                el.style.setProperty('--glow-x', `${current.x - rect.left}px`);
+                el.style.setProperty('--glow-y', `${current.y - rect.top}px`);
+                return;
+            }
+
+            if (!frame) {
+                last = null;
+                frame = requestAnimationFrame(paint);
+            }
+        });
+
+        el.addEventListener('pointerleave', () => {
+            target = null;
+            current = null;
         });
     });
 }

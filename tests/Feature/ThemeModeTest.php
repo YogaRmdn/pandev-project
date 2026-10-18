@@ -232,10 +232,14 @@ class ThemeModeTest extends TestCase
         // Perangkat sentuh / prefers-reduced-motion tidak mengaktifkan glow.
         $this->assertStringContainsString('(hover: none), (prefers-reduced-motion: reduce)', $css);
 
-        // Skrip tracker memakai pointer presisi & requestAnimationFrame.
+        // Skrip tracker memakai pointer presisi & requestAnimationFrame,
+        // dengan easing (EASE) supaya glow mengejar kursor — bukan menempel
+        // instan — plus fade yang lebih lambat di CSS.
         $js = $this->js();
         $this->assertStringContainsString('initCursorGlow', $js);
         $this->assertStringContainsString('(hover: hover) and (pointer: fine)', $js);
+        $this->assertStringContainsString('const EASE = 0.09', $js);
+        $this->assertStringContainsString('500ms cubic-bezier(0.22, 1, 0.36, 1)', $css);
 
         // Section utama & kartu layanan memakai kelas glow.
         $home = $this->get(route('home'))->assertOk()->getContent();
