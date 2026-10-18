@@ -82,7 +82,7 @@
             <div class="flex flex-wrap gap-2">
                 @if ($filters['search'])
                     <a href="{{ request()->fullUrlWithQuery(['search' => null, 'page' => null]) }}"
-                        class="bg-base-200 text-base-content hover:text-error inline-flex items-center gap-1 rounded-full px-2 py-1 text-sm">
+                        class="bg-base-200 text-base-content hover:text-ink-error inline-flex items-center gap-1 rounded-full px-2 py-1 text-sm">
                         Pencarian: {{ $filters['search'] }}
                         <x-lucide name="x" class="size-3" />
                     </a>
@@ -90,7 +90,7 @@
 
                 @foreach ($filters['statuses'] ?? [] as $status)
                     <a href="{{ request()->fullUrlWithQuery(['status' => array_values(array_diff($filters['statuses'], [$status])), 'page' => null]) }}"
-                        class="bg-base-200 text-base-content hover:text-error inline-flex items-center gap-1 rounded-full px-2 py-1 text-sm">
+                        class="bg-base-200 text-base-content hover:text-ink-error inline-flex items-center gap-1 rounded-full px-2 py-1 text-sm">
                         Status: {{ $statuses[$loop->index]['label'] ?? $status }}
                         <x-lucide name="x" class="size-3" />
                     </a>
@@ -98,14 +98,14 @@
 
                 @foreach ($filters['categories'] ?? [] as $category)
                     <a href="{{ request()->fullUrlWithQuery(['category' => array_values(array_diff($filters['categories'], [$category])), 'page' => null]) }}"
-                        class="bg-base-200 text-base-content hover:text-error inline-flex items-center gap-1 rounded-full px-2 py-1 text-sm">
+                        class="bg-base-200 text-base-content hover:text-ink-error inline-flex items-center gap-1 rounded-full px-2 py-1 text-sm">
                         Kategori: {{ $category }}
                         <x-lucide name="x" class="size-3" />
                     </a>
                 @endforeach
 
                 <a href="{{ route('dashboard.portfolio.index') }}"
-                    class="text-error hover:bg-error/10 inline-flex items-center gap-1 rounded-full px-2 py-1 text-sm">Hapus
+                    class="text-ink-error hover:bg-error/10 inline-flex items-center gap-1 rounded-full px-2 py-1 text-sm">Hapus
                     Semua</a>
             </div>
         @endif
@@ -116,7 +116,7 @@
             @empty
                 <div
                     class="flex h-72 flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-base-300 bg-base-100 px-6 text-center sm:col-span-2 xl:col-span-3">
-                    <span class="grid size-14 place-items-center rounded-full bg-base-200 text-base-content/40">
+                    <span class="grid size-14 place-items-center rounded-full bg-base-200 text-base-content/55">
                         <x-lucide name="folder-open" class="size-7" />
                     </span>
                     <div class="space-y-1">

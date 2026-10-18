@@ -67,7 +67,7 @@
                 <label class="label text-sm font-medium" for="description">Deskripsi</label>
                 <input class="input w-full" id="description" name="description" value="{{ old('description', $invoice->description) }}" placeholder="Deskripsi transaksi..." maxlength="255" required>
                                 @if ($errors->get('description'))
-                    <ul class="text-error space-y-1 text-sm">
+                    <ul class="text-ink-error space-y-1 text-sm">
                         @foreach ($errors->get('description') as $message)
                             <li>{{ $message }}</li>
                         @endforeach
@@ -79,7 +79,7 @@
                 <label class="label text-sm font-medium" for="date">Tanggal</label>
                 <input class="input w-full" id="date" type="date" name="date" value="{{ old('date', $invoice?->date?->format('Y-m-d') ?? now()->format('Y-m-d')) }}" required>
                                 @if ($errors->get('date'))
-                    <ul class="text-error space-y-1 text-sm">
+                    <ul class="text-ink-error space-y-1 text-sm">
                         @foreach ($errors->get('date') as $message)
                             <li>{{ $message }}</li>
                         @endforeach
@@ -122,28 +122,28 @@
             </template>
 
                         @if ($errors->get('invoice_items'))
-                <ul class="text-error space-y-1 text-sm">
+                <ul class="text-ink-error space-y-1 text-sm">
                     @foreach ($errors->get('invoice_items') as $message)
                         <li>{{ $message }}</li>
                     @endforeach
                 </ul>
             @endif
                         @if ($errors->get('invoice_items.*.name'))
-                <ul class="text-error space-y-1 text-sm">
+                <ul class="text-ink-error space-y-1 text-sm">
                     @foreach ($errors->get('invoice_items.*.name') as $message)
                         <li>{{ $message }}</li>
                     @endforeach
                 </ul>
             @endif
                         @if ($errors->get('invoice_items.*.quantity'))
-                <ul class="text-error space-y-1 text-sm">
+                <ul class="text-ink-error space-y-1 text-sm">
                     @foreach ($errors->get('invoice_items.*.quantity') as $message)
                         <li>{{ $message }}</li>
                     @endforeach
                 </ul>
             @endif
                         @if ($errors->get('invoice_items.*.price'))
-                <ul class="text-error space-y-1 text-sm">
+                <ul class="text-ink-error space-y-1 text-sm">
                     @foreach ($errors->get('invoice_items.*.price') as $message)
                         <li>{{ $message }}</li>
                     @endforeach
@@ -151,7 +151,7 @@
             @endif
         </div>
 
-        <div class="bg-primary ml-auto w-fit rounded-md p-3 font-semibold text-white">
+        <div class="bg-primary text-primary-content ml-auto w-fit rounded-md p-3 font-semibold">
             Total: <span x-text="'Rp ' + formatRupiah(total())"></span>
         </div>
     </div>

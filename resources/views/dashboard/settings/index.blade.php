@@ -22,7 +22,7 @@
                     </button>
 
                     @if ($user->image)
-                        <button type="button" class="btn btn-outline btn-square text-error absolute -right-4 -bottom-0.5 rounded-full" x-on:click="$dispatch('open-modal', 'avatar-remove')" aria-label="Hapus avatar">
+                        <button type="button" class="btn btn-outline btn-square text-ink-error absolute -right-4 -bottom-0.5 rounded-full" x-on:click="$dispatch('open-modal', 'avatar-remove')" aria-label="Hapus avatar">
                             <x-lucide name="trash" />
                         </button>
                     @endif
@@ -41,7 +41,7 @@
                         <label class="label text-sm font-medium" for="email">Email</label>
                         <input class="input w-full" id="email" type="email" name="email" value="{{ old('email', $user->email) }}" placeholder="Email..." autocomplete="off" required>
                         @if ($errors->get('email'))
-                            <ul class="text-error space-y-1 text-sm">
+                            <ul class="text-ink-error space-y-1 text-sm">
                                 @foreach ($errors->get('email') as $message)
                                     <li>{{ $message }}</li>
                                 @endforeach
@@ -53,7 +53,7 @@
                         <label class="label text-sm font-medium" for="fullname">Nama Lengkap</label>
                         <input class="input w-full" id="fullname" name="fullname" value="{{ old('fullname', $user->fullname) }}" placeholder="Nama Lengkap..." required>
                         @if ($errors->get('fullname'))
-                            <ul class="text-error space-y-1 text-sm">
+                            <ul class="text-ink-error space-y-1 text-sm">
                                 @foreach ($errors->get('fullname') as $message)
                                     <li>{{ $message }}</li>
                                 @endforeach
@@ -82,7 +82,7 @@
                                 </button>
                             </div>
                             @if ($errors->get($field))
-                                <ul class="text-error space-y-1 text-sm">
+                                <ul class="text-ink-error space-y-1 text-sm">
                                     @foreach ($errors->get($field) as $message)
                                         <li>{{ $message }}</li>
                                     @endforeach
@@ -109,7 +109,7 @@
 
             <label
                 for="avatar"
-                class="hover:bg-primary/20 flex min-h-60 cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dotted border-black/30 transition-transform"
+                class="hover:border-primary hover:bg-primary/10 flex min-h-60 cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dotted border-base-content/25 transition-transform"
             >
                 <x-lucide name="upload" class="size-8" />
                 <span class="font-medium">Upload Gambar</span>
@@ -119,7 +119,7 @@
             </label>
 
             @if ($errors->get('avatar'))
-                <ul class="text-error space-y-1 text-sm">
+                <ul class="text-ink-error space-y-1 text-sm">
                     @foreach ($errors->get('avatar') as $message)
                         <li>{{ $message }}</li>
                     @endforeach

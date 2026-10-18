@@ -19,18 +19,18 @@
             />
         @else
             <div class="bg-base-200 grid size-full place-items-center">
-                <x-lucide name="image" class="size-10 text-base-content/40" />
+                <x-lucide name="image" class="size-10 text-base-content/55" />
             </div>
         @endif
 
         @if ($isPublished)
             <span
-                class="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full border border-white/20 bg-white/90 px-2.5 py-0.5 text-xs font-medium text-success shadow-sm backdrop-blur">
+                class="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full border border-base-300/60 bg-base-100/90 px-2.5 py-0.5 text-xs font-medium text-ink-success shadow-sm backdrop-blur">
                 <x-lucide name="circle-dot" class="size-3" /> Published
             </span>
         @else
             <span
-                class="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full border border-white/20 bg-white/90 px-2.5 py-0.5 text-xs font-medium text-warning shadow-sm backdrop-blur">
+                class="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full border border-base-300/60 bg-base-100/90 px-2.5 py-0.5 text-xs font-medium text-ink-warning shadow-sm backdrop-blur">
                 <x-lucide name="circle" class="size-3" /> Draft
             </span>
         @endif
@@ -88,7 +88,7 @@
                     <button
                         type="button"
                         role="menuitem"
-                        class="text-error hover:bg-error/10 flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-sm"
+                        class="text-ink-error hover:bg-error/10 flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-sm"
                         x-on:click="open = false; $dispatch('open-modal', '{{ $confirmName }}')"
                     >
                         <x-lucide name="trash" class="size-4" /> Delete

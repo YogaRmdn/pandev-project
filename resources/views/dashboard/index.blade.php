@@ -8,20 +8,20 @@
     <div class="space-y-5">
         {{-- Hero / sambutan --}}
         <section
-            class="relative overflow-hidden rounded-2xl border border-base-300/70 bg-gradient-to-br from-primary to-primary/75 p-6 text-primary-content shadow-sm md:p-8">
+            class="bg-banner-brand relative overflow-hidden rounded-2xl border border-base-300/70 p-6 shadow-sm md:p-8">
             <div class="pointer-events-none absolute -right-16 -top-20 size-56 rounded-full bg-white/10 blur-2xl"></div>
             <div class="pointer-events-none absolute -bottom-24 right-24 size-56 rounded-full bg-white/5 blur-2xl"></div>
 
             <div class="relative flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
                 <div class="min-w-0">
-                    <p class="flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-primary-content/70">
+                    <p class="flex items-center gap-2 text-xs font-medium uppercase tracking-wider opacity-75">
                         <x-lucide name="sparkles" class="size-4" />
                         Ringkasan · {{ \App\Support\Format::date(now(), 'd F Y') }}
                     </p>
                     <h2 class="mt-2 font-heading text-2xl font-bold md:text-3xl">
                         Halo, {{ $user?->fullname ?? 'Sobat PanDev' }}
                     </h2>
-                    <p class="mt-1.5 max-w-xl text-sm text-primary-content/80">
+                    <p class="mt-1.5 max-w-xl text-sm opacity-90">
                         Kamu mengelola {{ $myPortfolioCount }} portfolio dengan
                         {{ $pendingInvoices }} faktur yang menunggu tindak lanjut.
                         Semangat berkarya hari ini!
@@ -34,7 +34,7 @@
                         <x-lucide name="plus" class="size-4" /> Portfolio Baru
                     </a>
                     <a href="{{ route('dashboard.finance.index') }}"
-                        class="btn btn-sm border-primary-content/40 bg-transparent text-primary-content hover:border-primary-content/40 hover:bg-primary-content/10">
+                        class="btn btn-sm border-banner-ink/40 bg-transparent text-banner-ink hover:border-banner-ink/60 hover:bg-banner-ink/10">
                         <x-lucide name="wallet" class="size-4" /> Keuangan
                     </a>
                 </div>
@@ -72,7 +72,7 @@
                                     class="size-11 shrink-0 rounded-lg border border-base-300/60 object-cover" />
                             @else
                                 <span
-                                    class="grid size-11 shrink-0 place-items-center rounded-lg border border-base-300/60 bg-base-200 text-base-content/40">
+                                    class="grid size-11 shrink-0 place-items-center rounded-lg border border-base-300/60 bg-base-200 text-base-content/55">
                                     <x-lucide name="image" class="size-5" />
                                 </span>
                             @endif
@@ -85,14 +85,14 @@
                             </span>
 
                             @if ($portfolio->status === \App\Enums\PortfolioStatus::PUBLISHED)
-                                <span class="badge badge-sm border-0 bg-success/10 font-medium text-success">Terbit</span>
+                                <span class="badge badge-sm border-0 bg-success/10 font-medium text-ink-success">Terbit</span>
                             @else
-                                <span class="badge badge-sm border-0 bg-warning/10 font-medium text-warning">Draft</span>
+                                <span class="badge badge-sm border-0 bg-warning/10 font-medium text-ink-warning">Draft</span>
                             @endif
                         </a>
                     @empty
                         <div class="flex flex-col items-center gap-3 px-5 py-12 text-center">
-                            <span class="grid size-12 place-items-center rounded-full bg-base-200 text-base-content/40">
+                            <span class="grid size-12 place-items-center rounded-full bg-base-200 text-base-content/55">
                                 <x-lucide name="folder-open" class="size-6" />
                             </span>
                             <div class="space-y-1">
@@ -122,8 +122,8 @@
                         <div class="flex items-center gap-3 border-b border-base-300/60 px-5 py-3 last:border-b-0">
                             <span @class([
                                 'grid size-9 shrink-0 place-items-center rounded-lg',
-                                'bg-success/10 text-success' => $isIncome,
-                                'bg-error/10 text-error' => !$isIncome,
+                                'bg-success/10 text-ink-success' => $isIncome,
+                                'bg-error/10 text-ink-error' => !$isIncome,
                             ])>
                                 <x-lucide :name="$isIncome ? 'trending-up' : 'trending-down'" class="size-4" />
                             </span>
@@ -139,15 +139,15 @@
 
                             <span @class([
                                 'shrink-0 text-sm font-semibold tabular-nums',
-                                'text-success' => $isIncome,
-                                'text-error' => !$isIncome,
+                                'text-ink-success' => $isIncome,
+                                'text-ink-error' => !$isIncome,
                             ])>
                                 {{ $isIncome ? '+' : '-' }}{{ \App\Support\Format::idr($transaction->amount) }}
                             </span>
                         </div>
                     @empty
                         <div class="flex flex-col items-center gap-3 px-5 py-12 text-center">
-                            <span class="grid size-12 place-items-center rounded-full bg-base-200 text-base-content/40">
+                            <span class="grid size-12 place-items-center rounded-full bg-base-200 text-base-content/55">
                                 <x-lucide name="receipt" class="size-6" />
                             </span>
                             <div class="space-y-1">

@@ -30,13 +30,13 @@
             x-on:input="errors.fullname.length && validateField('fullname')"
             value="{{ old('fullname', $user?->fullname) }}" placeholder="Nama lengkap...">
         @if ($errors->get('fullname'))
-            <ul class="text-error space-y-1 text-sm">
+            <ul class="text-ink-error space-y-1 text-sm">
                 @foreach ($errors->get('fullname') as $message)
                     <li>{{ $message }}</li>
                 @endforeach
             </ul>
         @endif
-        <ul class="text-error space-y-1 text-sm" x-show="errors.fullname.length" x-cloak>
+        <ul class="text-ink-error space-y-1 text-sm" x-show="errors.fullname.length" x-cloak>
             <template x-for="message in errors.fullname" :key="message">
                 <li x-text="message"></li>
             </template>
@@ -53,13 +53,13 @@
             x-on:input="errors.email.length && validateField('email')"
             value="{{ old('email', $user?->email) }}" placeholder="email@example.com">
         @if ($errors->get('email'))
-            <ul class="text-error space-y-1 text-sm">
+            <ul class="text-ink-error space-y-1 text-sm">
                 @foreach ($errors->get('email') as $message)
                     <li>{{ $message }}</li>
                 @endforeach
             </ul>
         @endif
-        <ul class="text-error space-y-1 text-sm" x-show="errors.email.length" x-cloak>
+        <ul class="text-ink-error space-y-1 text-sm" x-show="errors.email.length" x-cloak>
             <template x-for="message in errors.email" :key="message">
                 <li x-text="message"></li>
             </template>
@@ -90,13 +90,13 @@
             <p class="text-base-content/60 text-xs">Kosongkan password jika tidak ingin diubah.</p>
         @endif
         @if ($errors->get('password'))
-            <ul class="text-error space-y-1 text-sm">
+            <ul class="text-ink-error space-y-1 text-sm">
                 @foreach ($errors->get('password') as $message)
                     <li>{{ $message }}</li>
                 @endforeach
             </ul>
         @endif
-        <ul class="text-error space-y-1 text-sm" x-show="errors.password.length" x-cloak>
+        <ul class="text-ink-error space-y-1 text-sm" x-show="errors.password.length" x-cloak>
             <template x-for="message in errors.password" :key="message">
                 <li x-text="message"></li>
             </template>
@@ -126,13 +126,13 @@
                 </button>
             </div>
             @if ($errors->get('password_confirmation'))
-                <ul class="text-error space-y-1 text-sm">
+                <ul class="text-ink-error space-y-1 text-sm">
                     @foreach ($errors->get('password_confirmation') as $message)
                         <li>{{ $message }}</li>
                     @endforeach
                 </ul>
             @endif
-            <ul class="text-error space-y-1 text-sm" x-show="errors.password_confirmation.length" x-cloak>
+            <ul class="text-ink-error space-y-1 text-sm" x-show="errors.password_confirmation.length" x-cloak>
                 <template x-for="message in errors.password_confirmation" :key="message">
                     <li x-text="message"></li>
                 </template>
@@ -155,13 +155,13 @@
             @endforeach
         </select>
         @if ($errors->get('role'))
-            <ul class="text-error space-y-1 text-sm">
+            <ul class="text-ink-error space-y-1 text-sm">
                 @foreach ($errors->get('role') as $message)
                     <li>{{ $message }}</li>
                 @endforeach
             </ul>
         @endif
-        <ul class="text-error space-y-1 text-sm" x-show="errors.role.length" x-cloak>
+        <ul class="text-ink-error space-y-1 text-sm" x-show="errors.role.length" x-cloak>
             <template x-for="message in errors.role" :key="message">
                 <li x-text="message"></li>
             </template>

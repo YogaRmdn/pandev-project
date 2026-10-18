@@ -53,8 +53,8 @@
                                 <td class="align-middle whitespace-nowrap">
                                     <span @class([
                                         'flex items-center gap-1 font-semibold tabular-nums',
-                                        'text-success' => $isIncome,
-                                        'text-error' => !$isIncome,
+                                        'text-ink-success' => $isIncome,
+                                        'text-ink-error' => !$isIncome,
                                     ])>
                                         <x-lucide :name="$isIncome ? 'plus' : 'minus'" class="size-3" />
                                         {{ \App\Support\Format::idr($transaction->amount) }}
@@ -68,7 +68,7 @@
                                         <x-lucide name="pencil" />
                                     </button>
 
-                                    <button type="button" class="btn btn-ghost btn-square size-8 hover:text-error"
+                                    <button type="button" class="btn btn-ghost btn-square size-8 hover:text-ink-error"
                                         x-on:click="$dispatch('open-modal', '{{ $deleteName }}')" aria-label="Hapus transaksi">
                                         <x-lucide name="trash-2" />
                                     </button>

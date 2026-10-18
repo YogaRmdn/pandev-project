@@ -7,9 +7,9 @@
             <a href="{{ $item['href'] }}" title="{{ $item['title'] }}"
                 @class([
                     'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground flex h-12 items-center gap-2 rounded-lg px-2 text-sm',
-                    "bg-primary! text-white! hover:bg-primary/90! hover:text-white!" => $item['href'] === $activePath
+                    "bg-primary! text-primary-content! hover:bg-primary/90! hover:text-primary-content!" => $item['href'] === $activePath
                 ])
-                {{-- @if ($item['href'] === $activePath) bg-primary! text-white! hover:bg-primary/90! hover:text-white! @endif --}}>
+                {{-- @if ($item['href'] === $activePath) bg-primary! text-primary-content! hover:bg-primary/90! hover:text-primary-content! @endif --}}>
                 <x-lucide :name="$item['icon']" class="size-5 shrink-0" />
                 <span x-show="!$store.sidebar.collapsed" x-transition.opacity.duration.150ms>{{ $item['title'] }}</span>
             </a>

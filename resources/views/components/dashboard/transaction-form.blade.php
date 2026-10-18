@@ -19,7 +19,7 @@
                 @endforeach
             </select>
                         @if ($errors->get('type'))
-                <ul class="text-error space-y-1 text-sm">
+                <ul class="text-ink-error space-y-1 text-sm">
                     @foreach ($errors->get('type') as $message)
                         <li>{{ $message }}</li>
                     @endforeach
@@ -36,7 +36,7 @@
                 x-init="boot($el)"
                 x-on:input="sync($el)">
                         @if ($errors->get('amount'))
-                <ul class="text-error space-y-1 text-sm">
+                <ul class="text-ink-error space-y-1 text-sm">
                     @foreach ($errors->get('amount') as $message)
                         <li>{{ $message }}</li>
                     @endforeach
@@ -48,7 +48,7 @@
             <label class="label text-sm font-medium" for="description">Deskripsi</label>
             <textarea class="textarea w-full" id="description" name="description" rows="3" placeholder="Deskripsi transaksi..." required>{{ old('description', $transaction->description) }}</textarea>
                         @if ($errors->get('description'))
-                <ul class="text-error space-y-1 text-sm">
+                <ul class="text-ink-error space-y-1 text-sm">
                     @foreach ($errors->get('description') as $message)
                         <li>{{ $message }}</li>
                     @endforeach
@@ -60,7 +60,7 @@
             <label class="label text-sm font-medium" for="date">Tanggal</label>
             <input class="input w-full" id="date" type="date" name="date" value="{{ old('date', $transaction?->date?->format('Y-m-d') ?? now()->format('Y-m-d')) }}" required>
                         @if ($errors->get('date'))
-                <ul class="text-error space-y-1 text-sm">
+                <ul class="text-ink-error space-y-1 text-sm">
                     @foreach ($errors->get('date') as $message)
                         <li>{{ $message }}</li>
                     @endforeach

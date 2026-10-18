@@ -81,7 +81,7 @@
             role="dialog" aria-modal="true" aria-labelledby="success-modal-title">
             <div class="modal-box flex max-w-sm flex-col items-center gap-3 text-center">
                 <span class="grid size-14 place-items-center rounded-full bg-success/15">
-                    <x-lucide name="circle-check" class="size-8 text-success" />
+                    <x-lucide name="circle-check" class="size-8 text-ink-success" />
                 </span>
                 <h2 id="success-modal-title" class="text-lg font-semibold">Berhasil</h2>
                 <p class="text-sm text-base-content/70">{{ $flashMessage }}</p>

@@ -79,7 +79,11 @@
     --color-success-content: oklch(0.15 0.03 150);
     --color-warning: oklch(0.8 0.14 85);
     --color-warning-content: oklch(0.2 0.04 85);
-    --color-error: oklch(0.45 0.18 25);
+    /* Error adalah satu-satunya tone yang sebelumnya memakai isian gelap di
+       mode gelap (0.45). Akibatnya `text-error`, border `input-error`, dan
+       tombol hapus nyaris menyatu dengan latar base-100 (0.15). Disamakan
+       dengan tone lain: isian terang + tulisan gelap. */
+    --color-error: oklch(0.55 0.17 25);
     --color-error-content: oklch(0.98 0.01 25);
 
     --radius-selector: 0.5rem;
@@ -132,6 +136,14 @@
     --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-ring: var(--sidebar-ring);
+
+    /* Tinta status (lihat penjelasan di :root/.dark). */
+    --color-ink-success: var(--ink-success);
+    --color-ink-warning: var(--ink-warning);
+    --color-ink-error: var(--ink-error);
+    --color-ink-info: var(--ink-info);
+
+    --color-banner-ink: var(--banner-ink);
 
     --radius-sm: calc(var(--radius) * 0.6);
     --radius-md: calc(var(--radius) * 0.8);
@@ -209,6 +221,24 @@
     /* Warna ikon di atas permukaan gradien brand. */
     --gradient-ink: oklch(1 0 0);
 
+    /* "Ink" semantik: warna teks untuk status (sukses/peringatan/error/info)
+       yang duduk di atas latar base, jadi HARUS kontras terhadap base-100 —
+       bukan terhadap fill statusnya. Karena base-100 terang di mode terang dan
+       gelap di mode gelap, nilainya dibalik: gelap di mode terang, terang di
+       mode gelap. Dipakai lewat utilitas `text-ink-*`. */
+    --ink-success: oklch(0.44 0.13 152);
+    --ink-warning: oklch(0.49 0.11 72);
+    --ink-error: oklch(0.48 0.17 25);
+    --ink-info: oklch(0.44 0.1 225);
+
+    /* Banner brand dashboard: permukaan gelap di KEDUA mode supaya teksnya
+       selalu tipis-terang dan bisa diredupkan dengan `opacity-*` tanpa
+       kehilangan kontras (menurunkan alpha tinta gelap di atas permukaan
+       terang justru merusak keterbacaan di mode gelap). */
+    --banner-from: oklch(0.45 0.1 200);
+    --banner-to: oklch(0.33 0.08 190);
+    --banner-ink: oklch(1 0 0);
+
     --chart-1: oklch(0.45 0.1 200);
     --chart-2: oklch(0.55 0.08 220);
     --chart-3: oklch(0.65 0.1 180);
@@ -258,6 +288,15 @@
     --gradient-from: oklch(0.7 0.13 195);
     --gradient-to: oklch(0.82 0.15 168);
     --gradient-ink: oklch(0.12 0.02 200);
+
+    --ink-success: oklch(0.8 0.15 152);
+    --ink-warning: oklch(0.87 0.13 82);
+    --ink-error: oklch(0.78 0.15 25);
+    --ink-info: oklch(0.78 0.08 225);
+
+    --banner-from: oklch(0.32 0.07 200);
+    --banner-to: oklch(0.23 0.05 193);
+    --banner-ink: oklch(0.98 0.01 200);
 
     --chart-1: oklch(0.55 0.12 200);
     --chart-2: oklch(0.65 0.08 220);
@@ -341,6 +380,13 @@
 @utility bg-brand-gradient {
     background-image: linear-gradient(135deg, var(--gradient-from) 0%, var(--gradient-to) 100%);
     color: var(--primary-content);
+}
+
+/* Permukaan banner brand yang tetap gelap di kedua mode; tinta diambil dari
+   `--banner-ink` supaya anak-anaknya bisa diredupkan lewat `opacity-*`. */
+@utility bg-banner-brand {
+    background-image: linear-gradient(135deg, var(--banner-from) 0%, var(--banner-to) 100%);
+    color: var(--banner-ink);
 }
 
 /* Sapuan gradien halus untuk latar section; memakai warna brand dengan

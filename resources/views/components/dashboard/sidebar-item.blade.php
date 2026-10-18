@@ -17,7 +17,7 @@
             <span @class([
                 'grid size-8 shrink-0 place-items-center rounded-lg transition-colors',
                 'bg-primary text-primary-content shadow-sm shadow-primary/30' => $active,
-                'text-base-content/45 group-hover:text-primary' => ! $active,
+                'text-base-content/55 group-hover:text-primary' => ! $active,
             ])>
                 <x-lucide :name="$icon" class="size-[18px]" />
             </span>

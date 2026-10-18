@@ -96,13 +96,13 @@
                     x-on:input="errors.name.length && validateField('name')"
                     value="{{ old('name', $portfolio->name) }}" placeholder="Nama projek..." required>
                 @if ($errors->get('name'))
-                    <ul class="text-error space-y-1 text-sm">
+                    <ul class="text-ink-error space-y-1 text-sm">
                         @foreach ($errors->get('name') as $message)
                             <li>{{ $message }}</li>
                         @endforeach
                     </ul>
                 @endif
-                <ul class="text-error space-y-1 text-sm" x-show="errors.name.length" x-cloak>
+                <ul class="text-ink-error space-y-1 text-sm" x-show="errors.name.length" x-cloak>
                     <template x-for="message in errors.name" :key="message">
                         <li x-text="message"></li>
                     </template>
@@ -119,13 +119,13 @@
                     x-on:input="errors.description.length && validateField('description')"
                     placeholder="Deskripsi..." required>{{ old('description', $portfolio->description) }}</textarea>
                 @if ($errors->get('description'))
-                    <ul class="text-error space-y-1 text-sm">
+                    <ul class="text-ink-error space-y-1 text-sm">
                         @foreach ($errors->get('description') as $message)
                             <li>{{ $message }}</li>
                         @endforeach
                     </ul>
                 @endif
-                <ul class="text-error space-y-1 text-sm" x-show="errors.description.length" x-cloak>
+                <ul class="text-ink-error space-y-1 text-sm" x-show="errors.description.length" x-cloak>
                     <template x-for="message in errors.description" :key="message">
                         <li x-text="message"></li>
                     </template>
@@ -148,13 +148,13 @@
                     @endforeach
                 </select>
                 @if ($errors->get('status'))
-                    <ul class="text-error space-y-1 text-sm">
+                    <ul class="text-ink-error space-y-1 text-sm">
                         @foreach ($errors->get('status') as $message)
                             <li>{{ $message }}</li>
                         @endforeach
                     </ul>
                 @endif
-                <ul class="text-error space-y-1 text-sm" x-show="errors.status.length" x-cloak>
+                <ul class="text-ink-error space-y-1 text-sm" x-show="errors.status.length" x-cloak>
                     <template x-for="message in errors.status" :key="message">
                         <li x-text="message"></li>
                     </template>
@@ -177,13 +177,13 @@
                     @endforeach
                 </select>
                 @if ($errors->get('category'))
-                    <ul class="text-error space-y-1 text-sm">
+                    <ul class="text-ink-error space-y-1 text-sm">
                         @foreach ($errors->get('category') as $message)
                             <li>{{ $message }}</li>
                         @endforeach
                     </ul>
                 @endif
-                <ul class="text-error space-y-1 text-sm" x-show="errors.category.length" x-cloak>
+                <ul class="text-ink-error space-y-1 text-sm" x-show="errors.category.length" x-cloak>
                     <template x-for="message in errors.category" :key="message">
                         <li x-text="message"></li>
                     </template>
@@ -200,13 +200,13 @@
                     x-on:input="errors.demo_link.length && validateField('demo_link')"
                     value="{{ old('demo_link', $portfolio->demo_link) }}" placeholder="https://...">
                 @if ($errors->get('demo_link'))
-                    <ul class="text-error space-y-1 text-sm">
+                    <ul class="text-ink-error space-y-1 text-sm">
                         @foreach ($errors->get('demo_link') as $message)
                             <li>{{ $message }}</li>
                         @endforeach
                     </ul>
                 @endif
-                <ul class="text-error space-y-1 text-sm" x-show="errors.demo_link.length" x-cloak>
+                <ul class="text-ink-error space-y-1 text-sm" x-show="errors.demo_link.length" x-cloak>
                     <template x-for="message in errors.demo_link" :key="message">
                         <li x-text="message"></li>
                     </template>
@@ -223,13 +223,13 @@
                     x-on:input="errors.repository_link.length && validateField('repository_link')"
                     value="{{ old('repository_link', $portfolio->repository_link) }}" placeholder="https://...">
                 @if ($errors->get('repository_link'))
-                    <ul class="text-error space-y-1 text-sm">
+                    <ul class="text-ink-error space-y-1 text-sm">
                         @foreach ($errors->get('repository_link') as $message)
                             <li>{{ $message }}</li>
                         @endforeach
                     </ul>
                 @endif
-                <ul class="text-error space-y-1 text-sm" x-show="errors.repository_link.length" x-cloak>
+                <ul class="text-ink-error space-y-1 text-sm" x-show="errors.repository_link.length" x-cloak>
                     <template x-for="message in errors.repository_link" :key="message">
                         <li x-text="message"></li>
                     </template>
@@ -287,7 +287,7 @@
                 </template>
 
                 @if ($errors->get('tech_stacks'))
-                    <ul class="text-error space-y-1 text-sm">
+                    <ul class="text-ink-error space-y-1 text-sm">
                         @foreach ($errors->get('tech_stacks') as $message)
                             <li>{{ $message }}</li>
                         @endforeach
@@ -329,22 +329,22 @@
                 <div x-ref="thumbDrop" id="thumbnail-drop" tabindex="-1"
                     class="media-dropzone border-base-300 hover:border-primary hover:bg-base-200/60 border-2 border-dashed rounded-lg p-8 text-center transition-colors">
                     <div class="pointer-events-none flex flex-col items-center gap-2 text-sm">
-                        <x-lucide name="image-plus" class="text-base-content/40 size-8" />
+                        <x-lucide name="image-plus" class="text-base-content/55 size-8" />
                         <p class="font-medium">Drag & drop thumbnail di sini atau klik untuk memilih</p>
                         <p class="text-base-content/60 text-xs">JPG, PNG, WEBP — maksimal 1MB</p>
                     </div>
                 </div>
             </div>
 
-            <p x-show="thumb.error" x-cloak class="text-error text-sm" x-text="thumb.error"></p>
+            <p x-show="thumb.error" x-cloak class="text-ink-error text-sm" x-text="thumb.error"></p>
             @if ($errors->get('thumbnail'))
-                <ul class="text-error space-y-1 text-sm">
+                <ul class="text-ink-error space-y-1 text-sm">
                     @foreach ($errors->get('thumbnail') as $message)
                         <li>{{ $message }}</li>
                     @endforeach
                 </ul>
             @endif
-            <ul class="text-error space-y-1 text-sm" x-show="errors.thumbnail.length" x-cloak>
+            <ul class="text-ink-error space-y-1 text-sm" x-show="errors.thumbnail.length" x-cloak>
                 <template x-for="message in errors.thumbnail" :key="message">
                     <li x-text="message"></li>
                 </template>
@@ -367,7 +367,7 @@
                         </div>
                         <div x-show="item.status === 'error'"
                             class="bg-error/10 absolute inset-x-0 bottom-0 p-1.5 text-center">
-                            <span class="text-error text-[10px] leading-tight" x-text="item.error"></span>
+                            <span class="text-ink-error text-[10px] leading-tight" x-text="item.error"></span>
                         </div>
                         <button type="button" x-on:click="removeKept(item)" aria-label="Hapus gambar"
                             class="btn btn-circle btn-xs btn-error absolute top-1.5 right-1.5">
@@ -391,7 +391,7 @@
                         </div>
                         <div x-show="item.status === 'error'"
                             class="bg-error/10 absolute inset-x-0 bottom-0 p-1.5 text-center">
-                            <span class="text-error text-[10px] leading-tight" x-text="item.error"></span>
+                            <span class="text-ink-error text-[10px] leading-tight" x-text="item.error"></span>
                         </div>
                         <span x-show="item.status === 'idle'"
                             class="badge badge-primary badge-sm absolute bottom-1.5 left-1.5">Baru</span>
@@ -409,7 +409,7 @@
                 <div x-ref="galDrop" id="gallery-drop" tabindex="-1"
                     class="media-dropzone border-base-300 hover:border-primary hover:bg-base-200/60 border-2 border-dashed rounded-lg p-8 text-center transition-colors">
                     <div class="pointer-events-none flex flex-col items-center gap-2 text-sm">
-                        <x-lucide name="image-plus" class="text-base-content/40 size-8" />
+                        <x-lucide name="image-plus" class="text-base-content/55 size-8" />
                         <p class="font-medium">Drag & drop gambar galeri di sini atau klik untuk memilih</p>
                         <p class="text-base-content/60 text-xs">Upload langsung tersimpan</p>
                     </div>
@@ -417,13 +417,13 @@
             </div>
 
             @if ($errors->get('galery'))
-                <ul class="text-error space-y-1 text-sm">
+                <ul class="text-ink-error space-y-1 text-sm">
                     @foreach ($errors->get('galery') as $message)
                         <li>{{ $message }}</li>
                     @endforeach
                 </ul>
             @endif
-            <ul class="text-error space-y-1 text-sm" x-show="errors.galery.length" x-cloak>
+            <ul class="text-ink-error space-y-1 text-sm" x-show="errors.galery.length" x-cloak>
                 <template x-for="message in errors.galery" :key="message">
                     <li x-text="message"></li>
                 </template>

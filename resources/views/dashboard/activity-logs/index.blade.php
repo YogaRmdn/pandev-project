@@ -107,7 +107,7 @@
                                 </td>
 
                                 <td class="align-middle whitespace-nowrap text-right">
-                                    <button type="button" class="btn btn-ghost btn-square size-8 hover:text-error"
+                                    <button type="button" class="btn btn-ghost btn-square size-8 hover:text-ink-error"
                                         x-on:click="$dispatch('open-modal', '{{ $deleteName }}')" aria-label="Hapus log">
                                         <x-lucide name="trash-2" />
                                     </button>
@@ -125,7 +125,7 @@
                             <tr>
                                 <td class="h-32 text-center text-base-content/60" colspan="6">
                                     <div class="flex flex-col items-center gap-2">
-                                        <x-lucide name="scroll-text" class="size-8 text-base-content/30" />
+                                        <x-lucide name="scroll-text" class="size-8 text-base-content/45" />
                                         @if (request('search'))
                                             Tidak ada log yang cocok dengan pencarian.
                                         @else

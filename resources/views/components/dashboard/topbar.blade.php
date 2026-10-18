@@ -46,7 +46,7 @@
                     <span class="block max-w-32 truncate font-semibold">{{ $user->fullname }}</span>
                     <span class="block text-[11px] text-base-content/50">{{ $user->email }}</span>
                 </span>
-                <x-lucide name="chevron-down" class="hidden size-4 text-base-content/40 md:block" />
+                <x-lucide name="chevron-down" class="hidden size-4 text-base-content/55 md:block" />
             </button>
 
             <div x-show="open" x-cloak x-transition.origin.top.right role="menu"
@@ -78,7 +78,7 @@
                 <form method="POST" action="{{ route('logout') }}" role="none">
                     @csrf
                     <button type="submit" role="menuitem"
-                        class="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm text-error transition-colors hover:bg-error/10">
+                        class="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm text-ink-error transition-colors hover:bg-error/10">
                         <x-lucide name="log-out" class="size-4" /> Keluar
                     </button>
                 </form>

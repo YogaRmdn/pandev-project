@@ -30,7 +30,7 @@
                 class="bg-base-100 text-base-content flex w-full max-w-sm flex-col items-center gap-3 rounded-xl border p-6 text-center shadow-lg"
             >
                 <span class="grid size-14 place-items-center rounded-full bg-warning/15">
-                    <x-lucide name="clock-alert" class="size-8 text-warning" />
+                    <x-lucide name="clock-alert" class="size-8 text-ink-warning" />
                 </span>
                 <h2 id="idle-timeout-title" class="text-lg font-semibold">Sesi akan berakhir</h2>
                 <p id="idle-timeout-description" class="text-base-content/70 text-sm">

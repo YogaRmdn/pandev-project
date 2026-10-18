@@ -64,7 +64,7 @@
                                         <x-lucide name="pencil" />
                                     </button>
 
-                                    <button type="button" class="btn btn-ghost btn-square size-8 hover:text-error"
+                                    <button type="button" class="btn btn-ghost btn-square size-8 hover:text-ink-error"
                                         x-on:click="$dispatch('open-modal', '{{ $deleteName }}')" aria-label="Hapus invoice">
                                         <x-lucide name="trash-2" />
                                     </button>

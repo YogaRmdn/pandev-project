@@ -16,7 +16,7 @@
         <input @class(['input w-full', 'input-error' => $errors->has('title')]) id="title" name="title"
             value="{{ old('title', $ebook->title) }}" placeholder="Contoh: Laravel 12: Zero to Production">
         @error('title')
-            <p class="text-error text-sm">{{ $message }}</p>
+            <p class="text-ink-error text-sm">{{ $message }}</p>
         @enderror
     </div>
 
@@ -25,7 +25,7 @@
         <textarea @class(['textarea w-full', 'textarea-error' => $errors->has('description')]) id="description" name="description"
             rows="4" placeholder="Deskripsi singkat ebook...">{{ old('description', $ebook->description) }}</textarea>
         @error('description')
-            <p class="text-error text-sm">{{ $message }}</p>
+            <p class="text-ink-error text-sm">{{ $message }}</p>
         @enderror
     </div>
 
@@ -35,7 +35,7 @@
             value="{{ old('url', $ebook->url) }}" placeholder="https://lynk.id/pandev/...">
         <p class="text-base-content/60 text-xs">Tautan tombol "Beli" di halaman Buy eBook.</p>
         @error('url')
-            <p class="text-error text-sm">{{ $message }}</p>
+            <p class="text-ink-error text-sm">{{ $message }}</p>
         @enderror
     </div>
 
@@ -52,7 +52,7 @@
         <input @class(['file-input w-full', 'file-input-error' => $errors->has('cover')]) id="cover" type="file" name="cover"
             accept="image/*">
         @error('cover')
-            <p class="text-error text-sm">{{ $message }}</p>
+            <p class="text-ink-error text-sm">{{ $message }}</p>
         @enderror
     </div>
 

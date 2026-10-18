@@ -55,7 +55,7 @@
                 </span>
                 <span class="min-w-0 is-drawer-close:hidden">
                     <span class="block font-heading text-base font-bold leading-tight text-base-content">PanDev</span>
-                    <span class="block text-[11px] uppercase tracking-wider text-base-content/40">Admin Panel</span>
+                    <span class="block text-[11px] uppercase tracking-wider text-base-content/55">Admin Panel</span>
                 </span>
             </a>
 
@@ -72,7 +72,7 @@
             @foreach ($groups as $group)
                 <div class="space-y-1">
                     <p
-                        class="px-2.5 pb-1 text-[11px] font-semibold uppercase tracking-wider text-base-content/35 is-drawer-close:hidden">
+                        class="px-2.5 pb-1 text-[11px] font-semibold uppercase tracking-wider text-base-content/50 is-drawer-close:hidden">
                         {{ $group['label'] }}
                     </p>
                     <ul class="space-y-0.5">

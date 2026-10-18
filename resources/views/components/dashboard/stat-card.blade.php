@@ -10,10 +10,10 @@
 @php
     $tones = [
         'primary' => ['bg' => 'bg-primary/10', 'text' => 'text-primary', 'glow' => 'bg-primary/25'],
-        'success' => ['bg' => 'bg-success/10', 'text' => 'text-success', 'glow' => 'bg-success/25'],
-        'error' => ['bg' => 'bg-error/10', 'text' => 'text-error', 'glow' => 'bg-error/25'],
-        'warning' => ['bg' => 'bg-warning/10', 'text' => 'text-warning', 'glow' => 'bg-warning/25'],
-        'info' => ['bg' => 'bg-info/10', 'text' => 'text-info', 'glow' => 'bg-info/25'],
+        'success' => ['bg' => 'bg-success/10', 'text' => 'text-ink-success', 'glow' => 'bg-success/25'],
+        'error' => ['bg' => 'bg-error/10', 'text' => 'text-ink-error', 'glow' => 'bg-error/25'],
+        'warning' => ['bg' => 'bg-warning/10', 'text' => 'text-ink-warning', 'glow' => 'bg-warning/25'],
+        'info' => ['bg' => 'bg-info/10', 'text' => 'text-ink-info', 'glow' => 'bg-info/25'],
     ];
     $t = $tones[$tone] ?? $tones['primary'];
     $tag = $href ? 'a' : 'div';
@@ -28,7 +28,7 @@
             <p class="truncate text-xs font-semibold uppercase tracking-wider text-base-content/50">{{ $label }}</p>
             <p class="mt-2 truncate font-heading text-2xl font-bold tabular-nums text-base-content">{{ $value }}</p>
             @if ($hint)
-                <p class="mt-1 truncate text-xs text-base-content/45">{{ $hint }}</p>
+                <p class="mt-1 truncate text-xs text-base-content/55">{{ $hint }}</p>
             @endif
         </div>
 

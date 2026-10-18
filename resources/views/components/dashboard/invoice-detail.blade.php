@@ -46,7 +46,7 @@
             </tbody>
         </table></div>
 
-        <div class="bg-primary ml-auto w-fit rounded-md p-3 font-semibold text-white">
+        <div class="bg-primary text-primary-content ml-auto w-fit rounded-md p-3 font-semibold">
             Total: {{ \App\Support\Format::idr($total) }}
         </div>
 
@@ -56,7 +56,7 @@
                     @csrf
                     @method('PATCH')
                     <input type="hidden" name="status" value="PARTIALLY_PAID">
-                    <button type="submit" class="btn btn-primary bg-amber-700! text-white! hover:bg-amber-700/90!">
+                    <button type="submit" class="btn btn-warning">
                         <x-lucide name="circle-dashed-check" /> Sebagian dibayar / DP
                     </button>
                 </form>

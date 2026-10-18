@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\File;
 use Tests\TestCase;
 
 /**
@@ -38,6 +39,75 @@ class ThemeModeTest extends TestCase
         $this->assertStringContainsString('$store.theme.toggle()', $content);
         $this->assertStringContainsString('Aktifkan mode gelap', $content);
         $this->assertStringContainsString('Aktifkan mode terang', $content);
+    }
+
+    /**
+     * Semua blade di area dashboard (halaman + komponen bersama).
+     *
+     * @return list<string>
+     */
+    private function dashboardBladeFiles(): array
+    {
+        $files = [];
+
+        foreach ([resource_path('views/dashboard'), resource_path('views/components/dashboard')] as $dir) {
+            foreach (File::allFiles($dir) as $file) {
+                $files[] = $file->getPathname();
+            }
+        }
+
+        return $files;
+    }
+
+    public function test_dashboard_text_colors_follow_the_active_theme(): void
+    {
+        $css = $this->css();
+
+        // Tinta status dibalik antar mode — gelap di mode terang, terang di mode
+        // gelap — karena teksnya duduk di atas base-100, bukan di atas fill
+        // statusnya. Tanpa ini `text-warning` (2:1) dan `text-error` (2.4:1)
+        // praktis tak terbaca.
+        foreach (['success', 'warning', 'error', 'info'] as $tone) {
+            $this->assertStringContainsString("--color-ink-{$tone}: var(--ink-{$tone})", $css);
+        }
+
+        $this->assertStringContainsString('--ink-warning: oklch(0.49 0.11 72)', $css);
+        $this->assertStringContainsString('--ink-warning: oklch(0.87 0.13 82)', $css);
+
+        // Banner hero dashboard sengaja gelap di kedua mode supaya tintanya
+        // terang dan bisa diredupkan dengan `opacity-*` tanpa kehilangan
+        // kontras (menurunkan alpha tinta gelap di permukaan terang merusak
+        // keterbacaan di mode gelap).
+        $this->assertStringContainsString('@utility bg-banner-brand', $css);
+        $this->assertStringContainsString('color: var(--banner-ink)', $css);
+        $this->assertStringContainsString('--banner-ink: oklch(1 0 0)', $css);
+        $this->assertStringContainsString('--banner-ink: oklch(0.98 0.01 200)', $css);
+
+        // Tidak boleh ada lagi warna teks status mentah di dashboard.
+        foreach ($this->dashboardBladeFiles() as $path) {
+            preg_match_all('/(?<!ink-)text-(success|warning|error|info)(?![\w-])/', (string) file_get_contents($path), $matches);
+
+            $this->assertSame([], $matches[0], "Warna teks status mentah di {$path} harus memakai text-ink-*.");
+        }
+
+        // Kotak total faktur dulu `text-white` sehingga tidak ikut tema.
+        foreach (['invoice-form', 'invoice-detail'] as $component) {
+            $markup = (string) file_get_contents(resource_path("views/components/dashboard/{$component}.blade.php"));
+
+            $this->assertStringContainsString('bg-primary text-primary-content', $markup);
+            $this->assertStringNotContainsString('text-white', $markup);
+        }
+    }
+
+    public function test_dashboard_hero_uses_the_theme_aware_banner(): void
+    {
+        $dashboard = $this->actingAs(User::factory()->superadmin()->create())
+            ->get(route('dashboard'))
+            ->assertOk()
+            ->getContent();
+
+        $this->assertStringContainsString('bg-banner-brand', $dashboard);
+        $this->assertStringNotContainsString('bg-gradient-to-br from-primary to-primary/75', $dashboard);
     }
 
     public function test_dashboard_ships_the_theme_script(): void
