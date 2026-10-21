@@ -4,6 +4,8 @@
 
 @section('description', 'Browse all projects and best work delivered by PanDev.')
 
+@section('keywords', 'daftar proyek software house, kumpulan proyek web development, aplikasi kasir, sistem informasi, dashboard analytics, proyek flutter, proyek laravel, proyek next.js, portofolio developer indonesia, semua proyek pan dev')
+
 @push('json-ld')
     <x-json-ld :data="\App\Support\Seo::graph([
         \App\Support\Seo::breadcrumbs([

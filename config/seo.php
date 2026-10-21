@@ -21,7 +21,48 @@ return [
 
     'default_description' => env('SEO_DEFAULT_DESCRIPTION') ?: 'PanDev is a professional software development agency in Indonesia. We design, build, and scale web, mobile, desktop, IoT, and data products for startups and growing businesses.',
 
-    'keywords' => env('SEO_KEYWORDS') ?: 'software house indonesia, jasa pembuatan website, jasa pembuatan aplikasi, laravel developer, mobile app development, iot development, cyber security, ui ux design, pandev',
+    'keywords' => env('SEO_KEYWORDS') ?: implode(', ', [
+        // Inti bisnis (layanan utama + lokasi).
+        'software house indonesia',
+        'jasa pembuatan website',
+        'jasa pembuatan aplikasi',
+        'jasa pembuatan aplikasi mobile',
+        'jasa pengembangan software',
+        'web development indonesia',
+        'perusahaan pengembang software indonesia',
+        'panam developer',
+        'pandev',
+        // Platform & stack (dicari klien yang sudah tahu teknologinya).
+        'laravel developer',
+        'react developer',
+        'next.js developer',
+        'flutter developer',
+        'node.js developer',
+        'backend developer indonesia',
+        'mobile app development',
+        'jasa pembuatan website company profile',
+        'jasa pembuatan toko online',
+        // Layanan pendukung.
+        'it consultant indonesia',
+        'jasa konsultan it',
+        'outsourcing developer indonesia',
+        'jasa migrasi website',
+        'jasa maintenance website',
+        'jasa pembuatan dashboard',
+        // Spesialisasi yang membedakan PanDev.
+        'cyber security indonesia',
+        'penetration testing',
+        'jasa audit keamanan website',
+        'iot development',
+        'jasa pembuatan iot',
+        'embedded system indonesia',
+        'data analytics indonesia',
+        'gis indonesia',
+        'jasa pembuatan aplikasi gis',
+        'ui ux design',
+        'desain grafis',
+        'video editing',
+    ]),
 
     /*
     |--------------------------------------------------------------------------

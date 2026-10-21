@@ -4,6 +4,8 @@
 
 @section('description', 'Explore PanDev services for businesses and individuals — from web applications and mobile apps to IoT projects and data analytics.')
 
+@section('keywords', 'jasa pembuatan website, jasa pembuatan aplikasi web, jasa pembuatan aplikasi android ios, jasa pembuatan aplikasi desktop, jasa konsultan it, it consulting indonesia, jasa pembuatan aplikasi gis, data analytics indonesia, jasa penetration testing, jasa pembuatan iot, jasa desain ui ux, jasa editing video foto, layanan pengembangan software, jasa maintenance website')
+
 @push('json-ld')
     <x-json-ld :data="\App\Support\Seo::graph([
         \App\Support\Seo::breadcrumbs([

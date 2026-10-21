@@ -4,6 +4,8 @@
 
 @section('description', 'Practical eBooks written by the PanDev team — Laravel, frontend engineering, and cyber security, written for developers who ship to production.')
 
+@section('keywords', 'ebook pemrograman, buku laravel, ebook web development, ebook cyber security, buku pemrograman indonesia, tutorial praktis developer, belajar laravel, belajar keamanan sibel, ebook praktis programmer')
+
 @push('json-ld')
     <x-json-ld :data="\App\Support\Seo::graph([
         \App\Support\Seo::breadcrumbs([

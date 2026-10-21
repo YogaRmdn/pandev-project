@@ -4,6 +4,8 @@
 
 @section('description', 'Get to know PanDev, a software development agency in Indonesia focused on reliable technology solutions.')
 
+@section('keywords', 'tentang pan dev, software house indonesia terpercaya, tim developer indonesia, agen pengembang software, jasa pembuatan aplikasi profesional, perusahaan it indonesia, konsultan teknologi indonesia, karier developer indonesia')
+
 @push('json-ld')
     <x-json-ld :data="\App\Support\Seo::graph([
         \App\Support\Seo::breadcrumbs([

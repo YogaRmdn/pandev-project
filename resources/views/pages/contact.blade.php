@@ -4,6 +4,8 @@
 
 @section('description', 'Get in touch with PanDev for your digital product needs — we reply within one business day.')
 
+@section('keywords', 'hubungi software house indonesia, konsultasi gratis pembuatan aplikasi, jasa pengembangan software indonesia, contact developer indonesia, ajukan proyek software, penawaran jasa pembuatan website, jasa pembuatan aplikasi online, konsultasi it jarak jauh')
+
 @push('json-ld')
     <x-json-ld :data="\App\Support\Seo::graph([
         \App\Support\Seo::breadcrumbs([

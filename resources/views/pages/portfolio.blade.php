@@ -4,6 +4,8 @@
 
 @section('description', 'Browse the projects and best work delivered by PanDev — web, mobile, desktop, IoT, and data solutions.')
 
+@section('keywords', 'portofolio software house, contoh website company profile, contoh aplikasi mobile, studi kasus pengembangan software, proyek iot indonesia, aplikasi gis indonesia, hasil kerja developer indonesia, jasa pembuatan aplikasi terpercaya, project showcase indonesia')
+
 @push('json-ld')
     <x-json-ld :data="\App\Support\Seo::graph([
         \App\Support\Seo::breadcrumbs([
